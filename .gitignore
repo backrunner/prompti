@@ -1,0 +1,11 @@
+.DS_Store
+DerivedData/
+build/
+*.xcresult
+*.xccheckout
+*.xcuserstate
+xcuserdata/
+*.env
+.env.*
+!.env.example
+

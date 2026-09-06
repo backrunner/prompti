@@ -1,0 +1,22 @@
+name: Bug report
+description: Report a reproducible problem in Prompti
+title: "bug: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: "Please do not include API keys, raw model responses, recordings, or private learning data."
+  - type: textarea
+    id: expected
+    attributes:
+      label: What happened?
+      description: Include the steps to reproduce and the expected behavior.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: iOS version, device, and Prompti version
+    validations:
+      required: true

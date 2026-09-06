@@ -1,0 +1,62 @@
+name: Prompti
+options:
+  bundleIdPrefix: com.prompti
+  deploymentTarget:
+    iOS: "18.0"
+  xcodeVersion: "26.0"
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    CURRENT_PROJECT_VERSION: 1
+    MARKETING_VERSION: 0.1.0
+targets:
+  Prompti:
+    type: application
+    platform: iOS
+    sources:
+      - path: Prompti
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.prompti.app
+        PRODUCT_NAME: Prompti
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: Prompti/Supporting/Info.plist
+        SUPPORTS_MACCATALYST: NO
+        TARGETED_DEVICE_FAMILY: "1,2"
+        CODE_SIGN_ENTITLEMENTS: Prompti/Supporting/Prompti.entitlements
+    entitlements:
+      path: Prompti/Supporting/Prompti.entitlements
+      properties:
+        com.apple.developer.icloud-container-identifiers:
+          - iCloud.com.prompti.app
+        com.apple.developer.icloud-services:
+          - CloudKit
+        com.apple.developer.ubiquity-kvstore-identifier: $(TeamIdentifierPrefix)com.prompti.app
+  PromptiTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: PromptiTests
+    dependencies:
+      - target: Prompti
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.prompti.app.tests
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_STRICT_CONCURRENCY: complete
+  PromptiUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: PromptiUITests
+    dependencies:
+      - target: Prompti
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.prompti.app.uitests
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_STRICT_CONCURRENCY: complete
