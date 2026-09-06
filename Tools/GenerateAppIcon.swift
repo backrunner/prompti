@@ -5,42 +5,61 @@ let image = NSImage(size: size)
 image.lockFocus()
 
 let bounds = NSRect(origin: .zero, size: size)
+// iOS applies the final rounded mask. Keep this artwork full bleed and leave
+// generous safe margins so the mark remains legible at every icon size.
 let background = NSGradient(colors: [
-    NSColor(red: 0.28, green: 0.76, blue: 0.66, alpha: 1),
-    NSColor(red: 0.41, green: 0.78, blue: 0.97, alpha: 1),
-    NSColor(red: 0.78, green: 0.93, blue: 0.96, alpha: 1)
+    NSColor(red: 0.07, green: 0.45, blue: 0.40, alpha: 1),
+    NSColor(red: 0.18, green: 0.67, blue: 0.69, alpha: 1),
+    NSColor(red: 0.38, green: 0.73, blue: 0.93, alpha: 1)
 ])!
-background.draw(in: bounds, angle: -35)
+background.draw(in: bounds, angle: -38)
 
-// A translucent glass orb gives the mark a recognisable silhouette at small sizes.
-let glowRect = NSRect(x: 120, y: 120, width: 784, height: 784)
-NSColor.white.withAlphaComponent(0.18).setFill()
-NSBezierPath(roundedRect: glowRect, xRadius: 205, yRadius: 205).fill()
+// Soft light blooms create depth without drawing a rounded-corner frame.
+NSColor.white.withAlphaComponent(0.12).setFill()
+NSBezierPath(ovalIn: NSRect(x: -160, y: 520, width: 780, height: 780)).fill()
+NSColor(red: 0.76, green: 1, blue: 0.92, alpha: 0.14).setFill()
+NSBezierPath(ovalIn: NSRect(x: 530, y: -180, width: 760, height: 760)).fill()
 
+// A restrained glass disc is the single container for the travel mark.
+let glassRect = NSRect(x: 154, y: 154, width: 716, height: 716)
+NSColor.white.withAlphaComponent(0.20).setFill()
+NSBezierPath(ovalIn: glassRect).fill()
+let glassStroke = NSBezierPath(ovalIn: glassRect.insetBy(dx: 5, dy: 5))
+glassStroke.lineWidth = 10
+NSColor.white.withAlphaComponent(0.34).setStroke()
+glassStroke.stroke()
+
+// The route is deliberately short and quiet, so the airplane remains the
+// first thing read by the eye.
 let route = NSBezierPath()
-route.move(to: NSPoint(x: 190, y: 280))
-route.curve(to: NSPoint(x: 830, y: 745), controlPoint1: NSPoint(x: 330, y: 90), controlPoint2: NSPoint(x: 675, y: 920))
-route.lineWidth = 14
-route.setLineDash([24, 24], count: 2, phase: 0)
-NSColor.white.withAlphaComponent(0.65).setStroke()
+route.move(to: NSPoint(x: 274, y: 330))
+route.curve(to: NSPoint(x: 750, y: 674), controlPoint1: NSPoint(x: 394, y: 130), controlPoint2: NSPoint(x: 610, y: 858))
+route.lineWidth = 13
+route.setLineDash([20, 24], count: 2, phase: 0)
+NSColor.white.withAlphaComponent(0.82).setStroke()
 route.stroke()
 
-let borderRect = bounds.insetBy(dx: 94, dy: 94)
-let border = NSBezierPath(roundedRect: borderRect, xRadius: 150, yRadius: 150)
-border.lineWidth = 18
-NSColor(red: 0.06, green: 0.25, blue: 0.23, alpha: 0.22).setStroke()
-border.stroke()
-
-let sunRect = NSRect(x: 278, y: 278, width: 468, height: 468)
-NSColor(red: 1.0, green: 0.79, blue: 0.24, alpha: 1).setFill()
-NSBezierPath(ovalIn: sunRect).fill()
+for point in [NSPoint(x: 274, y: 330), NSPoint(x: 750, y: 674)] {
+    NSColor.white.withAlphaComponent(0.96).setFill()
+    NSBezierPath(ovalIn: NSRect(x: point.x - 12, y: point.y - 12, width: 24, height: 24)).fill()
+}
 
 let config = NSImage.SymbolConfiguration(pointSize: 330, weight: .black)
 if let symbol = NSImage(systemSymbolName: "airplane", accessibilityDescription: nil)?.withSymbolConfiguration(config) {
     symbol.isTemplate = true
     NSColor(red: 0.06, green: 0.13, blue: 0.16, alpha: 1).set()
-    let symbolRect = NSRect(x: 340, y: 350, width: 340, height: 340)
+    let symbolRect = NSRect(x: 342, y: 342, width: 340, height: 340)
+    NSGraphicsContext.saveGraphicsState()
+    let transform = NSAffineTransform()
+    transform.translateX(by: 512, yBy: 512)
+    transform.rotate(byDegrees: -18)
+    transform.translateX(by: -512, yBy: -512)
+    transform.concat()
+    NSColor(red: 0.04, green: 0.20, blue: 0.22, alpha: 0.20).set()
+    symbol.draw(in: symbolRect.offsetBy(dx: 0, dy: -13), from: .zero, operation: .sourceOver, fraction: 1)
+    NSColor.white.set()
     symbol.draw(in: symbolRect, from: .zero, operation: .sourceOver, fraction: 1)
+    NSGraphicsContext.restoreGraphicsState()
 }
 
 image.unlockFocus()
