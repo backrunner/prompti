@@ -1,0 +1,821 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		000E8F1AD9B30CF433BB07D2 /* SecureStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607EA6B150A0C01EA68300F9 /* SecureStore.swift */; };
+		022DF2971EDBC9C9A613B0D6 /* OpenRouterOAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395D2BF8399C0BBDA19F2CD4 /* OpenRouterOAuth.swift */; };
+		0727BC327C2560D9EB1F5E98 /* DomainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9696B831DD791D7541729F9B /* DomainTests.swift */; };
+		1592C5CF5DCDD1C4FA110409 /* ContentSafety.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB2AAE70E9A775CCFA31167 /* ContentSafety.swift */; };
+		193E0CD775D5D81BE4394054 /* PromptBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3D2B8E4D7B9B88A09CE84F /* PromptBuilder.swift */; };
+		22C46E45E6775EC62B615210 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC0AB0D9E427A171E1D0A16F /* SettingsView.swift */; };
+		2AAA9EDE7608F81865027297 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA629B11DA98CF68C6DADEF /* OnboardingView.swift */; };
+		2DB2B20A78B39B49066A516F /* PromptiTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C312F2378189D5E19F29DC /* PromptiTheme.swift */; };
+		2FA5EA0870F5118518FE5BC2 /* LandingRouteVisual.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AA3FC4C9C11A24A04C15D6 /* LandingRouteVisual.swift */; };
+		3ABF16B71E45D6397C76443A /* AppleQuestionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F7E7DC8BD5FEA956A3D2C0 /* AppleQuestionProvider.swift */; };
+		565260576ACB271CC31CAF51 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18856C51FFD0A185B9F90DE9 /* HomeView.swift */; };
+		5775CD2AA49EA93297EEAE08 /* GenerationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4B80A4D8C397C6B977F99E /* GenerationError.swift */; };
+		578BCBAAD48C12128BAF472B /* SpeechPracticeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6F42889F9DFF489C981C29 /* SpeechPracticeModel.swift */; };
+		594EA4E133328179B9E7E2BA /* PracticeSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD5DDEE4EADEF308B2E9F53 /* PracticeSetupView.swift */; };
+		5B893D514FEF54A141B6178F /* ProviderDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C96D9268874EB63409A40A /* ProviderDetector.swift */; };
+		60AE713554DE8F38B098332A /* QuestionGenerationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6EBC0E2A0753FDDB733EEA3 /* QuestionGenerationService.swift */; };
+		673938B215463BB707E95E99 /* GenerationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8DF6A458E2E119D5DD048 /* GenerationView.swift */; };
+		6EC9DB8160B8362F3B250D69 /* DestinationModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5DBCC853FF30B18D296DE0 /* DestinationModels.swift */; };
+		778745FD3AE92EF65D9C2626 /* OAuthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC8E3A99365EBDEC00F181F /* OAuthTests.swift */; };
+		82F0ED3D4374B6A9B22DBAE0 /* RemoteAIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0A356E245EE9B74E020D1EE /* RemoteAIClientTests.swift */; };
+		8985ED017C0B03C1026172C2 /* ModelConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB64D385BA41B765F507187C /* ModelConnectionView.swift */; };
+		8A4F1B70C4E2CD551E3E96C8 /* PracticeFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01F5D6FD0AC2F2EF72047CE /* PracticeFlow.swift */; };
+		9D9134A03F6D4927743B71B9 /* PracticeMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2DB877757A8A2E555362F62 /* PracticeMetrics.swift */; };
+		A344A1EC426C77C723B67C76 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 503960B686C5CC26B3DDA39C /* Localizable.xcstrings */; };
+		A3AC562184D7360E00B76D77 /* RemoteAIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C92ED016CAF10A350C57A15 /* RemoteAIClient.swift */; };
+		A5AF2F314EA30FF7DB326B78 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3457A1170F91255DE39F0D49 /* Assets.xcassets */; };
+		B05092BDE91F3771A90C79A1 /* ProviderModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7989CD0D0AED1901CFC83985 /* ProviderModels.swift */; };
+		B197630C6D19C7C163372F91 /* PromptiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09DD5A726E695B31D6E7AA3 /* PromptiApp.swift */; };
+		B97DAB35AE7EEC3BBDF17E79 /* OpenRouterCodeConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1156C4CD9DFD49D5ED2C0326 /* OpenRouterCodeConnectionView.swift */; };
+		BD9D2DBD3F23DEFAEC38D05D /* PromptiUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBFE03F759FD39CDEE52009A /* PromptiUITests.swift */; };
+		BDC988347D09A440FA50C19E /* ModelContainerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4569C4DE4EA89BBF6322049D /* ModelContainerFactory.swift */; };
+		C132340E0CC75CDC0EE1846A /* PersistenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6DA56EDEDCA371AE3BC0A44 /* PersistenceTests.swift */; };
+		C151310DDEF2240A584B76EA /* PracticeSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C19293380032FA7673B679D /* PracticeSessionView.swift */; };
+		C9477FC25E9C7FA81E435856 /* PersistentModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFBA6195A79BB16FC644409C /* PersistentModels.swift */; };
+		CC3E8F0A241F9682298F251E /* SpeechAnswerEvaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA21C221E5858DA07BE18A8 /* SpeechAnswerEvaluator.swift */; };
+		D1870945EF817082D81A9592 /* ReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F9B688A795BC24F980074F /* ReviewView.swift */; };
+		D49C3BECE7E56175201812AD /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79706F9D8FD394ED6F6A57CE /* AppSettings.swift */; };
+		D69D2B26912B9CABBBA4F40A /* TrainingModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25850C2487635076A63B7F2F /* TrainingModels.swift */; };
+		D8EEDAF3A0A40A89973BE85D /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BF558054813B6B5AEAF8B4 /* ProgressView.swift */; };
+		E18CAFB1791B91F918FA41EE /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 24EA6F677269F4C2ABFEFA67 /* PrivacyInfo.xcprivacy */; };
+		E9A42B8F6EA12AB9E06ADC2A /* PromptiComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E5148F4013543DE1FD4A6D /* PromptiComponents.swift */; };
+		EA150FE77B1FD1B232ED7560 /* AppDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = F425E0F5281EE71398534F72 /* AppDependencies.swift */; };
+		F1FF1ED1B190FAC4CECBCCB1 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AADC824339BC4E1E1044EE60 /* RootView.swift */; };
+		F292EE9AC5B8DC41DD0EA635 /* AppShellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C08230B8C6A8062EA6EC4E5 /* AppShellView.swift */; };
+		F4C5B99706E4D53035AD990F /* DestinationPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77887390715BFC38C6C41415 /* DestinationPickerView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		5D47DB4CFABC658B0DC8423C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2E6FA70D5060FEE1470A6598 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E1B23BE50D4DB4FB2BA2120F;
+			remoteInfo = Prompti;
+		};
+		8EE716D35B24139E2DC0AA5D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2E6FA70D5060FEE1470A6598 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E1B23BE50D4DB4FB2BA2120F;
+			remoteInfo = Prompti;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		08E5148F4013543DE1FD4A6D /* PromptiComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptiComponents.swift; sourceTree = "<group>"; };
+		0EA21C221E5858DA07BE18A8 /* SpeechAnswerEvaluator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechAnswerEvaluator.swift; sourceTree = "<group>"; };
+		1156C4CD9DFD49D5ED2C0326 /* OpenRouterCodeConnectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenRouterCodeConnectionView.swift; sourceTree = "<group>"; };
+		18856C51FFD0A185B9F90DE9 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		19F7E7DC8BD5FEA956A3D2C0 /* AppleQuestionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleQuestionProvider.swift; sourceTree = "<group>"; };
+		1C3D2B8E4D7B9B88A09CE84F /* PromptBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptBuilder.swift; sourceTree = "<group>"; };
+		24EA6F677269F4C2ABFEFA67 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		25850C2487635076A63B7F2F /* TrainingModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingModels.swift; sourceTree = "<group>"; };
+		2758483F7E225FFEAE0EC02F /* Prompti.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Prompti.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2CD5DDEE4EADEF308B2E9F53 /* PracticeSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeSetupView.swift; sourceTree = "<group>"; };
+		2F6F42889F9DFF489C981C29 /* SpeechPracticeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechPracticeModel.swift; sourceTree = "<group>"; };
+		3457A1170F91255DE39F0D49 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		395D2BF8399C0BBDA19F2CD4 /* OpenRouterOAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenRouterOAuth.swift; sourceTree = "<group>"; };
+		3C08230B8C6A8062EA6EC4E5 /* AppShellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppShellView.swift; sourceTree = "<group>"; };
+		3C92ED016CAF10A350C57A15 /* RemoteAIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAIClient.swift; sourceTree = "<group>"; };
+		40B5ABE4620049A2879B7D13 /* PromptiTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PromptiTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4569C4DE4EA89BBF6322049D /* ModelContainerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainerFactory.swift; sourceTree = "<group>"; };
+		45E8DF6A458E2E119D5DD048 /* GenerationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerationView.swift; sourceTree = "<group>"; };
+		4BAB89DD81302C2A35694D1F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		503960B686C5CC26B3DDA39C /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		5C19293380032FA7673B679D /* PracticeSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeSessionView.swift; sourceTree = "<group>"; };
+		607EA6B150A0C01EA68300F9 /* SecureStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureStore.swift; sourceTree = "<group>"; };
+		62C312F2378189D5E19F29DC /* PromptiTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptiTheme.swift; sourceTree = "<group>"; };
+		65AA3FC4C9C11A24A04C15D6 /* LandingRouteVisual.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingRouteVisual.swift; sourceTree = "<group>"; };
+		67C96D9268874EB63409A40A /* ProviderDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderDetector.swift; sourceTree = "<group>"; };
+		71D93DFA16FD86261A8CB480 /* PromptiUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PromptiUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		77887390715BFC38C6C41415 /* DestinationPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationPickerView.swift; sourceTree = "<group>"; };
+		79706F9D8FD394ED6F6A57CE /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		7989CD0D0AED1901CFC83985 /* ProviderModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderModels.swift; sourceTree = "<group>"; };
+		7C4CAF84D821A3D3BAA4B863 /* Prompti.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Prompti.entitlements; sourceTree = "<group>"; };
+		8A5DBCC853FF30B18D296DE0 /* DestinationModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationModels.swift; sourceTree = "<group>"; };
+		9696B831DD791D7541729F9B /* DomainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainTests.swift; sourceTree = "<group>"; };
+		9D4B80A4D8C397C6B977F99E /* GenerationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerationError.swift; sourceTree = "<group>"; };
+		A6DA56EDEDCA371AE3BC0A44 /* PersistenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceTests.swift; sourceTree = "<group>"; };
+		AADC824339BC4E1E1044EE60 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		B01F5D6FD0AC2F2EF72047CE /* PracticeFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeFlow.swift; sourceTree = "<group>"; };
+		BAA629B11DA98CF68C6DADEF /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		BC0AB0D9E427A171E1D0A16F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		BFBA6195A79BB16FC644409C /* PersistentModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentModels.swift; sourceTree = "<group>"; };
+		C2DB877757A8A2E555362F62 /* PracticeMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeMetrics.swift; sourceTree = "<group>"; };
+		C3F9B688A795BC24F980074F /* ReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewView.swift; sourceTree = "<group>"; };
+		C6EBC0E2A0753FDDB733EEA3 /* QuestionGenerationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionGenerationService.swift; sourceTree = "<group>"; };
+		CB64D385BA41B765F507187C /* ModelConnectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelConnectionView.swift; sourceTree = "<group>"; };
+		E09DD5A726E695B31D6E7AA3 /* PromptiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptiApp.swift; sourceTree = "<group>"; };
+		EAB2AAE70E9A775CCFA31167 /* ContentSafety.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentSafety.swift; sourceTree = "<group>"; };
+		EEC8E3A99365EBDEC00F181F /* OAuthTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthTests.swift; sourceTree = "<group>"; };
+		F0A356E245EE9B74E020D1EE /* RemoteAIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAIClientTests.swift; sourceTree = "<group>"; };
+		F3BF558054813B6B5AEAF8B4 /* ProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
+		F425E0F5281EE71398534F72 /* AppDependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDependencies.swift; sourceTree = "<group>"; };
+		FBFE03F759FD39CDEE52009A /* PromptiUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptiUITests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		0EFD5086DFAAC3B56453507B /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				18856C51FFD0A185B9F90DE9 /* HomeView.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		1F92680F7F3A9154EE4D5DB6 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				8A5DBCC853FF30B18D296DE0 /* DestinationModels.swift */,
+				C2DB877757A8A2E555362F62 /* PracticeMetrics.swift */,
+				7989CD0D0AED1901CFC83985 /* ProviderModels.swift */,
+				0EA21C221E5858DA07BE18A8 /* SpeechAnswerEvaluator.swift */,
+				25850C2487635076A63B7F2F /* TrainingModels.swift */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		2B3E0505C69F4DC3C8E61C17 /* Review */ = {
+			isa = PBXGroup;
+			children = (
+				C3F9B688A795BC24F980074F /* ReviewView.swift */,
+			);
+			path = Review;
+			sourceTree = "<group>";
+		};
+		3AFC0B3ECF30F112C53DF133 /* AI */ = {
+			isa = PBXGroup;
+			children = (
+				19F7E7DC8BD5FEA956A3D2C0 /* AppleQuestionProvider.swift */,
+				EAB2AAE70E9A775CCFA31167 /* ContentSafety.swift */,
+				9D4B80A4D8C397C6B977F99E /* GenerationError.swift */,
+				395D2BF8399C0BBDA19F2CD4 /* OpenRouterOAuth.swift */,
+				1C3D2B8E4D7B9B88A09CE84F /* PromptBuilder.swift */,
+				67C96D9268874EB63409A40A /* ProviderDetector.swift */,
+				C6EBC0E2A0753FDDB733EEA3 /* QuestionGenerationService.swift */,
+				3C92ED016CAF10A350C57A15 /* RemoteAIClient.swift */,
+			);
+			path = AI;
+			sourceTree = "<group>";
+		};
+		3C0736EAFEA8EA45F3EBAC4F /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				BC0AB0D9E427A171E1D0A16F /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		3F8A79D54D98A4B451A0A23C /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				BAA629B11DA98CF68C6DADEF /* OnboardingView.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		4F3F57A0BD2F2206C498840D /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				8A6B1EBA4D614BF2EEDC87D9 /* Destinations */,
+				0EFD5086DFAAC3B56453507B /* Home */,
+				845CDBE52AA7D081E2C96434 /* Models */,
+				3F8A79D54D98A4B451A0A23C /* Onboarding */,
+				BEE866422E44335C68714D29 /* Practice */,
+				B06FE0FE2722770CE9C45B33 /* Progress */,
+				2B3E0505C69F4DC3C8E61C17 /* Review */,
+				3C0736EAFEA8EA45F3EBAC4F /* Settings */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		54EFDC7C193E4C7BBA79E30D /* PromptiUITests */ = {
+			isa = PBXGroup;
+			children = (
+				FBFE03F759FD39CDEE52009A /* PromptiUITests.swift */,
+			);
+			path = PromptiUITests;
+			sourceTree = "<group>";
+		};
+		76EC08FDFCF80C5FFF281C4E /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				65AA3FC4C9C11A24A04C15D6 /* LandingRouteVisual.swift */,
+				08E5148F4013543DE1FD4A6D /* PromptiComponents.swift */,
+				62C312F2378189D5E19F29DC /* PromptiTheme.swift */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		7C7D99CF406D4F1DAFDC943A /* App */ = {
+			isa = PBXGroup;
+			children = (
+				F425E0F5281EE71398534F72 /* AppDependencies.swift */,
+				3C08230B8C6A8062EA6EC4E5 /* AppShellView.swift */,
+				B01F5D6FD0AC2F2EF72047CE /* PracticeFlow.swift */,
+				E09DD5A726E695B31D6E7AA3 /* PromptiApp.swift */,
+				AADC824339BC4E1E1044EE60 /* RootView.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		845CDBE52AA7D081E2C96434 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				CB64D385BA41B765F507187C /* ModelConnectionView.swift */,
+				1156C4CD9DFD49D5ED2C0326 /* OpenRouterCodeConnectionView.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		85BEBD943E09ED998731B8DA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				503960B686C5CC26B3DDA39C /* Localizable.xcstrings */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		8A6B1EBA4D614BF2EEDC87D9 /* Destinations */ = {
+			isa = PBXGroup;
+			children = (
+				77887390715BFC38C6C41415 /* DestinationPickerView.swift */,
+			);
+			path = Destinations;
+			sourceTree = "<group>";
+		};
+		91F134E08A10FA076AD9580B /* Prompti */ = {
+			isa = PBXGroup;
+			children = (
+				3457A1170F91255DE39F0D49 /* Assets.xcassets */,
+				7C7D99CF406D4F1DAFDC943A /* App */,
+				76EC08FDFCF80C5FFF281C4E /* DesignSystem */,
+				1F92680F7F3A9154EE4D5DB6 /* Domain */,
+				4F3F57A0BD2F2206C498840D /* Features */,
+				E41E37F2DB340C8D1D90EF13 /* Persistence */,
+				85BEBD943E09ED998731B8DA /* Resources */,
+				BC35B7391C801D430819B596 /* Services */,
+				DEF14D8BA355B0B5A1C075AB /* Supporting */,
+			);
+			path = Prompti;
+			sourceTree = "<group>";
+		};
+		95E510E132700CF150EBDF8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2758483F7E225FFEAE0EC02F /* Prompti.app */,
+				40B5ABE4620049A2879B7D13 /* PromptiTests.xctest */,
+				71D93DFA16FD86261A8CB480 /* PromptiUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AEAE4ACCA268702B00C82DB5 /* PromptiTests */ = {
+			isa = PBXGroup;
+			children = (
+				9696B831DD791D7541729F9B /* DomainTests.swift */,
+				EEC8E3A99365EBDEC00F181F /* OAuthTests.swift */,
+				A6DA56EDEDCA371AE3BC0A44 /* PersistenceTests.swift */,
+				F0A356E245EE9B74E020D1EE /* RemoteAIClientTests.swift */,
+			);
+			path = PromptiTests;
+			sourceTree = "<group>";
+		};
+		B06FE0FE2722770CE9C45B33 /* Progress */ = {
+			isa = PBXGroup;
+			children = (
+				F3BF558054813B6B5AEAF8B4 /* ProgressView.swift */,
+			);
+			path = Progress;
+			sourceTree = "<group>";
+		};
+		BC35B7391C801D430819B596 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				79706F9D8FD394ED6F6A57CE /* AppSettings.swift */,
+				607EA6B150A0C01EA68300F9 /* SecureStore.swift */,
+				2F6F42889F9DFF489C981C29 /* SpeechPracticeModel.swift */,
+				3AFC0B3ECF30F112C53DF133 /* AI */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		BEE866422E44335C68714D29 /* Practice */ = {
+			isa = PBXGroup;
+			children = (
+				45E8DF6A458E2E119D5DD048 /* GenerationView.swift */,
+				5C19293380032FA7673B679D /* PracticeSessionView.swift */,
+				2CD5DDEE4EADEF308B2E9F53 /* PracticeSetupView.swift */,
+			);
+			path = Practice;
+			sourceTree = "<group>";
+		};
+		DEF14D8BA355B0B5A1C075AB /* Supporting */ = {
+			isa = PBXGroup;
+			children = (
+				4BAB89DD81302C2A35694D1F /* Info.plist */,
+				24EA6F677269F4C2ABFEFA67 /* PrivacyInfo.xcprivacy */,
+				7C4CAF84D821A3D3BAA4B863 /* Prompti.entitlements */,
+			);
+			path = Supporting;
+			sourceTree = "<group>";
+		};
+		E41E37F2DB340C8D1D90EF13 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				4569C4DE4EA89BBF6322049D /* ModelContainerFactory.swift */,
+				BFBA6195A79BB16FC644409C /* PersistentModels.swift */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+		F99D5193702DE1E590A30716 = {
+			isa = PBXGroup;
+			children = (
+				91F134E08A10FA076AD9580B /* Prompti */,
+				AEAE4ACCA268702B00C82DB5 /* PromptiTests */,
+				54EFDC7C193E4C7BBA79E30D /* PromptiUITests */,
+				95E510E132700CF150EBDF8B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1CD95AF113A6F6ACA50A4A40 /* PromptiTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 95EB86D18AE89410A1BFDCB5 /* Build configuration list for PBXNativeTarget "PromptiTests" */;
+			buildPhases = (
+				482884D0A7A096357CBCF36D /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				758E13FE1864B023A6822BE7 /* PBXTargetDependency */,
+			);
+			name = PromptiTests;
+			packageProductDependencies = (
+			);
+			productName = PromptiTests;
+			productReference = 40B5ABE4620049A2879B7D13 /* PromptiTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		8DE79F68B1B557FA33BBB72E /* PromptiUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 84ABDD00ECFE34DDA1FBF136 /* Build configuration list for PBXNativeTarget "PromptiUITests" */;
+			buildPhases = (
+				83464B13BF4A2BED18719706 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8F5F919397F34810B605129D /* PBXTargetDependency */,
+			);
+			name = PromptiUITests;
+			packageProductDependencies = (
+			);
+			productName = PromptiUITests;
+			productReference = 71D93DFA16FD86261A8CB480 /* PromptiUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		E1B23BE50D4DB4FB2BA2120F /* Prompti */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9B50CEBD6DA0B01F4476D5C7 /* Build configuration list for PBXNativeTarget "Prompti" */;
+			buildPhases = (
+				7FF369390F2ABA62DD004549 /* Sources */,
+				8C7B67EBBE62F34018BCAFA4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Prompti;
+			packageProductDependencies = (
+			);
+			productName = Prompti;
+			productReference = 2758483F7E225FFEAE0EC02F /* Prompti.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2E6FA70D5060FEE1470A6598 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					8DE79F68B1B557FA33BBB72E = {
+						TestTargetID = E1B23BE50D4DB4FB2BA2120F;
+					};
+				};
+			};
+			buildConfigurationList = 622386A1F0CC9E1228743E33 /* Build configuration list for PBXProject "Prompti" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+				"zh-Hans",
+			);
+			mainGroup = F99D5193702DE1E590A30716;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 95E510E132700CF150EBDF8B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E1B23BE50D4DB4FB2BA2120F /* Prompti */,
+				1CD95AF113A6F6ACA50A4A40 /* PromptiTests */,
+				8DE79F68B1B557FA33BBB72E /* PromptiUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8C7B67EBBE62F34018BCAFA4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A5AF2F314EA30FF7DB326B78 /* Assets.xcassets in Resources */,
+				A344A1EC426C77C723B67C76 /* Localizable.xcstrings in Resources */,
+				E18CAFB1791B91F918FA41EE /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		482884D0A7A096357CBCF36D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0727BC327C2560D9EB1F5E98 /* DomainTests.swift in Sources */,
+				778745FD3AE92EF65D9C2626 /* OAuthTests.swift in Sources */,
+				C132340E0CC75CDC0EE1846A /* PersistenceTests.swift in Sources */,
+				82F0ED3D4374B6A9B22DBAE0 /* RemoteAIClientTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7FF369390F2ABA62DD004549 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EA150FE77B1FD1B232ED7560 /* AppDependencies.swift in Sources */,
+				D49C3BECE7E56175201812AD /* AppSettings.swift in Sources */,
+				F292EE9AC5B8DC41DD0EA635 /* AppShellView.swift in Sources */,
+				3ABF16B71E45D6397C76443A /* AppleQuestionProvider.swift in Sources */,
+				1592C5CF5DCDD1C4FA110409 /* ContentSafety.swift in Sources */,
+				6EC9DB8160B8362F3B250D69 /* DestinationModels.swift in Sources */,
+				F4C5B99706E4D53035AD990F /* DestinationPickerView.swift in Sources */,
+				5775CD2AA49EA93297EEAE08 /* GenerationError.swift in Sources */,
+				673938B215463BB707E95E99 /* GenerationView.swift in Sources */,
+				565260576ACB271CC31CAF51 /* HomeView.swift in Sources */,
+				2FA5EA0870F5118518FE5BC2 /* LandingRouteVisual.swift in Sources */,
+				8985ED017C0B03C1026172C2 /* ModelConnectionView.swift in Sources */,
+				BDC988347D09A440FA50C19E /* ModelContainerFactory.swift in Sources */,
+				2AAA9EDE7608F81865027297 /* OnboardingView.swift in Sources */,
+				B97DAB35AE7EEC3BBDF17E79 /* OpenRouterCodeConnectionView.swift in Sources */,
+				022DF2971EDBC9C9A613B0D6 /* OpenRouterOAuth.swift in Sources */,
+				C9477FC25E9C7FA81E435856 /* PersistentModels.swift in Sources */,
+				8A4F1B70C4E2CD551E3E96C8 /* PracticeFlow.swift in Sources */,
+				9D9134A03F6D4927743B71B9 /* PracticeMetrics.swift in Sources */,
+				C151310DDEF2240A584B76EA /* PracticeSessionView.swift in Sources */,
+				594EA4E133328179B9E7E2BA /* PracticeSetupView.swift in Sources */,
+				D8EEDAF3A0A40A89973BE85D /* ProgressView.swift in Sources */,
+				193E0CD775D5D81BE4394054 /* PromptBuilder.swift in Sources */,
+				B197630C6D19C7C163372F91 /* PromptiApp.swift in Sources */,
+				E9A42B8F6EA12AB9E06ADC2A /* PromptiComponents.swift in Sources */,
+				2DB2B20A78B39B49066A516F /* PromptiTheme.swift in Sources */,
+				5B893D514FEF54A141B6178F /* ProviderDetector.swift in Sources */,
+				B05092BDE91F3771A90C79A1 /* ProviderModels.swift in Sources */,
+				60AE713554DE8F38B098332A /* QuestionGenerationService.swift in Sources */,
+				A3AC562184D7360E00B76D77 /* RemoteAIClient.swift in Sources */,
+				D1870945EF817082D81A9592 /* ReviewView.swift in Sources */,
+				F1FF1ED1B190FAC4CECBCCB1 /* RootView.swift in Sources */,
+				000E8F1AD9B30CF433BB07D2 /* SecureStore.swift in Sources */,
+				22C46E45E6775EC62B615210 /* SettingsView.swift in Sources */,
+				CC3E8F0A241F9682298F251E /* SpeechAnswerEvaluator.swift in Sources */,
+				578BCBAAD48C12128BAF472B /* SpeechPracticeModel.swift in Sources */,
+				D69D2B26912B9CABBBA4F40A /* TrainingModels.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		83464B13BF4A2BED18719706 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BD9D2DBD3F23DEFAEC38D05D /* PromptiUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		758E13FE1864B023A6822BE7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E1B23BE50D4DB4FB2BA2120F /* Prompti */;
+			targetProxy = 5D47DB4CFABC658B0DC8423C /* PBXContainerItemProxy */;
+		};
+		8F5F919397F34810B605129D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E1B23BE50D4DB4FB2BA2120F /* Prompti */;
+			targetProxy = 8EE716D35B24139E2DC0AA5D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		00E4D6361649898C137841C3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.prompti.app.uitests;
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Prompti;
+			};
+			name = Release;
+		};
+		23B36A1FB38702952CEB4098 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.prompti.app.uitests;
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Prompti;
+			};
+			name = Debug;
+		};
+		2BB0D71CD74239ED543D44C4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		30FB540DF49DF68604639912 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Prompti/Supporting/Prompti.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Prompti/Supporting/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.prompti.app;
+				PRODUCT_NAME = Prompti;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		47348309B4FE3AED08E07631 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		BEF8B6CFBD57B68AC4BF0A46 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.prompti.app.tests;
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Prompti.app/Prompti";
+			};
+			name = Release;
+		};
+		DDABF49897B890558A700EC8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Prompti/Supporting/Prompti.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Prompti/Supporting/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.prompti.app;
+				PRODUCT_NAME = Prompti;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E896C1AB8711996394390341 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.prompti.app.tests;
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Prompti.app/Prompti";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		622386A1F0CC9E1228743E33 /* Build configuration list for PBXProject "Prompti" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2BB0D71CD74239ED543D44C4 /* Debug */,
+				47348309B4FE3AED08E07631 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		84ABDD00ECFE34DDA1FBF136 /* Build configuration list for PBXNativeTarget "PromptiUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				23B36A1FB38702952CEB4098 /* Debug */,
+				00E4D6361649898C137841C3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		95EB86D18AE89410A1BFDCB5 /* Build configuration list for PBXNativeTarget "PromptiTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E896C1AB8711996394390341 /* Debug */,
+				BEF8B6CFBD57B68AC4BF0A46 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		9B50CEBD6DA0B01F4476D5C7 /* Build configuration list for PBXNativeTarget "Prompti" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DDABF49897B890558A700EC8 /* Debug */,
+				30FB540DF49DF68604639912 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2E6FA70D5060FEE1470A6598 /* Project object */;
+}
