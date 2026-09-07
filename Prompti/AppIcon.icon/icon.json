@@ -1,0 +1,29 @@
+{
+  "fill" : {
+    "solid" : "srgb:0.025,0.58,0.45,1"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "fill-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "srgb:0.63922,0.94902,0.80784,1"
+              }
+            }
+          ],
+          "image-name" : "Prompti.svg",
+          "name" : "P · conversation"
+        }
+      ],
+      "name" : "Prompti"
+    }
+  ],
+  "supported-platforms" : {
+    "squares" : [
+      "iOS"
+    ]
+  }
+}

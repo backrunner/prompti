@@ -124,7 +124,7 @@ struct DestinationPickerView: View {
                         .accessibilityIdentifier("destination.\(destination.id)")
                     }
                 }
-                .padding(.horizontal, 16)
+                .padding(.horizontal, PromptiSpacing.page)
                 .padding(.top, 14)
                 .padding(.bottom, 36)
                 .frame(maxWidth: 760)
@@ -155,7 +155,7 @@ struct DestinationPickerView: View {
                     .accessibilityValue(Text(languageFilter == language.code ? "Selected" : "Not selected"))
                 }
             }
-            .padding(.horizontal, 16)
+            .padding(.horizontal, PromptiSpacing.page)
             .padding(.vertical, 10)
         }
         .scrollIndicators(.hidden)
@@ -194,11 +194,7 @@ private struct DestinationChoiceRow: View {
 
     var body: some View {
         HStack(spacing: 14) {
-            Image(systemName: destination.symbol)
-                .font(.system(size: 22, weight: .semibold))
-                .foregroundStyle(Color.promptInk)
-                .frame(width: 56, height: 56)
-                .background(isSelected ? Color.promptSun : Color.promptMint, in: Circle())
+            PromptiSymbolBadge(symbol: destination.symbol, size: 56)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(destination.city)
@@ -207,27 +203,27 @@ private struct DestinationChoiceRow: View {
                     .lineLimit(2)
                 Text(destination.country)
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.promptMuted)
                     .lineLimit(2)
                 Text(destination.languages.map(\.localName).joined(separator: " · "))
                     .font(.subheadline)
-                    .foregroundStyle(isSelected ? Color.promptMintDeep : Color.secondary)
+                    .foregroundStyle(isSelected ? Color.promptAction : Color.promptMuted)
                     .lineLimit(2)
             }
             Spacer(minLength: 4)
             Image(systemName: isSelected ? "checkmark.circle.fill" : "chevron.right")
                 .font(.system(size: 20, weight: .semibold))
-                .foregroundStyle(isSelected ? Color.promptMintDeep : Color.secondary)
+                .foregroundStyle(isSelected ? Color.promptAction : Color.promptMuted)
         }
         .padding(16)
         .background(
-            isSelected ? Color.promptMint.opacity(0.4) : Color.promptSky.opacity(0.12),
+            isSelected ? Color.promptSelection : Color.promptSurface,
             in: RoundedRectangle(cornerRadius: PromptiRadius.surface, style: .continuous)
         )
         .overlay {
             if isSelected {
                 RoundedRectangle(cornerRadius: PromptiRadius.surface, style: .continuous)
-                    .strokeBorder(Color.promptMintDeep.opacity(0.35), lineWidth: 1.5)
+                    .strokeBorder(Color.promptAccent, lineWidth: 1.5)
             }
         }
     }
@@ -238,11 +234,7 @@ private struct AddDestinationRow: View {
 
     var body: some View {
         HStack(spacing: 14) {
-            Image(systemName: "plus")
-                .font(.system(size: 20, weight: .bold))
-                .foregroundStyle(Color.promptInk)
-                .frame(width: 56, height: 56)
-                .background(Color.promptSun, in: Circle())
+            PromptiSymbolBadge(symbol: "plus", size: 56)
             VStack(alignment: .leading, spacing: 4) {
                 Text("Add \(query)")
                     .font(.title3.weight(.bold))
@@ -250,7 +242,7 @@ private struct AddDestinationRow: View {
                     .lineLimit(2)
                 Text("Works with any destination")
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.promptMuted)
             }
             Spacer(minLength: 4)
             Image(systemName: "arrow.up.right")
@@ -258,37 +250,24 @@ private struct AddDestinationRow: View {
                 .foregroundStyle(Color.promptAccent)
         }
         .padding(16)
-        .background(Color.promptSky.opacity(0.22), in: RoundedRectangle(cornerRadius: PromptiRadius.surface, style: .continuous))
-        .overlay {
-            RoundedRectangle(cornerRadius: PromptiRadius.surface, style: .continuous)
-                .strokeBorder(Color.promptMintDeep.opacity(0.24), style: StrokeStyle(lineWidth: 1.5, dash: [6, 5]))
-        }
+        .promptiSurface()
     }
 }
 
 private struct DestinationFilterChip: View {
-    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     let title: LocalizedStringKey
     let isSelected: Bool
 
     var body: some View {
-        let label = Text(title)
-            .font(.subheadline.weight(.semibold))
-            .foregroundStyle(isSelected ? Color.white : Color.primary)
-            .padding(.horizontal, 15)
-            .frame(minHeight: 44)
-
-        if #available(iOS 26.0, *), !reduceTransparency {
-            label.glassEffect(
-                .regular.tint(isSelected ? .promptMintDeep : nil).interactive(),
-                in: Capsule()
-            )
-        } else {
-            label.background(
-                isSelected ? Color.promptMintDeep : Color.promptSky.opacity(0.14),
-                in: Capsule()
-            )
+        HStack(spacing: 6) {
+            Image(systemName: "checkmark").opacity(isSelected ? 1 : 0)
+            Text(title)
         }
+        .font(.subheadline.weight(.semibold))
+        .foregroundStyle(isSelected ? Color.promptOnAction : Color.promptText)
+        .padding(.horizontal, 15)
+        .frame(minHeight: 44)
+        .background(isSelected ? Color.promptAction : Color.promptSurface, in: Capsule())
     }
 }
 
@@ -331,13 +310,13 @@ private struct CustomDestinationView: View {
                         VStack(alignment: .leading, spacing: 6) {
                             Image(systemName: "mappin.and.ellipse")
                                 .font(.system(size: 30, weight: .bold))
-                                .foregroundStyle(Color.promptCoral)
+                                .foregroundStyle(Color.promptAccent)
                             Text("Add destination")
-                                .font(.largeTitle.bold())
+                                .font(PromptiTypography.hero)
                                 .fontDesign(.rounded)
                             Text("City and country are all we need.")
                                 .font(.subheadline)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Color.promptMuted)
                         }
 
                         VStack(spacing: 12) {
@@ -360,9 +339,9 @@ private struct CustomDestinationView: View {
                                     .font(.subheadline.bold())
                                     .foregroundStyle(Color.promptAccent)
                             }
-                            .padding(.horizontal, 16)
+                            .padding(.horizontal, PromptiSpacing.page)
                             .frame(minHeight: 52)
-                            .background(Color.promptMint.opacity(0.24), in: RoundedRectangle(cornerRadius: PromptiRadius.compact))
+                            .background(Color.promptSelection, in: RoundedRectangle(cornerRadius: PromptiRadius.compact))
                             .transition(reduceMotion ? .opacity : .move(edge: .top).combined(with: .opacity))
                         }
                     }
@@ -381,7 +360,7 @@ private struct CustomDestinationView: View {
                     .frame(maxWidth: 680)
                     .padding(.horizontal, 24)
                     .padding(.vertical, 10)
-                    .background(.bar)
+                    .background(PromptiActionScrim())
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -405,7 +384,7 @@ private struct CustomDestinationView: View {
             .focused($focusedField, equals: field)
             .padding(.horizontal, 18)
             .frame(minHeight: 58)
-            .background(Color.promptSky.opacity(0.16), in: RoundedRectangle(cornerRadius: PromptiRadius.control, style: .continuous))
+            .background(Color.promptSurfaceRaised, in: RoundedRectangle(cornerRadius: PromptiRadius.control, style: .continuous))
     }
 
     private func save() {

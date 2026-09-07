@@ -44,6 +44,7 @@ struct DestinationCatalog: Sendable {
         .init(id: "attraction", title: "Attractions", symbol: "ticket.fill", context: "entry tickets, queues, opening information"),
         .init(id: "hotel", title: "Hotel", symbol: "bed.double.fill", context: "check-in, requests, checkout"),
         .init(id: "taxi", title: "Taxi", symbol: "car.fill", context: "destinations, pickup points, payment"),
+        .init(id: "delivery", title: "Food delivery", symbol: "takeoutbag.and.cup.and.straw.fill", context: "placing a food delivery order, delivery instructions and collecting an order"),
         .init(id: "emergency", title: "Help", symbol: "cross.case.fill", context: "lost items and getting urgent help")
     ]
 
@@ -133,9 +134,10 @@ struct DestinationCatalog: Sendable {
     }
 
     func makeCustomDestination(city: String, country: String) -> Destination? {
-        let city = city.trimmingCharacters(in: .whitespacesAndNewlines)
-        let country = country.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !city.isEmpty, !country.isEmpty else { return nil }
+        guard let city = try? ContentSafety.normalizeScene(city),
+              let country = try? ContentSafety.normalizeScene(country),
+              !Self.identifierComponent(city).isEmpty,
+              !Self.identifierComponent(country).isEmpty else { return nil }
 
         let isChina = Self.isChina(country)
         let fallbackLanguage = isChina

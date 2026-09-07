@@ -46,6 +46,14 @@ private struct ReviewStatus {
     let tint: Color
 }
 
+private struct ReviewPractice: Hashable {
+    let id = UUID()
+    let records: [QuestionRecord]
+
+    static func == (lhs: Self, rhs: Self) -> Bool { lhs.id == rhs.id }
+    func hash(into hasher: inout Hasher) { hasher.combine(id) }
+}
+
 struct ReviewView: View {
     @Binding var selectedTab: AppTab
     @Query(sort: \QuestionRecord.createdAt, order: .reverse) private var questions: [QuestionRecord]
@@ -56,23 +64,26 @@ struct ReviewView: View {
     @State private var languageFilter = "all"
     @State private var sceneFilter = "all"
     @State private var dateFilter = ReviewDateFilter.all
+    @State private var selectedPractice: ReviewPractice?
 
     private var attemptsByQuestion: [UUID: [AttemptRecord]] {
-        Dictionary(grouping: attempts, by: \AttemptRecord.questionID)
+        Dictionary(grouping: AttemptRecord.unique(in: attempts), by: \AttemptRecord.questionID)
     }
 
     private var modeQuestions: [QuestionRecord] {
-        questions.filter { question in
-            let history = attemptsByQuestion[question.id] ?? []
+        let grouped = attemptsByQuestion
+        return QuestionRecord.canonical(in: questions).filter { question in
+            let history = grouped[question.id] ?? []
+            let isReported = question.isQuarantined || history.contains { $0.result == .reported }
             switch mode {
             case .mistakes:
-                return !question.isQuarantined && history.contains { $0.result == .incorrect }
+                return !isReported && AttemptRecord.latestScoredResult(in: history) == .incorrect
             case .skipped:
-                return !question.isQuarantined && history.contains { $0.result == .skipped }
+                return !isReported && history.contains { $0.result == .skipped }
             case .history:
-                return !question.isQuarantined && !history.isEmpty
+                return !isReported && !history.isEmpty
             case .reported:
-                return history.contains { $0.result == .reported }
+                return isReported
             }
         }
     }
@@ -128,18 +139,18 @@ struct ReviewView: View {
                     }
                 }
                 .pickerStyle(.segmented)
-                .padding(.horizontal, 16)
+                .padding(.horizontal, PromptiSpacing.page)
 
                 if activeFilterCount > 0 {
                     HStack {
                         Label(activeFilterSummary, systemImage: "line.3.horizontal.decrease.circle.fill")
                             .font(.caption.weight(.semibold))
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Color.promptMuted)
                         Spacer()
                         Button("Clear", action: clearFilters)
                             .font(.caption.bold())
                     }
-                    .padding(.horizontal, 16)
+                    .padding(.horizontal, PromptiSpacing.page)
                 }
 
                 content
@@ -149,10 +160,13 @@ struct ReviewView: View {
         .navigationTitle("Review")
         .accessibilityIdentifier("review.root")
         .toolbar { filterToolbar }
+        .navigationDestination(item: $selectedPractice) { session in
+            PracticeSessionView(records: session.records)
+        }
         .safeAreaInset(edge: .bottom) {
             if !practiceableQuestions.isEmpty {
-                NavigationLink {
-                    PracticeSessionView(records: practiceableQuestions)
+                Button {
+                    selectedPractice = ReviewPractice(records: practiceableQuestions)
                 } label: {
                     Label(
                         mode == .mistakes ? "Practice all mistakes" : "Practice skipped questions",
@@ -162,10 +176,10 @@ struct ReviewView: View {
                 .buttonStyle(PrimaryActionButtonStyle())
                 .frame(maxWidth: 760)
                 .frame(maxWidth: .infinity)
-                .padding(.horizontal, 16)
+                .padding(.horizontal, PromptiSpacing.page)
                 .padding(.top, 10)
                 .padding(.bottom, 8)
-                .background(.bar)
+                .background(PromptiActionScrim())
             }
         }
     }
@@ -185,7 +199,7 @@ struct ReviewView: View {
                     selectedTab = .practice
                 }
                 .buttonStyle(PrimaryActionButtonStyle())
-                .padding(.horizontal, 16)
+                .padding(.horizontal, PromptiSpacing.page)
                 .frame(maxWidth: 560)
             }
         } else {
@@ -195,8 +209,8 @@ struct ReviewView: View {
                         if mode == .reported {
                             reviewRow(question)
                         } else {
-                            NavigationLink {
-                                PracticeSessionView(records: [question])
+                            Button {
+                                selectedPractice = ReviewPractice(records: [question])
                             } label: {
                                 reviewRow(question)
                             }
@@ -204,7 +218,7 @@ struct ReviewView: View {
                         }
                     }
                 }
-                .padding(.horizontal, 16)
+                .padding(.horizontal, PromptiSpacing.page)
                 .padding(.bottom, 96)
                 .frame(maxWidth: 760)
                 .frame(maxWidth: .infinity)
@@ -222,7 +236,7 @@ struct ReviewView: View {
                 Text(question.destinationName)
             }
             .font(.caption.weight(.semibold))
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Color.promptMuted)
 
             Text(question.prompt)
                 .font(.body.weight(.semibold))
@@ -237,16 +251,13 @@ struct ReviewView: View {
                 if mode != .reported {
                     Image(systemName: "chevron.right")
                         .font(.caption.bold())
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Color.promptMuted)
                 }
             }
         }
         .padding(18)
-        .foregroundStyle(Color.primary)
-        .background(
-            Color(.secondarySystemBackground),
-            in: RoundedRectangle(cornerRadius: PromptiRadius.surface)
-        )
+        .foregroundStyle(Color.promptText)
+        .promptiSurface()
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("review.question.\(question.id.uuidString)")
     }
@@ -299,7 +310,7 @@ struct ReviewView: View {
         }
         switch mode {
         case .mistakes:
-            return ("checkmark.seal", "No mistakes waiting", "Questions you miss will stay here, even after you master them later.")
+            return ("checkmark.seal", "No mistakes waiting", "Questions you miss wait here until you answer them correctly. All attempts remain in History.")
         case .skipped:
             return ("forward.fill", "No skipped questions", "Questions you skip will wait here when you are ready to return.")
         case .history:
@@ -315,20 +326,20 @@ struct ReviewView: View {
         switch mode {
         case .mistakes:
             if latest?.result == .correct {
-                return ReviewStatus(title: "Recently mastered", symbol: "checkmark.seal.fill", tint: .promptMintDeep)
+                return ReviewStatus(title: "Recently mastered", symbol: "checkmark.seal.fill", tint: .promptSuccess)
             }
-            return ReviewStatus(title: "Needs another look", symbol: "arrow.counterclockwise", tint: .promptCoral)
+            return ReviewStatus(title: "Needs another look", symbol: "arrow.counterclockwise", tint: .promptWarning)
         case .skipped:
-            return ReviewStatus(title: "Skipped earlier", symbol: "forward.fill", tint: .promptSky)
+            return ReviewStatus(title: "Skipped earlier", symbol: "forward.fill", tint: .promptMuted)
         case .history:
-            return ReviewStatus(title: "Practice this question", symbol: "play.fill", tint: .promptMintDeep)
+            return ReviewStatus(title: "Practice this question", symbol: "play.fill", tint: .promptAccent)
         case .reported:
             let reason = history.first(where: { $0.result == .reported })
                 .flatMap { ReportReason(rawValue: $0.reasonRaw) }?.title
             return ReviewStatus(
                 title: reason ?? "Removed from future practice",
                 symbol: "exclamationmark.shield.fill",
-                tint: .promptCoral
+                tint: .promptWarning
             )
         }
     }

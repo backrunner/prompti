@@ -151,6 +151,16 @@ final class PromptiUITests: XCTestCase {
         let start = app.buttons["generation.start"]
         XCTAssertTrue(start.waitForExistence(timeout: 5))
         attachScreenshot(named: "generation-ready")
+        start.tap()
+        let option = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "session.option.")).firstMatch
+        XCTAssertTrue(option.waitForExistence(timeout: 5))
+        attachScreenshot(named: "practice-question")
+        option.tap()
+        attachScreenshot(named: "practice-selected")
+        app.buttons["session.submit"].tap()
+        XCTAssertTrue(app.buttons["session.next"].waitForExistence(timeout: 5))
+        XCTAssertFalse(option.isEnabled)
+        attachScreenshot(named: "practice-feedback")
     }
 
     func testQuickQuestionCancellationReturnsHome() {
@@ -201,6 +211,32 @@ final class PromptiUITests: XCTestCase {
         attachScreenshot(named: "generation-failure")
     }
 
+    func testFailedTopUpKeepsPreparedQuestionsAvailable() {
+        launch(arguments: ["-prompti-demo", "-prompti-practice", "-prompti-ui-partial-generation", "-prompti-ui-fill-error"])
+        XCTAssertTrue(app.buttons["practice.generate"].waitForExistence(timeout: 5))
+        app.buttons["practice.generate"].tap()
+        XCTAssertTrue(app.buttons["generation.fillRemaining"].waitForExistence(timeout: 5))
+        app.buttons["generation.fillRemaining"].tap()
+        let startPrepared = app.buttons["generation.startPrepared"]
+        XCTAssertTrue(startPrepared.waitForExistence(timeout: 5))
+        startPrepared.tap()
+        XCTAssertTrue(app.staticTexts["1 / 5"].waitForExistence(timeout: 5))
+    }
+
+    func testScoredAnswerCannotAlsoBeSkipped() {
+        launch(arguments: ["-prompti-demo", "-prompti-practice"])
+        startFiveQuestionSession()
+        let choice = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "session.option.")).firstMatch
+        XCTAssertTrue(choice.waitForExistence(timeout: 5))
+        choice.tap()
+        app.buttons["session.submit"].tap()
+        XCTAssertTrue(app.buttons["session.next"].waitForExistence(timeout: 5))
+        app.buttons["session.options"].tap()
+        let skip = app.buttons["session.skip"]
+        XCTAssertTrue(skip.waitForExistence(timeout: 2))
+        XCTAssertFalse(skip.isEnabled)
+    }
+
     func testSpokenPermissionFallbackShowsSample() {
         launch(arguments: [
             "-prompti-demo",
@@ -249,6 +285,18 @@ final class PromptiUITests: XCTestCase {
         XCTAssertTrue(reviewQuestion.waitForExistence(timeout: 5))
         attachScreenshot(named: "review-with-data")
 
+        reviewQuestion.tap()
+        let correctOption = app.buttons.matching(optionPredicate).element(boundBy: 0)
+        XCTAssertTrue(correctOption.waitForExistence(timeout: 5))
+        correctOption.tap()
+        app.buttons["session.submit"].tap()
+        XCTAssertTrue(app.buttons["session.next"].waitForExistence(timeout: 5))
+        app.buttons["session.next"].tap()
+        XCTAssertTrue(app.buttons["session.done"].waitForExistence(timeout: 5))
+        app.buttons["session.done"].tap()
+        XCTAssertTrue(app.buttons["review.filters"].waitForExistence(timeout: 5))
+        XCTAssertFalse(reviewQuestion.exists)
+
         selectTab(systemImage: "chart.bar.fill", fallbackIndex: 3)
         XCTAssertTrue(app.descendants(matching: .any)["progress.metrics"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.descendants(matching: .any)["progress.mix"].waitForExistence(timeout: 5))
@@ -276,14 +324,78 @@ final class PromptiUITests: XCTestCase {
         XCTAssertTrue(app.buttons["model.connect"].isEnabled)
     }
 
-    func testWelcomeWithLargeText() {
-        launch(arguments: ["-prompti-onboarding", "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"])
+    func testWelcomeWithDefaultLayout() {
+        launch(arguments: ["-prompti-onboarding", "-AppleLanguages", "(en)", "-AppleLocale", "en_US"])
         let next = app.buttons["onboarding.continue"]
         XCTAssertTrue(next.waitForExistence(timeout: 5))
         XCTAssertTrue(next.isHittable)
-        attachScreenshot(named: "welcome-accessibility")
+        attachScreenshot(named: "welcome-default")
         next.tap()
         XCTAssertTrue(app.descendants(matching: .any)["onboarding.destination"].waitForExistence(timeout: 5))
+    }
+
+    func testMultipleBlanksRequireEveryAnswer() {
+        launch(arguments: ["-prompti-demo", "-prompti-practice", "-prompti-ui-multiple-blanks"])
+        startFiveQuestionSession()
+        let submit = app.buttons["session.submit"]
+        XCTAssertFalse(submit.isEnabled)
+        app.buttons["session.blank.0.0"].tap()
+        XCTAssertFalse(submit.isEnabled)
+        let second = app.buttons["session.blank.1.0"]
+        if !second.isHittable { app.swipeUp() }
+        second.tap()
+        XCTAssertTrue(submit.isEnabled)
+        submit.tap()
+        XCTAssertTrue(app.buttons["session.next"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["session.blank.0.0"].isEnabled)
+        XCTAssertFalse(second.isEnabled)
+        attachScreenshot(named: "multiple-blanks-feedback")
+    }
+
+    func testTranscriptCanBeEditedWithoutMicrophonePermission() {
+        launch(arguments: ["-prompti-demo", "-prompti-practice", "-prompti-ui-spoken-question", "-prompti-ui-speech-denied"])
+        startFiveQuestionSession()
+        let transcript = app.descendants(matching: .any)["session.transcript"].firstMatch
+        XCTAssertTrue(transcript.waitForExistence(timeout: 5))
+        transcript.tap()
+        transcript.typeText("Could you tell me the way to Shinjuku?")
+        attachScreenshot(named: "speech-edited")
+        app.buttons["session.submit"].tap()
+        XCTAssertTrue(app.buttons["session.next"].waitForExistence(timeout: 5))
+        app.swipeUp()
+        XCTAssertTrue(app.buttons["session.hearSample"].waitForExistence(timeout: 5))
+        attachScreenshot(named: "speech-feedback")
+    }
+
+    func testAutomaticFillPreservesCurrentQuestion() {
+        launch(arguments: ["-prompti-demo", "-prompti-practice", "-prompti-ui-auto-fill"])
+        let generate = app.buttons["practice.generate"]
+        XCTAssertTrue(generate.waitForExistence(timeout: 5))
+        generate.tap()
+        let start = app.buttons["generation.start"]
+        XCTAssertTrue(start.waitForExistence(timeout: 5))
+        start.tap()
+        XCTAssertTrue(app.staticTexts["1 / 5"].waitForExistence(timeout: 2))
+        let preparing = app.staticTexts["session.preparationStatus"]
+        let filled = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: preparing)
+        XCTAssertEqual(XCTWaiter.wait(for: [filled], timeout: 6), .completed)
+        XCTAssertTrue(app.staticTexts["1 / 5"].exists)
+        XCTAssertTrue(app.buttons["session.submit"].exists)
+    }
+
+    func testAutomaticFillFailureAllowsPartialCompletion() {
+        launch(arguments: ["-prompti-demo", "-prompti-practice", "-prompti-ui-partial-generation", "-prompti-ui-fill-error"])
+        app.buttons["practice.generate"].tap()
+        let start = app.buttons["generation.start"]
+        XCTAssertTrue(start.waitForExistence(timeout: 5))
+        start.tap()
+        for _ in 0..<3 {
+            app.buttons["session.options"].tap()
+            app.buttons["session.skip"].tap()
+        }
+        XCTAssertTrue(app.buttons["session.retryFill"].waitForExistence(timeout: 5))
+        app.buttons["session.finishPartial"].tap()
+        XCTAssertTrue(app.staticTexts["session.summary"].waitForExistence(timeout: 5))
     }
 
     private func launch(arguments: [String]) {

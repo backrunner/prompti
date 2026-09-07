@@ -21,10 +21,10 @@ private enum GenerationPhase: Equatable {
 
     var title: String {
         switch self {
-        case .preparing: "Packing your travel context"
+        case .preparing: "Preparing your conversation"
         case .connecting: "Creating useful questions"
         case .reviewing: "Checking safety and quality"
-        case .ready: "Ready for departure"
+        case .ready: "Ready to practice"
         case .failed: "This set could not be prepared"
         }
     }
@@ -38,7 +38,7 @@ private enum GenerationPhase: Equatable {
 
     var symbol: String {
         switch self {
-        case .preparing: "shippingbox.fill"
+        case .preparing: "text.bubble.fill"
         case .connecting: "questionmark.bubble.fill"
         case .reviewing: "checkmark.shield.fill"
         case .ready: "checkmark.seal.fill"
@@ -89,7 +89,7 @@ private enum GenerationStage: Int, CaseIterable, Identifiable {
 
     var symbol: String {
         switch self {
-        case .context: "shippingbox.fill"
+        case .context: "text.bubble.fill"
         case .questions: "text.bubble.fill"
         case .review: "checkmark.shield.fill"
         }
@@ -111,6 +111,8 @@ struct GenerationView: View {
     let request: TrainingRequest
     let onCancel: () -> Void
 
+    @State private var providerSnapshot: ProviderConfiguration?
+    @State private var jobID = UUID()
     @State private var phase = GenerationPhase.preparing
     @State private var records: [QuestionRecord] = []
     @State private var operationID = UUID()
@@ -134,7 +136,7 @@ struct GenerationView: View {
                                 .transition(.move(edge: .bottom).combined(with: .opacity))
                         }
                     }
-                    .padding(.horizontal, 16)
+                    .padding(.horizontal, PromptiSpacing.page)
                     .padding(.vertical, 12)
                     .frame(maxWidth: 640)
                     .frame(
@@ -161,7 +163,7 @@ struct GenerationView: View {
             actions
                 .frame(maxWidth: 640)
                 .frame(maxWidth: .infinity)
-                .padding(.horizontal, 16)
+                .padding(.horizontal, PromptiSpacing.page)
                 .padding(.top, 10)
                 .padding(.bottom, 8)
                 .background(PromptiActionScrim())
@@ -195,45 +197,33 @@ struct GenerationView: View {
                     Text("questions")
                 }
                 .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Color.promptMuted)
             }
 
-            FlightRouteVisual(
+            PracticeJourneyVisual(
                 progress: routeProgress,
                 destinationSymbol: request.destination.symbol,
-                isComplete: phase == .ready,
-                active: phase.isWorking
+                isComplete: phase == .ready
             )
-            .frame(height: dynamicTypeSize.isAccessibilitySize ? 150 : 174)
+            .frame(height: 112)
         }
         .padding(18)
-        .background(
-            LinearGradient(
-                colors: [Color.promptMint.opacity(0.34), Color.promptSky.opacity(0.18), Color.promptSun.opacity(0.12)],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            ),
-            in: RoundedRectangle(cornerRadius: PromptiRadius.hero, style: .continuous)
-        )
-        .overlay {
-            RoundedRectangle(cornerRadius: PromptiRadius.hero, style: .continuous)
-                .strokeBorder(Color.promptMintDeep.opacity(0.12))
-        }
+        .promptiHeroSurface()
     }
 
     private var status: some View {
         VStack(spacing: 10) {
             Image(systemName: phase.symbol)
                 .font(.title2.weight(.bold))
-                .foregroundStyle(phase.isFailed ? Color.promptCoral : Color.promptMintDeep)
+                .foregroundStyle(phase.isFailed ? Color.promptError : Color.promptAccent)
             Text(LocalizedStringKey(phase.title))
-                .font(.title2.bold())
+                .font(PromptiTypography.title)
                 .fontDesign(.rounded)
                 .multilineTextAlignment(.center)
                 .accessibilityIdentifier("generation.phase.\(phase.accessibilityID)")
             Text(statusDetail)
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Color.promptMuted)
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: 360)
         }
@@ -246,14 +236,7 @@ struct GenerationView: View {
         stageStripContent
             .frame(maxWidth: .infinity)
             .padding(12)
-            .background(
-                Color(.secondarySystemBackground).opacity(0.86),
-                in: RoundedRectangle(cornerRadius: PromptiRadius.surface, style: .continuous)
-            )
-            .overlay {
-                RoundedRectangle(cornerRadius: PromptiRadius.surface, style: .continuous)
-                    .strokeBorder(Color.primary.opacity(0.06))
-            }
+            .promptiSurface()
         .accessibilityElement(children: .contain)
     }
 
@@ -286,17 +269,17 @@ struct GenerationView: View {
         let localizedStatus = NSLocalizedString(status, comment: "Generation stage status")
         return HStack(spacing: 7) {
             Image(systemName: isComplete ? "checkmark.circle.fill" : stage.symbol)
-                .foregroundStyle(isComplete || isActive ? Color.promptMintDeep : Color.secondary)
+                .foregroundStyle(isComplete || isActive ? Color.promptAccent : Color.promptMuted)
             Text(LocalizedStringKey(stage.title))
                 .font(.caption.weight(isActive ? .bold : .semibold))
-                .foregroundStyle(isActive || isComplete ? Color.primary : Color.secondary)
+                .foregroundStyle(isActive || isComplete ? Color.promptText : Color.promptMuted)
         }
         .frame(maxWidth: dynamicTypeSize.isAccessibilitySize ? .infinity : nil, alignment: .leading)
         .accessibilityLabel("\(localizedTitle), \(localizedStatus)")
     }
 
     private var readyManifest: some View {
-        PromptiSectionSurface(tint: Color.promptMint.opacity(0.18)) {
+        PromptiSectionSurface() {
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
                     Label("Practice set", systemImage: "rectangle.stack.fill")
@@ -304,7 +287,7 @@ struct GenerationView: View {
                     Spacer()
                     Text("\(records.count) / \(request.count)")
                         .font(.headline.monospacedDigit())
-                        .foregroundStyle(Color.promptMintDeep)
+                        .foregroundStyle(Color.promptAccent)
                 }
 
                 Divider()
@@ -323,7 +306,7 @@ struct GenerationView: View {
                 if !request.scenes.isEmpty {
                     Label(localizedSceneList, systemImage: "map.fill")
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Color.promptMuted)
                         .lineLimit(2)
                 }
             }
@@ -340,7 +323,7 @@ struct GenerationView: View {
             Image(systemName: symbol)
         }
             .font(.subheadline.weight(.semibold))
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Color.promptMuted)
     }
 
     private var localizedSceneList: String {
@@ -355,7 +338,7 @@ struct GenerationView: View {
             switch phase {
             case .ready:
                 Button {
-                    practiceFlow.showSession(records)
+                    practiceFlow.showSession(records, request: request, configuration: providerSnapshot)
                 } label: {
                     Label {
                         HStack(spacing: 5) {
@@ -375,8 +358,16 @@ struct GenerationView: View {
                         run(.fillRemaining(request.count - records.count))
                     }
                     .buttonStyle(SecondaryActionButtonStyle())
+                    .accessibilityIdentifier("generation.fillRemaining")
                 }
             case .failed(let failure):
+                if !records.isEmpty {
+                    Button("Start prepared questions · \(records.count)") {
+                        practiceFlow.showSession(records, request: request, configuration: providerSnapshot)
+                    }
+                    .buttonStyle(PrimaryActionButtonStyle())
+                    .accessibilityIdentifier("generation.startPrepared")
+                }
                 recoveryButton(for: failure)
             case .preparing, .connecting, .reviewing:
                 Button("Cancel generation", role: .cancel, action: onCancel)
@@ -391,7 +382,7 @@ struct GenerationView: View {
         switch failure.recovery {
         case .retry:
             Button("Try again", systemImage: "arrow.clockwise") {
-                run(.initial)
+                run(remainingOperation)
             }
             .buttonStyle(PrimaryActionButtonStyle())
             .accessibilityIdentifier("generation.recovery.retry")
@@ -401,6 +392,12 @@ struct GenerationView: View {
             }
             .buttonStyle(PrimaryActionButtonStyle())
             .accessibilityIdentifier("generation.recovery.settings")
+            Button("Try again", systemImage: "arrow.clockwise") {
+                providerSnapshot = dependencies.settings.provider
+                run(remainingOperation)
+            }
+                .buttonStyle(SecondaryActionButtonStyle())
+                .accessibilityIdentifier("generation.recovery.retry")
         case .adjustPractice:
             Button("Adjust practice", systemImage: "slider.horizontal.3") {
                 _ = practiceFlow.cancel()
@@ -421,7 +418,7 @@ struct GenerationView: View {
         case .ready:
             records.count == request.count
                 ? String(localized: "All questions passed review.")
-                : String(localized: "\(records.count) of \(request.count) questions passed review. You can start now or try to add the rest.")
+                : String(localized: "Start with approved questions. The rest will be prepared as you practice.")
         case .failed(let failure):
             failure.message
         }
@@ -431,6 +428,10 @@ struct GenerationView: View {
         self.operation = operation
         shouldRunOperation = true
         operationID = UUID()
+    }
+
+    private var remainingOperation: GenerationOperation {
+        records.isEmpty ? .initial : .fillRemaining(max(1, request.count - records.count))
     }
 
     private func updateRouteProgress(for phase: GenerationPhase) {
@@ -453,14 +454,25 @@ struct GenerationView: View {
         do {
             try await Task.sleep(for: .milliseconds(250))
 
+            let configuration = providerSnapshot ?? dependencies.settings.provider
+            providerSnapshot = configuration
             var activeRequest = request
+            activeRequest.count = min(configuration.kind == .apple ? 2 : 3, request.count)
+            #if DEBUG
+            if ProcessInfo.processInfo.arguments.contains("-prompti-demo"), !ProcessInfo.processInfo.arguments.contains("-prompti-ui-auto-fill") { activeRequest.count = request.count }
+            #endif
             if case .fillRemaining(let count) = operation {
                 activeRequest.count = count
             }
 
+            let existing = try modelContext.fetch(FetchDescriptor<QuestionRecord>()).filter {
+                $0.destinationID == request.destination.id && $0.languageCode == request.language.code && $0.explanationLanguageCode == request.explanationLanguage.rawValue
+            }
+            activeRequest.previousPrompts = Array(existing.sorted { $0.createdAt < $1.createdAt }.suffix(30).map(\.prompt))
             let generated = try await dependencies.generation.generate(
                 activeRequest,
-                configuration: dependencies.settings.provider
+                configuration: configuration, jobID: jobID,
+                excluding: Set(existing.map { $0.question.contentSignature })
             ) { stage in
                 await MainActor.run {
                     phase = stage == .generating ? .connecting : .reviewing
@@ -468,7 +480,8 @@ struct GenerationView: View {
             }
             try Task.checkCancellation()
 
-            let saved = try save(generated, request: activeRequest)
+            let saved = try QuestionInventory.save(generated, request: activeRequest, context: modelContext)
+            guard !saved.isEmpty else { throw GenerationError.noApprovedQuestions }
             switch operation {
             case .initial:
                 records = saved
@@ -483,35 +496,17 @@ struct GenerationView: View {
         }
     }
 
-    private func save(_ questions: [GeneratedQuestion], request: TrainingRequest) throws -> [QuestionRecord] {
-        let fallbackScene = TravelScene(
-            id: "general",
-            title: "Travel basics",
-            symbol: "suitcase.rolling.fill",
-            context: "general travel communication"
-        )
-        var saved: [QuestionRecord] = []
-        for (offset, question) in questions.enumerated() {
-            let scene = request.scenes.isEmpty ? fallbackScene : request.scenes[offset % request.scenes.count]
-            let record = QuestionRecord(question: question, request: request, scene: scene)
-            modelContext.insert(record)
-            saved.append(record)
-        }
-        try modelContext.save()
-        return saved
-    }
-
     private func failure(for error: Error) -> GenerationFailure {
         guard let error = error as? GenerationError else {
             return GenerationFailure(message: error.localizedDescription, recovery: .retry)
         }
 
         switch error {
-        case .missingAPIKey, .invalidCredential, .modelUnavailable, .unsupportedProvider, .insufficientCredit, .invalidEndpoint:
+        case .missingAPIKey, .invalidCredential, .modelUnavailable, .unsupportedProvider, .insufficientCredit, .invalidEndpoint, .permissionDenied, .modelNotFound:
             return GenerationFailure(message: error.localizedDescription, recovery: .modelSettings)
-        case .invalidScene, .unsafeContent, .noApprovedQuestions:
+        case .invalidScene, .unsafeContent, .noApprovedQuestions, .refused, .truncatedOutput:
             return GenerationFailure(message: error.localizedDescription, recovery: .adjustPractice)
-        case .rateLimited, .providerUnavailable, .malformedResponse:
+        case .rateLimited, .providerUnavailable, .malformedResponse, .timedOut, .networkUnavailable:
             return GenerationFailure(message: error.localizedDescription, recovery: .retry)
         }
     }

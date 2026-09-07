@@ -43,6 +43,7 @@ struct AppShellView: View {
             }
         }
         .environment(practiceFlow)
+        .onDisappear { _ = practiceFlow.cancel() }
     }
 
     @ViewBuilder
@@ -62,8 +63,8 @@ struct AppShellView: View {
                 }
             }
         case .session(let id):
-            if let records = practiceFlow.records(for: id) {
-                PracticeSessionView(records: records) {
+            if let session = practiceFlow.session(for: id) {
+                PracticeSessionView(session: session) {
                     let origin = practiceFlow.finish()
                     if origin == .quickQuestion {
                         selectedTab = .today
@@ -82,12 +83,8 @@ private struct MissingPracticeView: View {
     let action: () -> Void
 
     var body: some View {
-        ContentUnavailableView {
-            Label("Practice unavailable", systemImage: "exclamationmark.triangle")
-        } description: {
-            Text("This practice set is no longer available.")
-        } actions: {
-            Button("Return to practice", action: action)
-        }
+        PromptiRecoveryView(symbol: "exclamationmark.triangle", title: "Practice unavailable",
+                            message: "This practice set is no longer available.",
+                            actionTitle: "Return to practice", action: action)
     }
 }

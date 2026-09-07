@@ -19,15 +19,15 @@ struct ProgressDashboardView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Query(sort: \AttemptRecord.createdAt) private var attempts: [AttemptRecord]
 
-    private var scored: [AttemptRecord] { attempts.filter { $0.result == .correct || $0.result == .incorrect } }
+    private var scored: [AttemptRecord] { AttemptRecord.scored(in: attempts) }
     private var correct: Int { scored.filter { $0.result == .correct }.count }
     private var accuracy: Int { scored.isEmpty ? 0 : Int((Double(correct) / Double(scored.count) * 100).rounded()) }
-    private var streakCount: Int { PracticeMetrics.consecutiveDayCount(dates: scored.map(\.createdAt)) }
+    private var streakCount: Int { PracticeMetrics.consecutiveDayCount(dayKeys: scored.map(\.localDayKey)) }
     private var dayProgress: [DayProgress] {
         let calendar = Calendar.current
         return (0..<7).reversed().compactMap { offset in
             guard let day = calendar.date(byAdding: .day, value: -offset, to: calendar.startOfDay(for: .now)) else { return nil }
-            let count = scored.count(where: { calendar.isDate($0.createdAt, inSameDayAs: day) })
+            let count = scored.count(where: { $0.localDayKey == PracticeMetrics.localDayKey(for: day) })
             return DayProgress(date: day, count: count)
         }
     }
@@ -60,9 +60,9 @@ struct ProgressDashboardView: View {
                         .frame(maxWidth: 560)
                     } else {
                         LazyVGrid(columns: metricColumns, spacing: 10) {
-                            MetricTile(value: "\(accuracy)%", label: "accuracy", symbol: "scope", tint: .promptMintDeep)
-                            MetricTile(value: "\(scored.count)", label: "answered", symbol: "text.book.closed.fill", tint: .promptSky)
-                            MetricTile(value: "\(streakCount)", label: "streak", symbol: "flame.fill", tint: .promptCoral)
+                            MetricTile(value: "\(accuracy)%", label: "accuracy", symbol: "scope", tint: .promptAccent)
+                            MetricTile(value: "\(scored.count)", label: "answered", symbol: "text.book.closed.fill", tint: .promptMuted)
+                            MetricTile(value: "\(streakCount)", label: "streak", symbol: "flame.fill", tint: .promptAccent)
                         }
                         .accessibilityIdentifier("progress.metrics")
 
@@ -73,7 +73,7 @@ struct ProgressDashboardView: View {
                                     x: .value("Day", day.date, unit: .day),
                                     y: .value("Questions", day.count)
                                 )
-                                .foregroundStyle(Color.promptMintDeep.gradient)
+                                .foregroundStyle(Color.promptAccent.gradient)
                                 .cornerRadius(4)
                             }
                             .chartYAxis { AxisMarks(position: .leading) { AxisGridLine(); AxisValueLabel() } }
@@ -81,7 +81,7 @@ struct ProgressDashboardView: View {
                             .accessibilityLabel("Questions answered during the last 7 days")
                         }
                         .padding(16)
-                        .background(Color(.systemBackground).opacity(0.86), in: RoundedRectangle(cornerRadius: PromptiRadius.surface))
+                        .promptiSurface()
 
                         practiceMix
                     }
@@ -89,7 +89,7 @@ struct ProgressDashboardView: View {
                     VStack(alignment: .leading, spacing: 12) {
                         SectionLabel("How Prompti counts")
                         InlineNotice(symbol: "forward.fill", text: "Skipped and reported questions never reduce your accuracy.")
-                        InlineNotice(symbol: "waveform", text: "Spoken answers with uncertain transcription are saved for practice but not scored.", tint: .promptSun)
+                        InlineNotice(symbol: "waveform", text: "Spoken answers with uncertain transcription are saved for practice but not scored.", tone: .neutral)
                     }
                 }
                 .padding(16)
@@ -114,7 +114,7 @@ struct ProgressDashboardView: View {
     private var practiceMix: some View {
         VStack(alignment: .leading, spacing: 12) {
             SectionLabel("Practice mix", subtitle: "Your most practiced languages and situations")
-            PromptiSectionSurface(tint: Color.promptSky.opacity(0.1)) {
+            PromptiSectionSurface() {
                 VStack(spacing: 18) {
                     distributionGroup("Languages", symbol: "character.bubble.fill", items: languageProgress)
                     Divider()
@@ -141,10 +141,10 @@ struct ProgressDashboardView: View {
                         Spacer()
                         Text("\(item.count)")
                             .font(.caption.bold().monospacedDigit())
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Color.promptMuted)
                     }
                     ProgressView(value: Double(item.count), total: Double(max(scored.count, 1)))
-                        .tint(Color.promptMintDeep)
+                        .tint(Color.promptAccent)
                 }
                 .accessibilityElement(children: .combine)
             }

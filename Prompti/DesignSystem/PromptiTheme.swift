@@ -1,13 +1,43 @@
 import SwiftUI
+import UIKit
 
+/// Brand roles, rather than decorative colors, are the only palette exposed to views.
+/// Keep AccentColor.colorset aligned with promptAccent (see the brand contract).
 extension Color {
-    static let promptMint = Color(red: 0.63, green: 0.93, blue: 0.82)
-    static let promptMintDeep = Color(red: 0.08, green: 0.52, blue: 0.42)
-    static let promptSky = Color(red: 0.56, green: 0.82, blue: 0.98)
-    static let promptCoral = Color(red: 0.98, green: 0.48, blue: 0.39)
-    static let promptSun = Color(red: 1.0, green: 0.78, blue: 0.25)
-    static let promptInk = Color(red: 0.09, green: 0.14, blue: 0.17)
     static let promptAccent = Color.accentColor
+    static let promptInk = Color(hex: 0x103F38)
+    static let promptCream = Color(hex: 0xF7FFEA)
+    static let promptMint = Color(hex: 0xA3F2CE)
+    static let promptCanvas = adaptive(light: 0xF5F6F0, dark: 0x101C18)
+    static let promptSurface = adaptive(light: 0xFFFFFF, dark: 0x1A2A24)
+    static let promptSurfaceRaised = adaptive(light: 0xEAF0E6, dark: 0x263B32)
+    static let promptHero = adaptive(light: 0xE3EDDE, dark: 0x203B2E)
+    static let promptText = adaptive(light: 0x173D33, dark: 0xEDF4EB)
+    static let promptMuted = adaptive(light: 0x52675B, dark: 0xB2C5B7)
+    static let promptBorder = adaptive(light: 0xCEDACB, dark: 0x3A5044)
+    // Always pair a filled action/selection with promptOnAction, including in dark mode.
+    static let promptAction = adaptive(light: 0x08765D, dark: 0xA3F2CE)
+    static let promptOnAction = adaptive(light: 0xF7FFEA, dark: 0x103F38)
+    static let promptSelection = adaptive(light: 0xDFEEE3, dark: 0x264538)
+    static let promptSuccess = adaptive(light: 0x176C47, dark: 0xA3F2CE)
+    static let promptSuccessSurface = adaptive(light: 0xE5F1E6, dark: 0x213C2C)
+    static let promptWarning = adaptive(light: 0x815710, dark: 0xE9C67D)
+    static let promptWarningSurface = adaptive(light: 0xF8EFD8, dark: 0x3C3221)
+    static let promptError = adaptive(light: 0xAE392F, dark: 0xFFAEA0)
+    static let promptErrorSurface = adaptive(light: 0xFAE9E4, dark: 0x442B27)
+
+    private init(hex: UInt32) {
+        self.init(.sRGB, red: Double((hex >> 16) & 255) / 255,
+                  green: Double((hex >> 8) & 255) / 255, blue: Double(hex & 255) / 255, opacity: 1)
+    }
+
+    private static func adaptive(light: UInt32, dark: UInt32) -> Color {
+        Color(uiColor: UIColor { traits in
+            let hex = traits.userInterfaceStyle == .dark ? dark : light
+            return UIColor(red: CGFloat((hex >> 16) & 255) / 255,
+                           green: CGFloat((hex >> 8) & 255) / 255, blue: CGFloat(hex & 255) / 255, alpha: 1)
+        })
+    }
 }
 
 enum PromptiRadius {
@@ -17,50 +47,44 @@ enum PromptiRadius {
     static let hero: CGFloat = 32
 }
 
-struct PromptiBackground: View {
-    @Environment(\.colorScheme) private var colorScheme
+enum PromptiSpacing {
+    static let inline: CGFloat = 8
+    static let related: CGFloat = 12
+    static let page: CGFloat = 20
+    static let section: CGFloat = 24
+}
 
+enum PromptiTypography {
+    static let hero = Font.system(.largeTitle, design: .rounded, weight: .bold)
+    static let title = Font.system(.title2, design: .rounded, weight: .bold)
+    static let section = Font.system(.title3, design: .rounded, weight: .semibold)
+}
+
+struct PromptiBackground: View {
     var body: some View {
-        GeometryReader { proxy in
-            ZStack(alignment: .topLeading) {
-                Color(.systemGroupedBackground)
-                Ellipse()
-                    .fill(Color.promptMint.opacity(colorScheme == .dark ? 0.09 : 0.22))
-                    .frame(width: proxy.size.width * 1.3, height: 420)
-                    .blur(radius: 90)
-                    .offset(x: -proxy.size.width * 0.4, y: -180)
-                Ellipse()
-                    .fill(Color.promptSky.opacity(colorScheme == .dark ? 0.06 : 0.18))
-                    .frame(width: proxy.size.width, height: 400)
-                    .blur(radius: 90)
-                    .offset(x: proxy.size.width * 0.45, y: 160)
-            }
-        }
-        .ignoresSafeArea()
-        .allowsHitTesting(false)
-        .accessibilityHidden(true)
+        Color.promptCanvas.ignoresSafeArea().allowsHitTesting(false).accessibilityHidden(true)
     }
 }
 
-/// Content surfaces stay quiet and readable underneath glass controls.
+/// Opaque reading surfaces are deliberately independent of the system glass controls.
 struct PromptiSurfaceModifier: ViewModifier {
     var radius: CGFloat = PromptiRadius.surface
     var tint: Color = .clear
-    @Environment(\.colorScheme) private var colorScheme
-    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
 
     func body(content: Content) -> some View {
         content
-            .background(Color(.secondarySystemGroupedBackground).opacity(reduceTransparency ? 1 : 0.86),
-                        in: .rect(cornerRadius: radius))
-            .background(tint, in: .rect(cornerRadius: radius))
+            .background {
+                RoundedRectangle(cornerRadius: radius, style: .continuous)
+                    .fill(Color.promptSurface)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: radius, style: .continuous).fill(tint)
+                    }
+            }
             .overlay {
                 RoundedRectangle(cornerRadius: radius, style: .continuous)
-                    .strokeBorder(LinearGradient(
-                        colors: [Color.white.opacity(colorScheme == .dark ? 0.12 : 0.9), Color.primary.opacity(0.035)],
-                        startPoint: .topLeading, endPoint: .bottomTrailing), lineWidth: 0.75)
+                    .strokeBorder(Color.promptBorder.opacity(0.65), lineWidth: 0.75)
+                    .allowsHitTesting(false)
             }
-            .shadow(color: .black.opacity(colorScheme == .dark ? 0.1 : 0.025), radius: 18, y: 7)
     }
 }
 
@@ -68,179 +92,125 @@ extension View {
     func promptiSurface(radius: CGFloat = PromptiRadius.surface, tint: Color = .clear) -> some View {
         modifier(PromptiSurfaceModifier(radius: radius, tint: tint))
     }
+
+    func promptiHeroSurface() -> some View {
+        background(Color.promptHero, in: .rect(cornerRadius: PromptiRadius.hero))
+            .overlay {
+                RoundedRectangle(cornerRadius: PromptiRadius.hero)
+                    .strokeBorder(Color.promptBorder.opacity(0.6), lineWidth: 0.75)
+                    .allowsHitTesting(false)
+            }
+    }
 }
 
-/// A reading scrim lets content scroll behind floating glass actions without
-/// letting labels from two layers overlap visually.
 struct PromptiActionScrim: View {
     var body: some View {
-        LinearGradient(stops: [
-            .init(color: Color(.systemGroupedBackground).opacity(0), location: 0),
-            .init(color: Color(.systemGroupedBackground).opacity(0.96), location: 0.35),
-            .init(color: Color(.systemGroupedBackground), location: 1)
-        ], startPoint: .top, endPoint: .bottom)
-        .ignoresSafeArea(edges: .bottom)
-        .allowsHitTesting(false)
+        Color.promptCanvas.ignoresSafeArea(edges: .bottom).allowsHitTesting(false)
     }
 }
 
 struct PrimaryActionButtonStyle: ButtonStyle {
-    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @Environment(\.isEnabled) private var isEnabled
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    @ViewBuilder
     func makeBody(configuration: Configuration) -> some View {
-        let label = configuration.label
+        configuration.label
             .font(.headline)
-            .foregroundStyle(isEnabled ? Color.white : Color.secondary)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 14)
+            .foregroundStyle(isEnabled ? Color.promptOnAction : Color.promptMuted)
+            .tint(isEnabled ? Color.promptOnAction : Color.promptMuted)
+            .padding(.horizontal, 18).padding(.vertical, 14)
             .frame(maxWidth: .infinity, minHeight: 52)
-            .contentShape(RoundedRectangle(cornerRadius: PromptiRadius.control, style: .continuous))
+            .background(isEnabled ? Color.promptAction : Color.promptSurfaceRaised,
+                        in: .rect(cornerRadius: PromptiRadius.control))
+            .contentShape(.rect(cornerRadius: PromptiRadius.control))
             .scaleEffect(configuration.isPressed && isEnabled ? 0.98 : 1)
-            .opacity(isEnabled ? (configuration.isPressed ? 0.86 : 1) : 0.62)
-            .animation(reduceMotion ? nil : .smooth(duration: 0.14), value: configuration.isPressed)
-
-        if #available(iOS 26.0, *), !reduceTransparency {
-            label.glassEffect(
-                .regular.tint(isEnabled ? Color.promptMintDeep : Color.secondary.opacity(0.18)).interactive(isEnabled),
-                in: RoundedRectangle(cornerRadius: PromptiRadius.control, style: .continuous)
-            )
-        } else {
-            label.background(
-                isEnabled ? Color.promptMintDeep : Color(.tertiarySystemFill),
-                in: RoundedRectangle(cornerRadius: PromptiRadius.control, style: .continuous)
-            )
-        }
+            .opacity(configuration.isPressed && isEnabled ? 0.88 : 1)
+            .animation(reduceMotion ? nil : .easeOut(duration: 0.16), value: configuration.isPressed)
     }
 }
 
 struct SecondaryActionButtonStyle: ButtonStyle {
-    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @Environment(\.isEnabled) private var isEnabled
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    @ViewBuilder
     func makeBody(configuration: Configuration) -> some View {
-        let label = configuration.label
-            .font(.subheadline.bold())
-            .foregroundStyle(Color.primary)
-            .padding(.horizontal, 14)
-            .padding(.vertical, 12)
+        configuration.label
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(isEnabled ? Color.promptAccent : Color.promptMuted)
+            .padding(.horizontal, 16).padding(.vertical, 12)
             .frame(maxWidth: .infinity, minHeight: 48)
-            .contentShape(RoundedRectangle(cornerRadius: PromptiRadius.control, style: .continuous))
-            .scaleEffect(configuration.isPressed && isEnabled ? 0.98 : 1)
-            .opacity(isEnabled ? 1 : 0.52)
-            .animation(reduceMotion ? nil : .smooth(duration: 0.14), value: configuration.isPressed)
-
-        if #available(iOS 26.0, *), !reduceTransparency {
-            label.glassEffect(
-                .regular.tint(Color.white.opacity(0.06)).interactive(isEnabled),
-                in: RoundedRectangle(cornerRadius: PromptiRadius.control, style: .continuous)
-            )
-        } else if reduceTransparency {
-            label
-                .background(Color.promptSky.opacity(0.24), in: RoundedRectangle(cornerRadius: PromptiRadius.control, style: .continuous))
-                .overlay {
-                    RoundedRectangle(cornerRadius: PromptiRadius.control, style: .continuous)
-                        .strokeBorder(Color.primary.opacity(0.1))
-                }
-        } else {
-            label
-                .background(Color.promptSky.opacity(0.18), in: RoundedRectangle(cornerRadius: PromptiRadius.control, style: .continuous))
-                .overlay {
-                    RoundedRectangle(cornerRadius: PromptiRadius.control, style: .continuous)
-                        .strokeBorder(Color.primary.opacity(0.08))
-                }
-        }
+            .background(Color.promptSurface, in: .rect(cornerRadius: PromptiRadius.control))
+            .overlay {
+                RoundedRectangle(cornerRadius: PromptiRadius.control)
+                    .strokeBorder(Color.promptBorder, lineWidth: 1)
+            }
+            .contentShape(.rect(cornerRadius: PromptiRadius.control))
+            .opacity(isEnabled ? (configuration.isPressed ? 0.72 : 1) : 0.6)
+            .animation(reduceMotion ? nil : .easeOut(duration: 0.16), value: configuration.isPressed)
     }
 }
 
+/// Reserve Liquid Glass for compact floating controls, navigation and toolbars.
 struct GlassIconButtonStyle: ButtonStyle {
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.isEnabled) private var isEnabled
 
-    @ViewBuilder
     func makeBody(configuration: Configuration) -> some View {
         let label = configuration.label
-            .frame(width: 48, height: 48)
-            .contentShape(Circle())
-            .scaleEffect(configuration.isPressed ? 0.96 : 1)
-            .animation(reduceMotion ? nil : .smooth(duration: 0.14), value: configuration.isPressed)
-
+            .foregroundStyle(Color.promptAccent)
+            .frame(width: 48, height: 48).contentShape(Circle())
+            .opacity(isEnabled ? (configuration.isPressed ? 0.7 : 1) : 0.45)
         if #available(iOS 26.0, *), !reduceTransparency {
-            label.glassEffect(.regular.tint(Color.promptMint.opacity(0.18)).interactive(), in: Circle())
-        } else if reduceTransparency {
-            label.background(Color.promptMint.opacity(0.28), in: Circle())
+            label.glassEffect(.regular.interactive(isEnabled), in: Circle())
         } else {
-            label.background(Color.promptMint.opacity(0.2), in: Circle())
+            label.background(Color.promptSurfaceRaised, in: Circle())
         }
     }
 }
 
 struct CompactGlassButtonStyle: ButtonStyle {
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-
-    @ViewBuilder
-    func makeBody(configuration: Configuration) -> some View {
-        let label = configuration.label
-            .font(.subheadline.bold())
-            .foregroundStyle(Color.primary)
-            .padding(.horizontal, 14)
-            .padding(.vertical, 10)
-            .frame(minHeight: 44)
-            .scaleEffect(configuration.isPressed ? 0.97 : 1)
-            .animation(reduceMotion ? nil : .smooth(duration: 0.14), value: configuration.isPressed)
-
-        if #available(iOS 26.0, *), !reduceTransparency {
-            label.glassEffect(.regular.tint(Color.promptMint.opacity(0.18)).interactive(), in: Capsule())
-        } else if reduceTransparency {
-            label.background(Color.promptMint.opacity(0.28), in: Capsule())
-        } else {
-            label.background(Color.promptMint.opacity(0.2), in: Capsule())
-        }
-    }
-}
-
-struct ProviderChoiceButtonStyle: ButtonStyle {
-    let tint: Color
-    let isSelected: Bool
     @Environment(\.isEnabled) private var isEnabled
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    @ViewBuilder
     func makeBody(configuration: Configuration) -> some View {
         let label = configuration.label
-            .scaleEffect(configuration.isPressed && isEnabled ? 0.985 : 1)
-            .opacity(isEnabled ? 1 : 0.46)
-            .animation(reduceMotion ? nil : .smooth(duration: 0.14), value: configuration.isPressed)
-
-        label
-            .background(
-                tint.opacity(isSelected ? 0.26 : 0.1),
-                in: .rect(cornerRadius: PromptiRadius.surface)
-            )
-            .overlay {
-                RoundedRectangle(cornerRadius: PromptiRadius.surface)
-                    .strokeBorder(isSelected ? tint.opacity(0.65) : Color.primary.opacity(0.08))
-            }
+            .font(.subheadline.weight(.semibold)).foregroundStyle(Color.promptAccent)
+            .padding(.horizontal, 14).padding(.vertical, 10)
+            .frame(minHeight: 44).contentShape(Capsule())
+            .opacity(isEnabled ? (configuration.isPressed ? 0.7 : 1) : 0.45)
+        if #available(iOS 26.0, *), !reduceTransparency {
+            label.glassEffect(.regular.interactive(isEnabled), in: Capsule())
+        } else {
+            label.background(Color.promptSurfaceRaised, in: Capsule())
+        }
     }
 }
 
 struct PromptiCredentialFieldModifier: ViewModifier {
     func body(content: Content) -> some View {
-        content
-            .font(.body)
-            .textFieldStyle(.plain)
-            .padding(.horizontal, 16)
-            .frame(minHeight: 52)
-            .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: PromptiRadius.compact, style: .continuous))
+        content.font(.body).foregroundStyle(Color.promptText).textFieldStyle(.plain)
+            .padding(.horizontal, 16).frame(minHeight: 52)
+            .background(Color.promptSurfaceRaised, in: .rect(cornerRadius: PromptiRadius.compact))
             .overlay {
-                RoundedRectangle(cornerRadius: PromptiRadius.compact, style: .continuous)
-                    .strokeBorder(Color.promptMintDeep.opacity(0.14))
+                RoundedRectangle(cornerRadius: PromptiRadius.compact)
+                    .strokeBorder(Color.promptBorder, lineWidth: 0.75)
             }
+    }
+}
+
+struct RecordingActionButtonStyle: ButtonStyle {
+    let isRecording: Bool
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(isRecording ? Color.promptError : Color.promptOnAction)
+            .padding(.horizontal, 16).padding(.vertical, 12)
+            .frame(minHeight: 44)
+            .background(isRecording ? Color.promptErrorSurface : Color.promptAction,
+                        in: .rect(cornerRadius: PromptiRadius.control))
+            .opacity(isEnabled ? (configuration.isPressed ? 0.75 : 1) : 0.5)
     }
 }
 
@@ -248,15 +218,13 @@ struct PromptiSectionSurface<Content: View>: View {
     let tint: Color
     @ViewBuilder let content: Content
 
-    init(tint: Color = Color.promptSky.opacity(0.12), @ViewBuilder content: () -> Content) {
+    init(tint: Color = .clear, @ViewBuilder content: () -> Content) {
         self.tint = tint
         self.content = content()
     }
 
     var body: some View {
-        content
-            .padding(16)
-            .promptiSurface(tint: tint)
+        content.padding(18).promptiSurface(tint: tint)
     }
 }
 
@@ -311,11 +279,11 @@ struct SectionLabel: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 3) {
             Text(LocalizedStringKey(title))
-                .font(.title3.weight(.bold))
+                .font(PromptiTypography.section)
             if let subtitle {
                 Text(LocalizedStringKey(subtitle))
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.promptMuted)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

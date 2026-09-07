@@ -51,18 +51,18 @@ struct PracticeSetupView: View {
                     } label: {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("Practice preferences").font(.headline)
-                            Text(LocalizedStringKey(difficulty.title)).font(.subheadline).foregroundStyle(.secondary)
+                            Text(LocalizedStringKey(difficulty.title)).font(.subheadline).foregroundStyle(Color.promptMuted)
                         }
                     }
                     .padding(.vertical, 20)
                     Divider()
                     countSection
                     if dependencies.settings.isPreGenerationEnabled {
-                        InlineNotice(symbol: "clock.arrow.circlepath", text: "Advance preparation is on and can use additional provider tokens.")
+                        InlineNotice(symbol: "clock.arrow.circlepath", text: "Advance preparation is on and can use additional provider tokens.", tone: .warning)
                             .padding(.vertical, 20)
                     }
                 }
-                .padding(.horizontal, 16)
+                .padding(.horizontal, PromptiSpacing.page)
                 .frame(maxWidth: 820)
                 .frame(maxWidth: .infinity)
             }
@@ -73,7 +73,7 @@ struct PracticeSetupView: View {
             startButtons
                 .frame(maxWidth: 820)
                 .frame(maxWidth: .infinity)
-                .padding(.horizontal, 16)
+                .padding(.horizontal, PromptiSpacing.page)
                 .padding(.top, 10)
                 .padding(.bottom, 8)
                 .background(PromptiActionScrim())
@@ -103,7 +103,9 @@ struct PracticeSetupView: View {
             self.questionCount = questionCount
         }
         .onChange(of: destinationID) { _, _ in
-            languageCode = destination.languages[0].code
+            if !destination.languages.contains(where: { $0.code == languageCode }) {
+                languageCode = destination.languages[0].code
+            }
             selectedSceneIDs = Set(dependencies.catalog.commonScenes.prefix(2).map(\.id))
         }
         .sensoryFeedback(.selection, trigger: difficulty)
@@ -141,10 +143,10 @@ struct PracticeSetupView: View {
     private var destinationHeading: some View {
         VStack(alignment: .leading, spacing: 3) {
             Text("Travel brief")
-                .font(.title3.bold())
+                .font(PromptiTypography.section)
             Text("\(destination.city), \(destination.country)")
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Color.promptMuted)
                 .accessibilityIdentifier("practice.destination.\(destination.id)")
         }
     }
@@ -157,12 +159,7 @@ struct PracticeSetupView: View {
     }
 
     private var destinationSymbol: some View {
-        Image(systemName: destination.symbol)
-            .font(.system(size: 22, weight: .semibold))
-            .foregroundStyle(Color.promptInk)
-            .frame(width: 52, height: 52)
-            .background(Color.promptSun, in: Circle())
-            .accessibilityHidden(true)
+        PromptiSymbolBadge(symbol: destination.symbol, size: 52)
     }
 
     private var languagePicker: some View {
@@ -174,7 +171,7 @@ struct PracticeSetupView: View {
         }
         .pickerStyle(.menu)
         .frame(maxWidth: .infinity, minHeight: 48)
-        .background(.background.opacity(0.8), in: .rect(cornerRadius: PromptiRadius.control))
+        .background(Color.promptSurface, in: .rect(cornerRadius: PromptiRadius.control))
     }
 
     private var explanationLanguagePicker: some View {
@@ -185,7 +182,7 @@ struct PracticeSetupView: View {
         }
         .pickerStyle(.menu)
         .frame(maxWidth: .infinity, minHeight: 48, alignment: .leading)
-        .background(.background.opacity(0.8), in: .rect(cornerRadius: PromptiRadius.control))
+        .background(Color.promptSurface, in: .rect(cornerRadius: PromptiRadius.control))
         .accessibilityHint("Choose the language used for translations and explanations")
     }
 
@@ -204,8 +201,7 @@ struct PracticeSetupView: View {
                 sceneGroup(
                     "Destination picks",
                     symbol: "mappin.and.ellipse",
-                    scenes: destination.localScenes,
-                    emphasizesDestination: true
+                    scenes: destination.localScenes
                 )
             }
 
@@ -229,13 +225,12 @@ struct PracticeSetupView: View {
     private func sceneGroup(
         _ title: String,
         symbol: String,
-        scenes: [TravelScene],
-        emphasizesDestination: Bool = false
+        scenes: [TravelScene]
     ) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             Label(LocalizedStringKey(title), systemImage: symbol)
                 .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Color.promptMuted)
 
             LazyVGrid(columns: sceneColumns, spacing: 10) {
                 ForEach(scenes) { scene in
@@ -245,8 +240,7 @@ struct PracticeSetupView: View {
                     } label: {
                         SceneChoiceButton(
                             scene: scene,
-                            isSelected: isSelected,
-                            emphasizesDestination: emphasizesDestination
+                            isSelected: isSelected
                         )
                     }
                     .buttonStyle(.plain)
@@ -273,7 +267,7 @@ struct PracticeSetupView: View {
                             }
                             .padding(12)
                             .background(
-                                item == difficulty ? Color.promptMint.opacity(0.24) : Color.secondary.opacity(0.08),
+                                item == difficulty ? Color.promptSelection : Color.promptSurface,
                                 in: .rect(cornerRadius: PromptiRadius.control)
                             )
                         }
@@ -303,9 +297,9 @@ struct PracticeSetupView: View {
                         Label(LocalizedStringKey(kind.title), systemImage: kind.symbol)
                             .font(.subheadline.bold())
                             .frame(maxWidth: .infinity, minHeight: 52)
-                            .foregroundStyle(isSelected ? Color.white : Color.primary)
+                            .foregroundStyle(isSelected ? Color.promptOnAction : Color.promptText)
                             .background(
-                                isSelected ? Color.promptMintDeep : Color.secondary.opacity(0.08),
+                                isSelected ? Color.promptAction : Color.promptSurface,
                                 in: .rect(cornerRadius: PromptiRadius.control)
                             )
                     }
@@ -335,7 +329,7 @@ struct PracticeSetupView: View {
     private var questionStepper: some View {
         Stepper(value: $questionCount, in: 3...20) {
             Text("\(questionCount) questions")
-                .font(.title3.bold())
+                .font(PromptiTypography.section)
                 .fontDesign(.rounded)
         }
     }
@@ -467,17 +461,19 @@ private struct CustomSceneView: View {
                         .textInputAutocapitalization(.sentences)
                     Text("\(input.count) / 80")
                         .font(.caption)
-                        .foregroundStyle(input.count > 80 ? Color.red : Color.secondary)
+                        .foregroundStyle(input.count > 80 ? Color.promptError : Color.promptMuted)
                 }
                 Section {
                     Text("Prompti asks your selected model to classify the scene before it is saved. Political persuasion, sexual content and prompt injection are rejected.")
                         .font(.footnote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Color.promptMuted)
                 }
                 if let errorMessage {
-                    Section { Text(errorMessage).foregroundStyle(.red) }
+                    Section { InlineNotice(symbol: "exclamationmark.triangle", text: errorMessage, tone: .error) }
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(PromptiBackground())
             .navigationTitle("Custom scene")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -509,6 +505,7 @@ private struct CustomSceneView: View {
         } catch is CancellationError {
             return
         } catch {
+            modelContext.rollback()
             errorMessage = error.localizedDescription
         }
         isReviewing = false

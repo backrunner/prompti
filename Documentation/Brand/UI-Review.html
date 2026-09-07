@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-Hans">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prompti · 实际 UI 验收</title>
+<style>
+  :root{font-family:system-ui,-apple-system,sans-serif;color:#173d33;background:#f5f6f0;color-scheme:light}
+  *{box-sizing:border-box}body{margin:0}main{max-width:1320px;margin:auto;padding:40px 24px 64px}
+  header{max-width:800px}.brand{display:flex;align-items:center;gap:10px;font-size:24px;font-weight:750}
+  .brand img{height:35px;width:30px}h1{font-size:clamp(28px,4vw,44px);letter-spacing:-.04em;margin:22px 0 12px}
+  p{line-height:1.65;color:#52675b}a{color:#08765d;text-underline-offset:3px}
+  nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:28px 0 20px}
+  button{font:inherit;font-weight:650;border:1px solid #cedacb;border-radius:18px;padding:12px 24px;background:white;color:#173d33;cursor:pointer;min-height:48px}
+  button[aria-pressed=true]{background:#08765d;color:#f7ffea;border-color:#08765d}
+  button:focus-visible,a:focus-visible{outline:3px solid #08765d;outline-offset:4px}
+  #count{font-size:14px;color:#52675b;margin-left:8px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:28px 20px}
+  figure{margin:0;background:white;border:1px solid #cedacb;border-radius:20px;padding:12px}
+  figure a{display:block}figure img{display:block;width:100%;height:auto;border-radius:10px;background:#eaf0e6}
+  figcaption{padding:14px 3px 6px;font-size:15px;font-weight:650}
+  footer{margin-top:36px;border-top:1px solid #cedacb;padding-top:16px;font-size:14px;line-height:1.7;color:#52675b}
+  @media(max-width:540px){main{padding:24px 16px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 10px}figure{padding:6px;border-radius:14px}figcaption{font-size:13px;padding:10px 2px 4px}}
+</style>
+<main>
+  <header>
+    <div class="brand"><img src="Prompti-Mark.svg" alt="">Prompti</div>
+    <h1>同一个品牌，贯穿每次练习。</h1>
+    <p>以下均为实际 App 的模拟器截图：iPhone 17e · iOS 27.0 · 默认字号 · 2026-09-08。中文界面为主，另含英文欢迎页。点击图片查看原始尺寸。</p>
+    <p><a href="UI-Review.md">验收记录与测试范围</a> · <a href="../../.agents/13-brand-and-ui-guidelines.md">品牌与 UI 开发规范</a> · <a href="Preview.html">图标与商店排版示意</a></p>
+  </header>
+  <nav aria-label="截图外观">
+    <button type="button" data-mode="Light" aria-pressed="true">浅色</button>
+    <button type="button" data-mode="Dark" aria-pressed="false">深色</button>
+    <span id="count" role="status"></span>
+  </nav>
+  <div class="grid" id="screens"></div>
+  <noscript><p>请通过 <a href="UI-Review.md">验收记录</a> 查看截图链接。</p></noscript>
+  <footer>画面使用 Demo 测试数据。浅深色分别展示已采集的状态，覆盖范围不完全相同。这里的截图与 Icon Composer 输出分开保存；未将商店排版示意当作实际上架页面。真机、iPad、旧系统与真实账户授权等未完成项见验收记录。</footer>
+</main>
+<script>
+  const labels={
+    'welcome-default':'欢迎 · English','onboarding-welcome':'欢迎 · 简体中文',
+    'home':'今日','onboarding-destination':'引导 · 目的地','onboarding-language':'引导 · 语言',
+    'onboarding-model':'引导 · 模型连接','onboarding-preferences':'引导 · 偏好',
+    'destination-picker':'选择目的地','practice-setup':'练习配置',
+    'generation-working':'生成中','generation-ready':'准备完成','generation-partial':'部分题目已准备',
+    'generation-failure':'生成失败','practice-question':'选择题 · 未选',
+    'practice-selected':'选择题 · 已选','practice-feedback':'选择题 · 正确反馈',
+    'multiple-blanks-feedback':'多空完形 · 正确反馈','speech-edited':'口语 · 手动编辑',
+    'speech-feedback':'口语 · 未评分反馈','speech-fallback':'口语 · 权限降级',
+    'practice-summary':'练习完成','review-empty':'复习 · 空状态','review-with-data':'复习 · 待复习题目',
+    'progress-empty':'进度 · 空状态','progress-with-data':'进度 · 有数据','settings':'设置'
+  };
+  const captures={
+    Light:['welcome-default','home','destination-picker','practice-setup','generation-working','generation-ready','generation-partial','generation-failure','practice-question','practice-selected','practice-feedback','multiple-blanks-feedback','speech-fallback','practice-summary','settings'],
+    Dark:['onboarding-welcome','welcome-default','home','onboarding-destination','onboarding-language','onboarding-model','onboarding-preferences','practice-setup','generation-working','generation-ready','practice-question','practice-selected','practice-feedback','multiple-blanks-feedback','speech-edited','speech-feedback','review-empty','review-with-data','progress-empty','progress-with-data','settings']
+  };
+  function render(mode){
+    document.querySelectorAll('[data-mode]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.mode===mode)));
+    const grid=document.getElementById('screens');grid.replaceChildren();
+    for(const name of captures[mode]){
+      const figure=document.createElement('figure'),link=document.createElement('a'),img=document.createElement('img'),caption=document.createElement('figcaption');
+      link.href=`UIScreenshots/${mode}/${name}.png`;
+      img.src=link.href;img.alt=`${mode==='Light'?'浅色':'深色'} · ${labels[name]} · 实际 App 截图`;
+      img.width=1170;img.height=2532;img.loading='lazy';
+      caption.textContent=labels[name];link.append(img);figure.append(link,caption);grid.append(figure);
+    }
+    document.getElementById('count').textContent=`${captures[mode].length} 个已采集状态`;
+  }
+  document.querySelectorAll('[data-mode]').forEach(button=>button.addEventListener('click',()=>render(button.dataset.mode)));
+  render('Light');
+</script>
+</html>

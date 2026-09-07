@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prompti · 品牌与 App 图标</title>
+<style>
+  * { box-sizing: border-box; }
+  :root { color-scheme: light; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif; color: #103f38; background: #f4f5ef; }
+  body { margin: 0; padding: 42px 56px 28px; max-width: 1560px; margin-inline: auto; }
+  header, .row, .store-result, .sizes, .variants, footer { display: flex; align-items: center; }
+  header { justify-content: space-between; margin-bottom: 30px; }
+  .brand { display: flex; gap: 11px; align-items: center; font-size: 25px; font-weight: 700; letter-spacing: -1px; }
+  .brand img { width: 26px; height: 32px; }
+  .eyebrow { font-size: 11px; letter-spacing: 2px; font-weight: 600; color: #64766e; }
+  .layout { display: grid; grid-template-columns: 1.07fr 1fr; gap: 24px; }
+  .hero, .store { border: 1px solid #dee5db; border-radius: 28px; padding: 32px; }
+  .hero { background: #e6eee2; display: flex; align-items: center; gap: 32px; min-height: 340px; }
+  .hero-icon { width: 238px; height: 238px; }
+  h1 { font-size: 46px; line-height: 1.06; letter-spacing: -2px; margin: 12px 0 18px; }
+  .hero p { color: #4e6c60; line-height: 1.8; font-size: 14px; margin: 0; }
+  .store { background: #fff; }
+  .store .eyebrow { margin-bottom: 22px; }
+  .store-result { gap: 16px; }
+  .store-result img { width: 64px; height: 64px; }
+  .app-title { font-size: 19px; font-weight: 600; letter-spacing: -.4px; margin-bottom: 5px; color: #192521; }
+  .subtitle { font-size: 12px; color: #718078; }
+  .get { margin-left: auto; padding: 7px 23px; border-radius: 24px; background: #f1f3f7; color: #007aff; font-size: 14px; font-weight: 600; }
+  .divider { height: 1px; background: #edf0eb; margin: 24px 0; }
+  .product img { width: 100px; height: 100px; }
+  .product .app-title { font-size: 25px; }
+  .product .get { display: inline-block; margin-top: 16px; padding: 5px 25px; background: #007aff; color: white; font-size: 13px; }
+  .section-title { display: flex; align-items: baseline; justify-content: space-between; margin: 30px 0 16px; }
+  .section-title h2 { font-size: 15px; font-weight: 600; margin: 0; }
+  .section-title span { font-size: 11px; color: #748176; }
+  .variants { gap: 14px; }
+  figure { margin: 0; }
+  .variant { flex: 1; text-align: center; border: 1px solid #e0e5dc; border-radius: 20px; background: #eaeee7; padding: 20px 10px 14px; }
+  .variant.dark { background: #142923; border-color: #142923; color: #c4ddcf; }
+  .variant img { width: 88px; height: 88px; display: block; margin: 0 auto 12px; }
+  figcaption { font-size: 11px; }
+  .bottom { display: grid; grid-template-columns: 1.45fr 1fr; gap: 24px; }
+  .sizes { justify-content: space-around; align-items: flex-end; min-height: 162px; padding: 15px 16px 12px; border-radius: 20px; background: white; border: 1px solid #e0e5dc; }
+  .sizes figure { text-align: center; }
+  .sizes img { display: block; margin: 0 auto 10px; }
+  .sizes figcaption { color: #718078; font-size: 10px; }
+  .lockups { display: flex; height: 162px; border: 1px solid #e0e5dc; border-radius: 20px; overflow: hidden; }
+  .lockup { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; background: #e4ebdf; font-size: 25px; font-weight: 700; letter-spacing: -.8px; }
+  .lockup.dark { color: #f7ffea; background: #103f38; }
+  .lockup img { width: 34px; height: 40px; }
+  footer { justify-content: space-between; margin-top: 24px; color: #7b877d; font-size: 10px; line-height: 1.6; }
+  a { color: inherit; text-decoration-color: #9bab9c; }
+  @media(max-width:1000px) { body { padding: 24px; } .layout,.bottom { grid-template-columns: 1fr; } .hero { justify-content: center; } .variants { flex-wrap: wrap; } .variant { min-width: 28%; } }
+  @media(max-width:520px) { .hero { flex-direction: column; align-items: flex-start; } .hero-icon { width: 180px; height: 180px; } h1 { font-size: 40px; } .sizes { flex-wrap: wrap; gap: 18px; } .lockup { font-size: 22px; } header .eyebrow { display: none; } }
+</style>
+<header>
+  <div class="brand"><img src="Prompti-Mark.svg" alt="">Prompti</div>
+  <div class="eyebrow">BRAND & APP ICON · 2026.09</div>
+</header>
+<main>
+  <div class="layout">
+    <section class="hero">
+      <img class="hero-icon" src="Previews/Default.png" alt="Prompti：翡翠绿底色，奶白色 P 与对话气泡轮廓">
+      <div><div class="eyebrow">SAY HELLO TO THE WORLD</div><h1>从开口，<br>到远方。</h1><p>一个 P，一次对话。<br>让每一段旅程，从自信表达开始。</p></div>
+    </section>
+    <section class="store">
+      <div class="eyebrow">APP STORE · 搜索列表 / 产品页示意</div>
+      <div class="store-result"><img src="Previews/Default.png" alt="搜索结果中的图标"><div><div class="app-title">Prompti</div><div class="subtitle">旅行语言练习</div></div><span class="get">获取</span></div>
+      <div class="divider"></div>
+      <div class="store-result product"><img src="Previews/Default.png" alt="产品页中的图标"><div><div class="app-title">Prompti</div><div class="subtitle">为下一段旅程，练习开口</div><span class="get">获取</span></div></div>
+    </section>
+  </div>
+  <div class="section-title"><h2>一种轮廓，适应每一种外观</h2><span>Icon Composer · iOS 26 系统渲染</span></div>
+  <section class="variants" aria-label="系统外观">
+    <figure class="variant"><img src="Previews/Default.png" alt="默认"><figcaption>默认 · 翡翠绿</figcaption></figure>
+    <figure class="variant dark"><img src="Previews/Dark.png" alt="深色"><figcaption>深色 · 薄荷绿</figcaption></figure>
+    <figure class="variant"><img src="Previews/TintedLight.png" alt="浅色着色"><figcaption>着色 · 浅色</figcaption></figure>
+    <figure class="variant dark"><img src="Previews/TintedDark.png" alt="深色着色"><figcaption>着色 · 深色</figcaption></figure>
+    <figure class="variant"><img src="Previews/ClearLight.png" alt="浅色透明"><figcaption>透明 · 浅色</figcaption></figure>
+    <figure class="variant dark"><img src="Previews/ClearDark.png" alt="深色透明"><figcaption>透明 · 深色</figcaption></figure>
+  </section>
+  <div class="bottom">
+    <section><div class="section-title"><h2>缩小，仍然一眼认出</h2><span>按 1 CSS px ≈ 1 pt 排列</span></div><div class="sizes">
+      <figure><img src="Previews/Default.png" width="20" height="20" alt="20pt"><figcaption>20 pt</figcaption></figure>
+      <figure><img src="Previews/Default.png" width="29" height="29" alt="29pt"><figcaption>29 pt</figcaption></figure>
+      <figure><img src="Previews/Default.png" width="40" height="40" alt="40pt"><figcaption>40 pt</figcaption></figure>
+      <figure><img src="Previews/Default.png" width="60" height="60" alt="60pt"><figcaption>60 pt</figcaption></figure>
+      <figure><img src="Previews/Default.png" width="80" height="80" alt="80pt"><figcaption>80 pt</figcaption></figure>
+      <figure><img src="Previews/Default.png" width="120" height="120" alt="120pt"><figcaption>120 pt</figcaption></figure>
+    </div></section>
+    <section><div class="section-title"><h2>离开图标，也是品牌</h2><span>单色矢量 · 字标组合示意</span></div><div class="lockups"><div class="lockup"><img src="Prompti-Mark.svg" alt="">Prompti</div><div class="lockup dark"><img src="Prompti-Mark-Reversed.svg" alt="">Prompti</div></div></section>
+  </div>
+</main>
+<footer><span>商店排版为设计示意，不代表已发布页面。系统光效与着色会随版本、壁纸和用户设置变化。</span><a href="README.md">品牌资源与生成说明 ↗</a></footer>
+</html>

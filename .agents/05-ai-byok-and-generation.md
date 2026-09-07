@@ -172,3 +172,16 @@ Adapter 不把所有非 2xx 都映射成“网络错误”。UI 根据错误提�
 - 本地“断开”删除当前配置对应的密钥；远程撤销需在服务商账号操作。没有引入 Prompti 后端、client secret 或密钥同步。
 - 官方依据：https://openrouter.ai/docs/guides/overview/auth/oauth
 - 自动化覆盖 PKCE 向量、回调/state 错误、换码请求、隔离边界和 Chat 响应解析；真实账号授权与额度检查需要使用测试账号做设备端联调。
+
+## 2026-09-06：协议复核修正
+
+- JSON mode 和 Anthropic 文本模式均显式发送序列化后的 JSON Schema；OpenAI Chat 在结构化与 JSON mode 中均发送 `store: false`。
+- 生成输出上限为 12,000 tokens，审核/探测为 4,000 tokens；OpenAI Chat 使用 `max_completion_tokens`，兼容接口使用 `max_tokens`，Responses 使用 `max_output_tokens`。兼容服务是否接受这些字段仍需真实账号验证。
+- HTTP 凭据请求不跟随重定向；读取响应时执行 2 MB 上限。URL 拒绝用户信息、query/fragment、常见 IPv4 非公网地址及 IPv6 本地/映射地址。DNS 解析到私网及 rebinding 防护尚未完成，不能宣称已全面防 SSRF。
+- 认证、权限、模型/端点不存在、余额不足、限流、网络、超时、拒答和输出截断分别映射为可恢复错误；URLSession 取消保持取消语义。
+- 四档难度传递具体长度、词汇、句式和干扰项约束；输出仍需人工语言质量校准，不能把 prompt 约束视为已经通过难度评测。
+- 官方核对依据：[Structured Outputs / JSON mode](https://developers.openai.com/api/docs/guides/structured-outputs)。本轮未调用收费 Provider。
+
+## 2026-09-07：能力补齐
+
+已接入逐题审核、口语语义评估、小批次生成/边练边补、有界重试和本机实际请求/token 用量。 最新实现范围、测试结果和真实环境边界见 [能力补齐记录](12-capabilities-2026-09-07.md)。

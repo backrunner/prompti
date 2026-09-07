@@ -23,7 +23,7 @@ struct RemoteAIClientTests {
         let client = makeClient(.openAIChat)
         let schema: [String: Any] = ["type": "object"]
 
-        let structured = client.chatBody(
+        let structured = try client.chatBody(
             system: "system",
             user: "user",
             schemaName: "test",
@@ -34,7 +34,7 @@ struct RemoteAIClientTests {
         #expect(structuredFormat["type"] as? String == "json_schema")
         #expect(structured["store"] as? Bool == false)
 
-        let json = client.chatBody(
+        let json = try client.chatBody(
             system: "system",
             user: "user",
             schemaName: "test",
@@ -52,7 +52,7 @@ struct RemoteAIClientTests {
             ),
             apiKey: "test-key"
         )
-        let compatibleBody = compatible.chatBody(
+        let compatibleBody = try compatible.chatBody(
             system: "system",
             user: "user",
             schemaName: "test",

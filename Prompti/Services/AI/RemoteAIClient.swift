@@ -1,4 +1,5 @@
 import Foundation
+import Darwin
 
 struct QuestionBatchPayload: Codable, Sendable {
     var questions: [QuestionPayload]
@@ -12,6 +13,10 @@ struct QuestionPayload: Codable, Sendable {
     var translation: String
     var explanation: String
     var sampleAnswer: String?
+    var sceneID: String? = nil
+    var cloze: ClozeContent? = nil
+    var rubric: SpeechRubric? = nil
+    var sourceFactIDs: [String]? = nil
 
     var question: GeneratedQuestion? {
         guard let kind = QuestionKind(rawValue: type) else { return nil }
@@ -22,7 +27,8 @@ struct QuestionPayload: Codable, Sendable {
             correctAnswer: correctAnswer,
             translation: translation,
             explanation: explanation,
-            sampleAnswer: sampleAnswer
+            sampleAnswer: sampleAnswer,
+            sceneID: sceneID, cloze: cloze, rubric: rubric, sourceFactIDs: sourceFactIDs
         )
     }
 }
@@ -38,9 +44,13 @@ private struct StructuredJSONResult: Sendable {
     let support: StructuredOutputSupport
 }
 
-struct RemoteAIClient: Sendable {
+struct RemoteAIClient: QuestionProvider {
     let configuration: ProviderConfiguration
     let apiKey: String
+    var transport: (@Sendable (URLRequest) async throws -> (Data, HTTPURLResponse))? = nil
+
+    var usageSink: UsageSink? = nil
+    var jobID: UUID? = nil
 
     func generate(_ request: TrainingRequest) async throws -> [GeneratedQuestion] {
         let prompt = try PromptBuilder.questionPrompt(request)
@@ -69,14 +79,20 @@ struct RemoteAIClient: Sendable {
         )
     }
 
-    func reviewQuestions(_ questions: [GeneratedQuestion]) async throws -> Bool {
-        let result = try await requestJSON(
-            system: PromptBuilder.systemInstructions,
-            user: try PromptBuilder.batchReviewPrompt(questions),
-            schemaName: "prompti_batch_review",
-            schema: Self.reviewSchema
-        )
-        return try JSONDecoder().decode(ReviewPayload.self, from: result.data).allowed
+    func reviewQuestions(_ questions: [GeneratedQuestion], request: TrainingRequest) async throws -> [QuestionReview] {
+        let result = try await requestJSON(system: PromptBuilder.systemInstructions,
+            user: PromptBuilder.qualityReviewPrompt(questions, request: request),
+            schemaName: "prompti_question_review", schema: Self.qualityReviewSchema)
+        return try JSONDecoder().decode(QuestionReviews.self, from: result.data).decisions
+    }
+
+    func evaluateSpeech(_ question: GeneratedQuestion, transcript: String, languageCode: String,
+                        explanationLanguage: ExplanationLanguage) async throws -> SemanticVerdict {
+        let result = try await requestJSON(system: PromptBuilder.systemInstructions,
+            user: PromptBuilder.speechEvaluationPrompt(question, transcript: transcript, languageCode: languageCode,
+                                                       explanationLanguage: explanationLanguage),
+            schemaName: "prompti_speech_evaluation", schema: Self.semanticSchema)
+        return try JSONDecoder().decode(SemanticVerdict.self, from: result.data)
     }
 
     func probe() async throws -> StructuredOutputSupport {
@@ -110,7 +126,7 @@ struct RemoteAIClient: Sendable {
         case .openAIResponses:
             request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
             primaryUsesStructuredOutputs = configuration.structuredOutputSupport != .unsupported
-            primaryBody = responsesBody(
+            primaryBody = try responsesBody(
                 system: system,
                 user: user,
                 schemaName: schemaName,
@@ -118,12 +134,12 @@ struct RemoteAIClient: Sendable {
                 usesStructuredOutputs: primaryUsesStructuredOutputs
             )
             fallbackBody = primaryUsesStructuredOutputs
-                ? responsesBody(system: system, user: user, schemaName: schemaName, schema: schema, usesStructuredOutputs: false)
+                ? try responsesBody(system: system, user: user, schemaName: schemaName, schema: schema, usesStructuredOutputs: false)
                 : nil
         case .openAIChat, .openRouterOAuth:
             request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
             primaryUsesStructuredOutputs = configuration.structuredOutputSupport != .unsupported
-            primaryBody = chatBody(
+            primaryBody = try chatBody(
                 system: system,
                 user: user,
                 schemaName: schemaName,
@@ -131,7 +147,7 @@ struct RemoteAIClient: Sendable {
                 usesStructuredOutputs: primaryUsesStructuredOutputs
             )
             fallbackBody = primaryUsesStructuredOutputs
-                ? chatBody(system: system, user: user, schemaName: schemaName, schema: schema, usesStructuredOutputs: false)
+                ? try chatBody(system: system, user: user, schemaName: schemaName, schema: schema, usesStructuredOutputs: false)
                 : nil
         case .anthropic:
             request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
@@ -139,16 +155,16 @@ struct RemoteAIClient: Sendable {
             primaryUsesStructuredOutputs = false
             primaryBody = [
                 "model": configuration.model,
-                "max_tokens": 3000,
+                "max_tokens": Self.outputLimit(for: schemaName),
                 "system": system,
-                "messages": [["role": "user", "content": user + "\nReturn only valid JSON matching this JSON Schema: \(schema)"]]
+                "messages": [["role": "user", "content": try Self.schemaPrompt(user, schema: schema)]]
             ]
             fallbackBody = nil
         case .apple:
             throw GenerationError.unsupportedProvider
         }
 
-        let primaryResponse = try await perform(request, body: primaryBody)
+        let primaryResponse = try await perform(request, body: primaryBody, operation: schemaName)
         if (200..<300).contains(primaryResponse.statusCode) {
             return StructuredJSONResult(
                 data: try outputData(from: primaryResponse.data),
@@ -159,40 +175,76 @@ struct RemoteAIClient: Sendable {
         if primaryUsesStructuredOutputs,
            [400, 422].contains(primaryResponse.statusCode),
            let fallbackBody {
-            let fallbackResponse = try await perform(request, body: fallbackBody)
-            try validateStatus(fallbackResponse.statusCode)
+            let fallbackResponse = try await perform(request, body: fallbackBody, operation: schemaName + ".fallback")
+            try validateStatus(fallbackResponse.statusCode, data: fallbackResponse.data)
             return StructuredJSONResult(
                 data: try outputData(from: fallbackResponse.data),
                 support: .unsupported
             )
         }
 
-        try validateStatus(primaryResponse.statusCode)
+        try validateStatus(primaryResponse.statusCode, data: primaryResponse.data)
         throw GenerationError.malformedResponse
     }
 
-    private func perform(_ request: URLRequest, body: [String: Any]) async throws -> (data: Data, statusCode: Int) {
+    private func perform(_ request: URLRequest, body: [String: Any], operation: String) async throws -> (data: Data, statusCode: Int) {
         var request = request
         request.httpBody = try JSONSerialization.data(withJSONObject: body)
-        let configuration = URLSessionConfiguration.ephemeral
-        configuration.httpCookieStorage = nil
-        configuration.urlCache = nil
-        let session = URLSession(configuration: configuration)
-        defer { session.invalidateAndCancel() }
-        let (data, response) = try await session.data(for: request)
-        try Task.checkCancellation()
-        guard data.count <= 2_000_000, let http = response as? HTTPURLResponse else {
-            throw GenerationError.malformedResponse
+        var usage = ModelUsage(jobID: jobID, provider: configuration.kind.rawValue, model: configuration.model, operation: operation)
+        await usageSink?(usage)
+        do {
+            let data: Data
+            let http: HTTPURLResponse
+            if let transport {
+                (data, http) = try await transport(request)
+            } else {
+                let configuration = URLSessionConfiguration.ephemeral
+                configuration.httpCookieStorage = nil
+                configuration.urlCache = nil
+                configuration.timeoutIntervalForResource = 90
+                let session = URLSession(configuration: configuration, delegate: ProviderRedirectPolicy(), delegateQueue: nil)
+                defer { session.invalidateAndCancel() }
+                let (bytes, response) = try await session.bytes(for: request)
+                guard let response = response as? HTTPURLResponse,
+                      response.expectedContentLength <= 2_000_000 else { throw GenerationError.malformedResponse }
+                http = response
+                var buffer = Data()
+                for try await byte in bytes {
+                    guard buffer.count < 2_000_000 else { throw GenerationError.malformedResponse }
+                    buffer.append(byte)
+                }
+                data = buffer
+            }
+            usage.complete(data: data, statusCode: http.statusCode)
+            await usageSink?(usage)
+            try Task.checkCancellation()
+            guard data.count <= 2_000_000 else { throw GenerationError.malformedResponse }
+            return (data, http.statusCode)
+        } catch {
+            usage.status = Task.isCancelled || error is CancellationError || (error as? URLError)?.code == .cancelled ? "cancelled" : "failed"
+            await usageSink?(usage)
+            guard let error = error as? URLError else { throw error }
+            if Task.isCancelled || error.code == .cancelled { throw CancellationError() }
+            if error.code == .timedOut { throw GenerationError.timedOut }
+            throw GenerationError.networkUnavailable
         }
-        return (data, http.statusCode)
     }
 
-    private func validateStatus(_ statusCode: Int) throws {
+    func validateStatus(_ statusCode: Int, data: Data = Data()) throws {
+        let object = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any]
+        let error = object?["error"] as? [String: Any]
+        let code = error?["code"] as? String ?? error?["type"] as? String
         switch statusCode {
         case 200..<300: return
+        case 300..<400: throw GenerationError.invalidEndpoint
         case 402: throw GenerationError.insufficientCredit
-        case 401, 403: throw GenerationError.invalidCredential
-        case 429: throw GenerationError.rateLimited
+        case 401: throw GenerationError.invalidCredential
+        case 403: throw GenerationError.permissionDenied
+        case 404: throw GenerationError.modelNotFound
+        case 408, 504: throw GenerationError.timedOut
+        case 429:
+            if code == "insufficient_quota" || code == "quota_exceeded" { throw GenerationError.insufficientCredit }
+            throw GenerationError.rateLimited
         case 500...599: throw GenerationError.providerUnavailable
         default: throw GenerationError.malformedResponse
         }
@@ -206,11 +258,16 @@ struct RemoteAIClient: Sendable {
 
     func endpointURL() throws -> URL {
         guard configuration.kind != .openRouterOAuth || configuration.baseURL == ProviderKind.openRouterOAuth.defaultBaseURL,
-              let base = URL(string: configuration.baseURL),
+              var base = URL(string: configuration.baseURL.trimmingCharacters(in: .whitespacesAndNewlines)),
               base.scheme?.lowercased() == "https",
               let host = base.host?.lowercased(),
-              !isPrivateHost(host) else { throw GenerationError.invalidEndpoint }
+              base.user == nil, base.password == nil, base.query == nil, base.fragment == nil,
+              !Self.isPrivateHost(host) else { throw GenerationError.invalidEndpoint }
 
+        var components = URLComponents(url: base, resolvingAgainstBaseURL: false)!
+        components.path = base.path.replacingOccurrences(of: "/+$", with: "", options: .regularExpression)
+        guard let normalizedBase = components.url else { throw GenerationError.invalidEndpoint }
+        base = normalizedBase
         let route: String
         switch configuration.kind {
         case .openAIResponses: route = "responses"
@@ -228,10 +285,41 @@ struct RemoteAIClient: Sendable {
         return base.appending(path: "v1").appending(path: route)
     }
 
-    private func isPrivateHost(_ host: String) -> Bool {
-        host == "localhost" || host.hasSuffix(".local") || host == "0.0.0.0" || host == "::1" ||
-            host.hasPrefix("127.") || host.hasPrefix("10.") || host.hasPrefix("192.168.") ||
-            (host.hasPrefix("172.") && (16...31).contains(Int(host.split(separator: ".").dropFirst().first ?? "0") ?? 0))
+    static func isPrivateHost(_ input: String) -> Bool {
+        let host = input.lowercased().trimmingCharacters(in: CharacterSet(charactersIn: "[]."))
+        if host.isEmpty || host == "localhost" || host.hasSuffix(".localhost") || host.hasSuffix(".local")
+            || !host.contains(".") && !host.contains(":") || host.contains("%") { return true }
+        var ipv4 = in_addr()
+        if inet_aton(host, &ipv4) == 1 {
+            let address = UInt32(bigEndian: ipv4.s_addr)
+            let first = address >> 24
+            let second = (address >> 16) & 255
+            return first == 0 || first == 10 || first == 127 || first >= 224
+                || (first == 100 && (64...127).contains(second))
+                || (first == 169 && second == 254)
+                || (first == 172 && (16...31).contains(second))
+                || (first == 192 && (second == 168 || second == 0))
+                || (first == 198 && (18...19).contains(second))
+        }
+        if host.contains(":") {
+            var ipv6 = in6_addr()
+            guard inet_pton(AF_INET6, host, &ipv6) == 1 else { return true }
+            let bytes = withUnsafeBytes(of: ipv6) { Array($0) }
+            // Permit ordinary global unicast only; this also excludes mapped
+            // IPv4, ULA, loopback, link-local and multicast addresses.
+            return bytes[0] & 0xe0 != 0x20
+        }
+        return false
+    }
+
+    private static func outputLimit(for schemaName: String) -> Int {
+        schemaName == "prompti_question_batch" ? 12_000 : 4_000
+    }
+
+    private static func schemaPrompt(_ user: String, schema: [String: Any]) throws -> String {
+        let data = try JSONSerialization.data(withJSONObject: schema, options: [.sortedKeys])
+        guard let json = String(data: data, encoding: .utf8) else { throw GenerationError.malformedResponse }
+        return user + "\nReturn only a JSON object matching this JSON Schema:\n" + json
     }
 
     func chatBody(
@@ -240,18 +328,21 @@ struct RemoteAIClient: Sendable {
         schemaName: String,
         schema: [String: Any],
         usesStructuredOutputs: Bool
-    ) -> [String: Any] {
+    ) throws -> [String: Any] {
         var result: [String: Any] = [
             "model": configuration.model,
             "messages": [
                 ["role": "system", "content": system],
-                ["role": "user", "content": user]
+                ["role": "user", "content": try Self.schemaPrompt(user, schema: schema)]
             ]
         ]
+        if URL(string: configuration.baseURL)?.host?.lowercased() == "api.openai.com" {
+            result["store"] = false
+            result["max_completion_tokens"] = Self.outputLimit(for: schemaName)
+        } else {
+            result["max_tokens"] = Self.outputLimit(for: schemaName)
+        }
         if usesStructuredOutputs {
-            if URL(string: configuration.baseURL)?.host?.lowercased() == "api.openai.com" {
-                result["store"] = false
-            }
             result["response_format"] = [
                 "type": "json_schema",
                 "json_schema": ["name": schemaName, "strict": true, "schema": schema]
@@ -268,12 +359,13 @@ struct RemoteAIClient: Sendable {
         schemaName: String,
         schema: [String: Any],
         usesStructuredOutputs: Bool
-    ) -> [String: Any] {
+    ) throws -> [String: Any] {
         [
             "model": configuration.model,
             "store": false,
             "instructions": system,
-            "input": user,
+            "input": try Self.schemaPrompt(user, schema: schema),
+            "max_output_tokens": Self.outputLimit(for: schemaName),
             "text": [
                 "format": usesStructuredOutputs
                     ? ["type": "json_schema", "name": schemaName, "strict": true, "schema": schema]
@@ -288,19 +380,30 @@ struct RemoteAIClient: Sendable {
         }
         switch configuration.kind {
         case .openAIResponses:
+            if object["status"] as? String == "incomplete" { throw GenerationError.truncatedOutput }
+            if object["status"] as? String == "failed" { throw GenerationError.providerUnavailable }
             if let direct = object["output_text"] as? String { return direct }
             guard let output = object["output"] as? [[String: Any]] else { throw GenerationError.malformedResponse }
             for item in output {
                 guard let content = item["content"] as? [[String: Any]] else { continue }
+                if content.contains(where: { $0["type"] as? String == "refusal" }) { throw GenerationError.refused }
                 if let text = content.first(where: { ($0["type"] as? String) == "output_text" })?["text"] as? String {
                     return text
                 }
             }
         case .openAIChat, .openRouterOAuth:
+            if let choices = object["choices"] as? [[String: Any]] {
+                if choices.first?["finish_reason"] as? String == "length" { throw GenerationError.truncatedOutput }
+                if choices.first?["finish_reason"] as? String == "content_filter" { throw GenerationError.refused }
+                if let message = choices.first?["message"] as? [String: Any],
+                   let refusal = message["refusal"] as? String, !refusal.isEmpty { throw GenerationError.refused }
+            }
             if let choices = object["choices"] as? [[String: Any]],
                let message = choices.first?["message"] as? [String: Any],
                let content = message["content"] as? String { return content }
         case .anthropic:
+            if object["stop_reason"] as? String == "max_tokens" { throw GenerationError.truncatedOutput }
+            if object["stop_reason"] as? String == "refusal" { throw GenerationError.refused }
             if let content = object["content"] as? [[String: Any]],
                let text = content.first(where: { ($0["type"] as? String) == "text" })?["text"] as? String { return text }
         case .apple: break
@@ -315,6 +418,29 @@ struct RemoteAIClient: Sendable {
             result = result.replacingOccurrences(of: "```", with: "")
         }
         return result.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private static var stringArray: [String: Any] { ["type": "array", "items": ["type": "string"]] }
+    private static func object(_ properties: [String: Any]) -> [String: Any] {
+        ["type": "object", "additionalProperties": false, "properties": properties, "required": properties.keys.sorted()]
+    }
+    private static func nullable(_ schema: [String: Any]) -> [String: Any] {
+        ["anyOf": [schema, ["type": "null"]]]
+    }
+    private static var clozeSchema: [String: Any] {
+        object(["segments": stringArray, "blanks": ["type": "array", "items": object([
+            "id": ["type": "string"], "options": stringArray, "correctAnswer": ["type": "string"]])]])
+    }
+    private static var rubricSchema: [String: Any] {
+        object(["intent": ["type": "string"], "requiredDetails": stringArray, "acceptableVariations": stringArray])
+    }
+    private static var qualityReviewSchema: [String: Any] {
+        var fields: [String: Any] = ["questionID": ["type": "string"], "reason": ["type": "string"]]
+        for key in ["safe", "language", "scene", "natural", "answer", "difficulty"] { fields[key] = ["type": "boolean"] }
+        return object(["decisions": ["type": "array", "items": object(fields)]])
+    }
+    private static var semanticSchema: [String: Any] {
+        object(["result": ["type": "string", "enum": ["correct", "incorrect", "undetermined"]], "feedback": ["type": "string"]])
     }
 
     private static var reviewSchema: [String: Any] {
@@ -347,13 +473,26 @@ struct RemoteAIClient: Sendable {
                             "correctAnswer": ["type": "string"],
                             "translation": ["type": "string"],
                             "explanation": ["type": "string"],
-                            "sampleAnswer": ["type": ["string", "null"]]
+                            "sampleAnswer": ["type": ["string", "null"]],
+                            "sceneID": ["type": "string"],
+                            "cloze": Self.nullable(Self.clozeSchema),
+                            "rubric": Self.nullable(Self.rubricSchema),
+                            "sourceFactIDs": Self.stringArray
                         ],
-                        "required": ["type", "prompt", "options", "correctAnswer", "translation", "explanation", "sampleAnswer"]
+                        "required": ["type", "prompt", "options", "correctAnswer", "translation", "explanation", "sampleAnswer", "sceneID", "cloze", "rubric", "sourceFactIDs"]
                     ]
                 ]
             ],
             "required": ["questions"]
         ]
+    }
+}
+
+/// Provider credentials must never follow an HTTP redirect to another endpoint.
+final class ProviderRedirectPolicy: NSObject, URLSessionTaskDelegate {
+    func urlSession(_ session: URLSession, task: URLSessionTask,
+                    willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest,
+                    completionHandler: @escaping (URLRequest?) -> Void) {
+        completionHandler(nil)
     }
 }

@@ -25,6 +25,15 @@ enum TrainingDifficulty: String, Codable, CaseIterable, Identifiable, Sendable {
         case .fluent: "Nuanced, region-aware conversation"
         }
     }
+
+    var generationConstraints: String {
+        switch self {
+        case .survival: "A1: one clause, at most 8 words (30 characters for Chinese/Japanese); common concrete vocabulary; obvious but meaningful distractors; include a short usage hint."
+        case .basic: "A2–B1: at most 15 words (55 characters for Chinese/Japanese); everyday vocabulary; simple questions and polite requests; distinguish distractors by meaning."
+        case .natural: "B1–B2: at most 25 words (90 characters for Chinese/Japanese); at most two clauses; natural polite phrasing; plausible distractors with one unambiguous best answer."
+        case .fluent: "B2–C1: at most 40 words (140 characters for Chinese/Japanese); nuanced register and connected clauses; closely related distractors; use regional expressions only when supported by supplied facts."
+        }
+    }
 }
 
 enum ExplanationLanguage: String, Codable, CaseIterable, Identifiable, Sendable {
@@ -86,6 +95,17 @@ struct GeneratedQuestion: Codable, Hashable, Identifiable, Sendable {
     var translation: String
     var explanation: String
     var sampleAnswer: String?
+    var sceneID: String? = nil
+    var cloze: ClozeContent? = nil
+    var rubric: SpeechRubric? = nil
+    var generation: GenerationMetadata? = nil
+    var sourceFactIDs: [String]? = nil
+
+    var contentSignature: String {
+        ContentFingerprint.hash([kind.rawValue, prompt, correctAnswer, cloze?.blanks.map(\.correctAnswer).joined(separator: "|") ?? ""]
+            .map { $0.precomposedStringWithCanonicalMapping.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() }
+            .joined(separator: "\u{0}"))
+    }
 }
 
 struct TrainingRequest: Sendable {
@@ -97,6 +117,7 @@ struct TrainingRequest: Sendable {
     var difficulty: TrainingDifficulty
     var kinds: Set<QuestionKind>
     var count: Int
+    var previousPrompts: [String] = []
 }
 
 enum AttemptResult: String, Codable, Sendable {
@@ -141,6 +162,16 @@ struct SessionResultCounts: Sendable {
         case .skipped: skipped += 1
         case .undetermined: undetermined += 1
         case .reported: reported += 1
+        }
+    }
+
+    mutating func remove(_ result: AttemptResult) {
+        switch result {
+        case .correct: correct = max(0, correct - 1)
+        case .incorrect: incorrect = max(0, incorrect - 1)
+        case .skipped: skipped = max(0, skipped - 1)
+        case .undetermined: undetermined = max(0, undetermined - 1)
+        case .reported: reported = max(0, reported - 1)
         }
     }
 }

@@ -1,0 +1,94 @@
+{
+  "date": "2026-09-08",
+  "device": "iPhone 17e",
+  "os": "iOS 27.0 (24A5390f)",
+  "textSize": "large (default)",
+  "build": "build-for-testing succeeded after final answer appearance fix",
+  "brandCheck": "passed; minimum checked role contrast 4.64:1",
+  "swiftTesting": {
+    "passed": 66,
+    "suites": 9
+  },
+  "uniqueUITestsPassed": 25,
+  "totalUIMethods": 25,
+  "batches": [
+    {
+      "batch": "light",
+      "appearance": "light",
+      "status": "canceled after event service stalled",
+      "passedUITests": [
+        "testAutomaticFillFailureAllowsPartialCompletion",
+        "testAutomaticFillPreservesCurrentQuestion",
+        "testCompletedPracticeReturnsToSetupWithoutRegenerating",
+        "testDestinationPickerVisualState",
+        "testFailedTopUpKeepsPreparedQuestionsAvailable",
+        "testGenerationFailureVisualState",
+        "testGenerationPartialSuccessVisualState"
+      ]
+    },
+    {
+      "batch": "dark-interaction",
+      "appearance": "dark",
+      "status": "passed",
+      "passedUITests": [
+        "testPracticeVisualStates",
+        "testSettingsVisualState",
+        "testTranscriptCanBeEditedWithoutMicrophonePermission",
+        "testWelcomeWithDefaultLayout"
+      ]
+    },
+    {
+      "batch": "dark-pages",
+      "appearance": "dark",
+      "status": "passed",
+      "passedUITests": [
+        "testHomeVisualState",
+        "testMultipleBlanksRequireEveryAnswer",
+        "testOnboardingVisualStates",
+        "testProgressVisualState",
+        "testReviewAndProgressWithData",
+        "testReviewVisualState"
+      ]
+    },
+    {
+      "batch": "light-final",
+      "appearance": "light",
+      "status": "passed",
+      "passedUITests": [
+        "testHomeStartsDefaultPracticeSet",
+        "testHomeVisualState",
+        "testModelSetupRequiresVerifiedConnection",
+        "testPracticeCanBeEndedEarly",
+        "testPracticeDestinationTracksHomeSelection",
+        "testPracticeVisualStates",
+        "testQuickQuestionCancellationReturnsHome",
+        "testQuickQuestionStartsSingleQuestion",
+        "testScoredAnswerCannotAlsoBeSkipped",
+        "testSettingsVisualState",
+        "testSpokenPermissionFallbackShowsSample",
+        "testWelcomeWithDefaultLayout"
+      ]
+    },
+    {
+      "batch": "light-answers",
+      "appearance": "light",
+      "status": "passed",
+      "passedUITests": [
+        "testMultipleBlanksRequireEveryAnswer",
+        "testPracticeVisualStates",
+        "testScoredAnswerCannotAlsoBeSkipped"
+      ]
+    },
+    {
+      "batch": "dark-answers",
+      "appearance": "dark",
+      "status": "passed",
+      "passedUITests": [
+        "testMultipleBlanksRequireEveryAnswer",
+        "testPracticeVisualStates",
+        "testScoredAnswerCannotAlsoBeSkipped"
+      ]
+    }
+  ],
+  "note": "25 UI methods passed across batches. The first light batch was canceled during testHomeStartsDefaultPracticeSet after an event-service stall; that method passed in light-final. Final answer styles were rebuilt and rechecked in both appearances."
+}

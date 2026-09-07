@@ -3,6 +3,8 @@
 状态：Draft v0.1  
 更新日期：2026-07-12
 
+最新实现复核：[`11-code-review-2026-09-06.md`](./11-code-review-2026-09-06.md)。核心流程已实现，但尚未满足全部 P0 发布门槛，详见未完成项与验证边界。
+
 本目录是 Prompti 的产品、设计和工程基线。实现前应先处理
 [`10-decisions-and-roadmap.md`](./10-decisions-and-roadmap.md) 中标记为“发布前必须确认”的事项；任何改变用户数据、内容安全或 AI Provider 协议的实现，都应同步更新对应文档。
 
@@ -20,10 +22,12 @@
 | [`08-technical-implementation.md`](./08-technical-implementation.md) | Swift/iOS 技术选型、接口草案、后台与口语实现 |
 | [`09-testing-and-release.md`](./09-testing-and-release.md) | 测试策略、评测集、CI、发布门槛和可观测性 |
 | [`10-decisions-and-roadmap.md`](./10-decisions-and-roadmap.md) | 决策记录、开放问题、MVP 分期和风险 |
+| [`13-brand-and-ui-guidelines.md`](./13-brand-and-ui-guidelines.md) | P 对话品牌、语义配色、共享组件、开发与视觉验收规范 |
 
 ## 已采用的基线
 
 - 产品名：Prompti；开源、原生 iOS、Swift 编写。
+- 品牌：P 对话标识、翡翠绿操作色、暖中性内容面；所有 UI 以 `13-brand-and-ui-guidelines.md` 为现行基线。
 - 推荐工具链：Xcode 26+、Swift 6.2 严格并发检查。
 - 建议最低系统：iOS 18；iOS 26+ 且设备、地区、语言均支持时才显示并默认使用 Apple 系统模型。
 - UI：SwiftUI；持久化：SwiftData + CloudKit private database；密钥：Keychain，仅本机保存。
@@ -40,3 +44,4 @@
 - **可以**：增强项，不阻塞 MVP。
 - **不做**：明确的非目标，避免范围蔓延。
 
+- [2026-09-07 能力补齐与验收](12-capabilities-2026-09-07.md)：恢复/隔离、逐题审核、口语语义、多空、自动补题与用量。

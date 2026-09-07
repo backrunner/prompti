@@ -22,7 +22,7 @@ struct OpenRouterCodeConnectionView: View {
                         VStack(alignment: .leading, spacing: 16) {
                             Text("1. Sign in securely in your browser.").font(.headline)
                             Text("Approve Prompti, then copy the authorization code shown by OpenRouter.")
-                                .font(.subheadline).foregroundStyle(.secondary)
+                                .font(.subheadline).foregroundStyle(Color.promptMuted)
                             Button("Open secure sign in", systemImage: "arrow.up.right.square") {
                                 authorization = OpenRouterAuthorization()
                                 code = ""
@@ -58,7 +58,7 @@ struct OpenRouterCodeConnectionView: View {
                                 }
                             } label: {
                                 HStack {
-                                    if isExchanging { ProgressView().tint(.white) }
+                                    if isExchanging { ProgressView().tint(.promptOnAction) }
                                     Text("Connect and verify")
                                 }
                             }
@@ -67,10 +67,10 @@ struct OpenRouterCodeConnectionView: View {
                         }
                     }
                     if let errorMessage {
-                        InlineNotice(symbol: "info.circle", text: errorMessage)
+                        InlineNotice(symbol: "exclamationmark.triangle", text: errorMessage, tone: .error)
                     }
                     Text("The code expires after 10 minutes. Keep this page open while you sign in.")
-                        .font(.footnote).foregroundStyle(.secondary)
+                        .font(.footnote).foregroundStyle(Color.promptMuted)
                 }
                 .padding(24)
             }
