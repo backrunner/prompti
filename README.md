@@ -9,13 +9,18 @@ Prompti 是一款开源、原生 SwiftUI 旅游语言学习应用。用户选择
 - 通用场景、城市特色场景和经过 LLM 审核的自定义场景。
 - 生存、基本、自然和流畅四档难度；3-20 题或随机一题。
 - Apple Foundation Models、OpenAI Responses、OpenAI Chat / Compatible、Anthropic Messages。
-- 结构化生成、输入过滤、输出二次审查、题目确定性校验和失败恢复。
-- 完形填空、QA、录音转写、系统语音播放、跳过和题目报告。
-- SwiftData 本地题库、错题复习、统计和 CloudKit private database 同步。
+- 结构化生成、逐题安全与质量审核、确定性校验、来源快照和有界失败恢复。
+- 1–3 空完形、QA、可编辑录音转写、口语语义反馈、可调速语音播放、跳过和题目报告。
+- SwiftData 本地题库、错题复习、统计、账户独立存储与 CloudKit private database 同步。
+- 先练已审核题目并自动补齐；显示实际请求/token 用量，可清空未练库存。
 - API Key 仅保存于本机 Keychain，不进入 iCloud 或日志。
 - 用户明确启用后，在 App 前台进入首页时补足少量题目库存。
 
 产品和工程设计文档见 [.agents/README.md](.agents/README.md)。
+
+品牌 Logo、iOS 图标外观与商店展示示意见 [品牌预览](Documentation/Brand/Preview.html)；矢量资源和生成方式见 [品牌说明](Documentation/Brand/README.md)。
+
+全 App 的品牌实施与实际模拟器截图见 [UI 验收记录](Documentation/Brand/UI-Review.md)；开发约束见 [品牌与 UI 规范](.agents/13-brand-and-ui-guidelines.md)。
 
 ## 环境
 
@@ -38,7 +43,7 @@ xcodebuild -project Prompti.xcodeproj \
 
 在 Xcode 中打开 `Prompti.xcodeproj` 也可以直接运行。
 
-CloudKit 同步需要在开发者账号中注册 `iCloud.com.prompti.app`，或将 bundle/container identifier 改为自己的标识。CloudKit 配置不可用时，应用会退化到本地 SwiftData store。
+CloudKit 同步需要在开发者账号中注册 `iCloud.com.prompti.app`，或将 bundle/container identifier 改为自己的标识。同一账户的 CloudKit 配置与本地回退使用相同的 SwiftData 文件；验证账户后启用同步。旧版本与未登录的数据可在设置中明确确认后导入，不会自动归入当前 iCloud 账户。
 
 ## 测试
 
@@ -55,17 +60,23 @@ Debug 构建可添加 `-prompti-demo` 启动参数绕过真实模型并使用安
 - OpenAI 官方配置默认使用 Responses API，并设置 `store: false`。
 - Chat Completions 官方配置同样设置 `store: false`。
 - 自定义 endpoint 只允许 HTTPS，并拒绝常见的回环和私网地址。
-- Provider 请求只包含目的地、语言、所选场景和生成约束，不包含设备标识或完整历史。
+- 生成请求包含目的地、语言、场景、生成约束与最多 30 条已有题干以避免重复；不发送设备标识或答题历史。
+- 口语语义评估仅发送当前题干、参考答案/rubric、转写文字和语言设置。生成来源和答题快照随学习数据保存；请求用量仅在本机保存。
 - 原始录音不持久化；Speech framework 仅在一次口语练习期间处理音频。
 
 请自行确认所选 Provider 的数据保留、价格、地区和模型政策。
 
 ## 当前 MVP 边界
 
+本轮实现、验证与剩余发布检查见 [2026-09-07 能力补齐](.agents/12-capabilities-2026-09-07.md)；原始差距清单保留在 [代码复核](.agents/11-code-review-2026-09-06.md)。
+
 - 口语题提供录音、转写和参考答案；低置信语音不计分，也不宣称提供专业发音评分。
 - “提前准备”只在 App 活跃且首页出现时执行，不承诺 iOS 系统后台调度。
+- “提前准备”默认仅 Wi-Fi、每日最多申请 12 题（设置可调整）；失败/取消仍占用该预算，低电量或低电源模式下不启动新请求。
+- 口语通过所选模型按意图和必要细节评估同义表达；低置信、模糊或评估服务不可用时不计分。模型语义质量仍需七语言内容验收。
+- 已实现同账户回退恢复、账户分库、显式导入和 CloudKit 同步事件状态；真实账户切换、系统 mirroring 生命周期和双设备收敛仍需真机验收。
 - 预设目的地目录是随 App 发布的静态、常青内容；自定义目的地仅生成通用旅游场景，不提供实时票价、营业时间、签证、法律或安全信息。
-- 当前 UI 文案以英语为主，训练内容支持七种目标语言。
+- 新增主要流程提供中英文文案，训练内容支持七种目标语言；本轮按系统默认字号和常规布局验收。
 - 本环境没有使用真实用户 API Key 调用收费 Provider；远程协议实现基于官方协议并覆盖响应 fixture contract tests，但发布前仍需进行受控的真实账户兼容测试。
 
 ## 贡献与安全
@@ -82,4 +93,4 @@ OpenRouter sign-in now supports PKCE authorization and multiple model choices th
 
 Credentials are isolated by provider endpoint in the device Keychain. New connections are verified before saving. Disconnecting removes the local credential; revoke remote access from the provider account.
 
-The welcome route animation, content surfaces and floating actions now share a quieter Liquid Glass treatment, with Reduce Motion/Reduce Transparency fallbacks. Today starts a default practice set directly; advanced preferences stay in the Practice tab. See `.agents/02-user-experience.md` and `.agents/05-ai-byok-and-generation.md` for the current interaction and authorization contracts.
+The interface now uses the same P conversation mark as the app icon, emerald actions and warm neutral reading surfaces. Welcome, generation and completion visuals share the conversation theme. Native Liquid Glass stays in navigation and compact floating controls, with opaque fallbacks. Today starts a default practice set directly; advanced preferences stay in the Practice tab. See [.agents/13-brand-and-ui-guidelines.md](.agents/13-brand-and-ui-guidelines.md) for the brand contract and [.agents/05-ai-byok-and-generation.md](.agents/05-ai-byok-and-generation.md) for authorization behavior.

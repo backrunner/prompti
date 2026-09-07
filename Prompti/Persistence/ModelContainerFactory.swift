@@ -1,3 +1,4 @@
+import Foundation
 import SwiftData
 
 enum PersistenceMode: Equatable, Sendable {
@@ -10,57 +11,48 @@ struct ModelContainerSetup {
     let mode: PersistenceMode
 }
 
-enum PromptiSchemaV1: VersionedSchema {
-    static let versionIdentifier = Schema.Version(1, 0, 0)
-    static var models: [any PersistentModel.Type] {
-        [QuestionRecord.self, AttemptRecord.self, UserSceneRecord.self]
-    }
-}
-
 enum PromptiMigrationPlan: SchemaMigrationPlan {
-    static var schemas: [any VersionedSchema.Type] { [PromptiSchemaV1.self] }
-    static var stages: [MigrationStage] { [] }
+    static var schemas: [any VersionedSchema.Type] { [PromptiSchemaV1.self, PromptiSchemaV2.self] }
+    static var stages: [MigrationStage] {
+        [.lightweight(fromVersion: PromptiSchemaV1.self, toVersion: PromptiSchemaV2.self)]
+    }
 }
 
 enum ModelContainerFactory {
-    @MainActor
-    static func make(inMemory: Bool = false) -> ModelContainer {
-        makeSetup(inMemory: inMemory).container
+    static func storeURL(scope: String, root: URL = URL.applicationSupportDirectory) -> URL {
+        root.appending(path: "PromptiAccounts", directoryHint: .isDirectory)
+            .appending(path: ContentFingerprint.hash(scope) + ".store")
     }
 
     @MainActor
+    static func open(url: URL, cloud: Bool) throws -> ModelContainerSetup {
+        try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+        let schema = Schema(versionedSchema: PromptiSchemaV2.self)
+        func container(cloudEnabled: Bool) throws -> ModelContainer {
+            let configuration = ModelConfiguration("Prompti", schema: schema, url: url,
+                cloudKitDatabase: cloudEnabled ? .private("iCloud.com.prompti.app") : .none)
+            return try ModelContainer(for: schema, migrationPlan: PromptiMigrationPlan.self, configurations: [configuration])
+        }
+        if cloud, let container = try? container(cloudEnabled: true) {
+            return ModelContainerSetup(container: container, mode: .iCloud)
+        }
+        // Cloud failure must never select a different file for the same owner.
+        return ModelContainerSetup(container: try container(cloudEnabled: false), mode: .localFallback)
+    }
+
+    @MainActor
+    static func make(inMemory: Bool = false) -> ModelContainer { makeSetup(inMemory: inMemory).container }
+
+    @MainActor
     static func makeSetup(inMemory: Bool = false) -> ModelContainerSetup {
-        let schema = Schema(versionedSchema: PromptiSchemaV1.self)
         do {
-            let cloudConfiguration = ModelConfiguration(
-                "PromptiCloud",
-                schema: schema,
-                isStoredInMemoryOnly: inMemory,
-                cloudKitDatabase: inMemory ? .none : .automatic
-            )
-            let container = try ModelContainer(
-                for: schema,
-                migrationPlan: PromptiMigrationPlan.self,
-                configurations: [cloudConfiguration]
-            )
-            return ModelContainerSetup(container: container, mode: inMemory ? .localFallback : .iCloud)
+            if !inMemory { return try open(url: storeURL(scope: "guest"), cloud: false) }
+            let schema = Schema(versionedSchema: PromptiSchemaV2.self)
+            let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+            return ModelContainerSetup(container: try ModelContainer(for: schema, migrationPlan: PromptiMigrationPlan.self,
+                                                                    configurations: [configuration]), mode: .localFallback)
         } catch {
-            do {
-                let localConfiguration = ModelConfiguration(
-                    "PromptiLocal",
-                    schema: schema,
-                    isStoredInMemoryOnly: inMemory,
-                    cloudKitDatabase: .none
-                )
-                let container = try ModelContainer(
-                    for: schema,
-                    migrationPlan: PromptiMigrationPlan.self,
-                    configurations: [localConfiguration]
-                )
-                return ModelContainerSetup(container: container, mode: .localFallback)
-            } catch {
-                fatalError("Unable to create Prompti data store: \(error.localizedDescription)")
-            }
+            fatalError("Unable to create Prompti data store: \(error.localizedDescription)")
         }
     }
 }

@@ -7,6 +7,7 @@ struct HomeView: View {
     @Environment(AppDependencies.self) private var dependencies
     @Environment(PracticeFlow.self) private var practiceFlow
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.scenePhase) private var scenePhase
     @Query(sort: \AttemptRecord.createdAt, order: .reverse) private var attempts: [AttemptRecord]
     @Query(sort: \QuestionRecord.createdAt, order: .reverse) private var questions: [QuestionRecord]
     @State private var showSettings = false
@@ -22,24 +23,21 @@ struct HomeView: View {
     }
 
     private var scoredDestinationAttempts: [AttemptRecord] {
-        destinationAttempts.filter { $0.result == .correct || $0.result == .incorrect }
+        AttemptRecord.scored(in: destinationAttempts)
     }
 
     private var todayAttempts: [AttemptRecord] {
-        scoredDestinationAttempts.filter { Calendar.current.isDateInToday($0.createdAt) }
+        scoredDestinationAttempts.filter { $0.localDayKey == PracticeMetrics.localDayKey() }
     }
 
     private var correctCount: Int { scoredDestinationAttempts.filter { $0.result == .correct }.count }
     private var streakCount: Int {
-        PracticeMetrics.consecutiveDayCount(dates: scoredDestinationAttempts.map(\.createdAt))
+        PracticeMetrics.consecutiveDayCount(dayKeys: scoredDestinationAttempts.map(\.localDayKey))
     }
     private var availableQuestions: [QuestionRecord] {
-        let attemptedIDs = Set(attempts.map(\.questionID))
-        return questions.filter {
-            !$0.isQuarantined && !attemptedIDs.contains($0.id)
-                && $0.destinationID == destination.id
-                && $0.languageCode == dependencies.settings.languageCode
-        }
+        QuestionInventory.available(questions, attempts: attempts, destinationID: destination.id,
+            languageCode: dependencies.settings.languageCode, explanationLanguage: dependencies.settings.explanationLanguage,
+            difficulty: dependencies.settings.difficulty)
     }
 
     var body: some View {
@@ -53,7 +51,7 @@ struct HomeView: View {
                     metrics
                     recentSection
                 }
-                .padding(.horizontal, 16)
+                .padding(.horizontal, PromptiSpacing.page)
                 .padding(.bottom, 24)
                 .frame(maxWidth: 820)
                 .frame(maxWidth: .infinity)
@@ -61,6 +59,7 @@ struct HomeView: View {
             .scrollIndicators(.hidden)
         }
         .navigationTitle("Today")
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Settings", systemImage: "gearshape.fill") { showSettings = true }
@@ -79,19 +78,13 @@ struct HomeView: View {
     }
 
     private var header: some View {
-        HStack(alignment: .center) {
-            Label {
-                Text(LocalizedStringKey(todayAttempts.isEmpty ? "Ready for your next stop" : "Keep your route moving"))
-            } icon: {
-                Image(systemName: "airplane.departure")
-                    .foregroundStyle(Color.promptMintDeep)
-            }
-            .font(.title3.bold())
-            Spacer()
-            Image(systemName: "sun.max.fill")
-                .font(.system(size: 22, weight: .semibold))
-                .foregroundStyle(Color.promptSun)
+        VStack(alignment: .leading, spacing: 10) {
+            PromptiWordmark()
+            Text(LocalizedStringKey(todayAttempts.isEmpty ? "Your next conversation starts here." : "A little practice. More confidence."))
+                .font(.subheadline)
+                .foregroundStyle(Color.promptMuted)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.top, 8)
     }
 
@@ -103,13 +96,13 @@ struct HomeView: View {
                 HStack {
                     Text("Next stop")
                         .font(.subheadline.bold())
-                        .foregroundStyle(Color.promptMintDeep)
+                        .foregroundStyle(Color.promptAccent)
                     Spacer()
                     Image(systemName: "arrow.up.right")
                         .font(.headline)
-                        .foregroundStyle(Color.primary)
+                        .foregroundStyle(Color.promptText)
                         .frame(width: 42, height: 42)
-                        .background(Color(.systemBackground).opacity(0.55), in: Circle())
+                        .background(Color.promptSurface, in: Circle())
                 }
                 ViewThatFits(in: .horizontal) {
                     HStack(alignment: .bottom) {
@@ -128,20 +121,13 @@ struct HomeView: View {
                             .font(.subheadline)
                             .padding(.horizontal, 10)
                             .padding(.vertical, 6)
-                            .background(Color(.systemBackground).opacity(0.5), in: Capsule())
+                            .background(Color.promptSurface, in: Capsule())
                     }
                 }
             }
             .padding(24)
-            .foregroundStyle(Color.primary)
-            .background(
-                LinearGradient(
-                    colors: [Color.promptMint.opacity(0.28), Color.promptSky.opacity(0.18)],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                ),
-                in: RoundedRectangle(cornerRadius: PromptiRadius.hero, style: .continuous)
-            )
+            .foregroundStyle(Color.promptText)
+            .promptiHeroSurface()
         }
         .buttonStyle(.plain)
         .accessibilityHint("Choose another destination")
@@ -151,21 +137,16 @@ struct HomeView: View {
     private var destinationName: some View {
         VStack(alignment: .leading, spacing: 3) {
             Text(destination.city)
-                .font(.system(.largeTitle, design: .rounded, weight: .bold))
+                .font(PromptiTypography.hero)
                 .fontDesign(.rounded)
             Text(destination.country)
                 .font(.subheadline.bold())
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Color.promptMuted)
         }
     }
 
     private var destinationHeroSymbol: some View {
-        Image(systemName: destination.symbol)
-            .font(.system(size: 30, weight: .bold))
-            .foregroundStyle(Color.promptInk)
-            .frame(width: 76, height: 76)
-            .background(Color(.secondarySystemGroupedBackground).opacity(0.75), in: .rect(cornerRadius: 24))
-            .accessibilityHidden(true)
+        PromptiSymbolBadge(symbol: destination.symbol, size: 68)
     }
 
     private var quickStart: some View {
@@ -182,7 +163,7 @@ struct HomeView: View {
             }
             if let inventoryMessage {
                 Text(LocalizedStringKey(inventoryMessage))
-                    .font(.footnote).foregroundStyle(.secondary)
+                    .font(.footnote).foregroundStyle(Color.promptMuted)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
@@ -207,9 +188,9 @@ struct HomeView: View {
         VStack(spacing: 12) {
             SectionLabel("This trip")
             LazyVGrid(columns: metricColumns, spacing: 10) {
-                MetricTile(value: "\(todayAttempts.count)", label: "today", symbol: "checkmark.circle.fill", tint: .promptMintDeep)
-                MetricTile(value: "\(correctCount)", label: "correct", symbol: "star.fill", tint: .promptSun)
-                MetricTile(value: "\(streakCount)", label: "streak", symbol: "flame.fill", tint: .promptCoral)
+                MetricTile(value: "\(todayAttempts.count)", label: "today", symbol: "checkmark.circle.fill", tint: .promptAccent)
+                MetricTile(value: "\(correctCount)", label: "correct", symbol: "checkmark.seal.fill", tint: .promptSuccess)
+                MetricTile(value: "\(streakCount)", label: "streak", symbol: "flame.fill", tint: .promptAccent)
             }
         }
     }
@@ -220,11 +201,11 @@ struct HomeView: View {
             SectionLabel("Question tray")
             if availableQuestions.isEmpty {
                 HStack(alignment: .top, spacing: 12) {
-                    Image(systemName: "sparkles").foregroundStyle(Color.promptAccent)
+                    PromptiBrandMark(height: 26).foregroundStyle(Color.promptAccent)
                     VStack(alignment: .leading, spacing: 5) {
                         Text("A small practice goes a long way.").font(.subheadline.weight(.semibold))
                         Text("Start a set to build confidence for your next trip.")
-                            .font(.footnote).foregroundStyle(.secondary)
+                            .font(.footnote).foregroundStyle(Color.promptMuted)
                     }
                     Spacer(minLength: 0)
                 }
@@ -238,14 +219,14 @@ struct HomeView: View {
                     HStack(spacing: 12) {
                         Image(systemName: question.question.kind.symbol)
                             .font(.system(size: 16, weight: .semibold))
-                            .foregroundStyle(Color.promptMintDeep)
+                            .foregroundStyle(Color.promptAccent)
                             .frame(width: 36, height: 36)
-                            .background(Color.promptMint.opacity(0.35), in: Circle())
+                            .background(Color.promptSurfaceRaised, in: .rect(cornerRadius: PromptiRadius.compact))
                         VStack(alignment: .leading, spacing: 3) {
                             Text(question.prompt).lineLimit(2).font(.subheadline.weight(.semibold))
                             Text("\(question.destinationName) · \(question.sceneTitle)")
                                 .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Color.promptMuted)
                         }
                         Spacer(minLength: 0)
                     }
@@ -277,15 +258,24 @@ struct HomeView: View {
     }
 
     private var inventoryContext: String {
-        "\(dependencies.settings.isPreGenerationEnabled)|\(destination.id)|\(dependencies.settings.languageCode)|\(dependencies.settings.provider)"
+        "\(dependencies.settings.isPreGenerationEnabled)|\(scenePhase)|\(selectedTab)|\(destination.id)|\(dependencies.settings.languageCode)|\(dependencies.settings.difficulty)|\(dependencies.settings.explanationLanguage)|\(dependencies.settings.provider)|\(dependencies.inventoryConditions.hasNetwork)|\(dependencies.inventoryConditions.usesWiFi)|\(dependencies.settings.inventoryTarget)|\(dependencies.settings.dailyPreparationLimit)|\(dependencies.settings.preparationWiFiOnly)"
     }
 
     private func prepareInventoryIfNeeded() async {
-        guard dependencies.settings.isPreGenerationEnabled, availableQuestions.count < 3 else { return }
+        let settings = dependencies.settings
+        guard settings.isPreGenerationEnabled, scenePhase == .active, selectedTab == .today,
+              dependencies.inventoryConditions.allowsPreparation(wifiOnly: settings.preparationWiFiOnly, onDevice: settings.provider.kind == .apple),
+              availableQuestions.count < settings.inventoryTarget else { return }
+        guard settings.provider.kind == .apple || dependencies.secureStore.readAPIKey(for: settings.provider) != nil else { return }
+        let count = settings.reservePreparationCount(min(3, settings.inventoryTarget - availableQuestions.count))
+        guard count > 0 else {
+            inventoryMessage = "Advance preparation has reached today's limit. You can still start practice yourself."
+            return
+        }
         inventoryMessage = "Preparing a few approved questions while Prompti is open."
         let destination = dependencies.settings.selectedDestination(in: dependencies.catalog)
         let language = destination.languages.first(where: { $0.code == dependencies.settings.languageCode }) ?? destination.languages[0]
-        let request = TrainingRequest(
+        var request = TrainingRequest(
             destination: destination,
             language: language,
             explanationLanguage: dependencies.settings.explanationLanguage,
@@ -293,20 +283,20 @@ struct HomeView: View {
             customScene: nil,
             difficulty: dependencies.settings.difficulty,
             kinds: [.cloze, .multipleChoice],
-            count: 3
+            count: count
         )
+        request.previousPrompts = Array(questions.filter { $0.destinationID == destination.id && $0.languageCode == language.code }.prefix(30).map(\.prompt))
         do {
-            let generated = try await dependencies.generation.generate(request, configuration: dependencies.settings.provider)
+            let generated = try await dependencies.generation.generate(request, configuration: dependencies.settings.provider,
+                excluding: Set(questions.filter { $0.destinationID == destination.id && $0.languageCode == language.code }.map { $0.question.contentSignature }),
+                allowsRegeneration: false)
             try Task.checkCancellation()
-            for (offset, question) in generated.enumerated() {
-                let scene = request.scenes[offset % request.scenes.count]
-                modelContext.insert(QuestionRecord(question: question, request: request, scene: scene))
-            }
-            try modelContext.save()
+            _ = try QuestionInventory.save(generated, request: request, context: modelContext)
             inventoryMessage = "Your approved question tray has been topped up."
         } catch is CancellationError {
             return
         } catch {
+            modelContext.rollback()
             inventoryMessage = "Advance preparation paused: \(error.localizedDescription)"
         }
     }

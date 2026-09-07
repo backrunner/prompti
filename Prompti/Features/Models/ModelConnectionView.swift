@@ -48,7 +48,7 @@ struct ModelConnectionView: View {
                 Label("Private and on-device", systemImage: "apple.intelligence")
                     .font(.headline)
                 Text("Exercises are generated on this device. Prompti still checks every question before showing it.")
-                    .font(.footnote).foregroundStyle(.secondary)
+                    .font(.footnote).foregroundStyle(Color.promptMuted)
             } else if provider.kind == .openRouterOAuth {
                 oauthControls
             } else {
@@ -58,13 +58,13 @@ struct ModelConnectionView: View {
             if let status {
                 Label(LocalizedStringKey(status), systemImage: isVerified ? "checkmark.circle.fill" : "info.circle")
                     .font(.footnote)
-                    .foregroundStyle(isVerified ? Color.promptAccent : Color.secondary)
+                    .foregroundStyle(isVerified ? Color.promptSuccess : Color.promptMuted)
                     .accessibilityIdentifier("model.status")
             }
 
             if provider.kind != .apple {
                 Text("Your destination, language and scenes go to your selected provider. Credentials stay on this device. Model usage may use account credits.")
-                    .font(.footnote).foregroundStyle(.secondary)
+                    .font(.footnote).foregroundStyle(Color.promptMuted)
             }
         }
         .onChange(of: provider.model) { _, _ in invalidate() }
@@ -91,14 +91,11 @@ struct ModelConnectionView: View {
     private var oauthControls: some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(spacing: 12) {
-                Image(systemName: "point.3.connected.trianglepath.dotted")
-                    .font(.title2).foregroundStyle(Color.promptAccent)
-                    .frame(width: 48, height: 48)
-                    .background(Color.promptMint.opacity(0.2), in: .rect(cornerRadius: 16))
+                PromptiSymbolBadge(symbol: "point.3.connected.trianglepath.dotted")
                 VStack(alignment: .leading, spacing: 3) {
                     Text("One account. More possibilities.").font(.headline)
                     Text("GPT, Claude, Gemini and more")
-                        .font(.subheadline).foregroundStyle(.secondary)
+                        .font(.subheadline).foregroundStyle(Color.promptMuted)
                 }
             }
 
@@ -109,16 +106,16 @@ struct ModelConnectionView: View {
             } label: {
                 HStack {
                     VStack(alignment: .leading, spacing: 3) {
-                        Text("Model").font(.caption).foregroundStyle(.secondary)
+                        Text("Model").font(.caption).foregroundStyle(Color.promptMuted)
                         Text(modelDisplayName).font(.subheadline.weight(.medium)).lineLimit(2)
                     }
                     Spacer()
                     Image(systemName: "chevron.up.chevron.down").font(.caption.bold())
                 }
                 .padding(14)
-                .background(Color(.tertiarySystemFill), in: .rect(cornerRadius: PromptiRadius.control))
+                .background(Color.promptSurfaceRaised, in: .rect(cornerRadius: PromptiRadius.control))
             }
-            .foregroundStyle(.primary)
+            .foregroundStyle(Color.promptText)
             .disabled(isBusy)
             .accessibilityIdentifier("model.selection")
 
@@ -126,7 +123,7 @@ struct ModelConnectionView: View {
                 connect(needsAuthorization: isVerified || !hasCredential)
             } label: {
                 HStack(spacing: 8) {
-                    if isBusy { ProgressView().tint(.white) }
+                    if isBusy { ProgressView().tint(.promptOnAction) }
                     Label(isVerified ? "Reconnect OpenRouter" : (hasCredential ? "Verify model" : "Connect with OpenRouter"),
                           systemImage: isVerified ? "checkmark.shield.fill" : "arrow.up.right.square")
                 }

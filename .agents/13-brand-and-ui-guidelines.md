@@ -1,0 +1,99 @@
+# 品牌与 UI 开发规范
+
+状态：实施基线 · 2026-09-07
+
+适用：全部 SwiftUI 页面、组件、App Icon、文档和商店物料。
+
+本规范承接 [品牌图标](../Documentation/Brand/README.md)，取代 `02-user-experience.md` 中早期的飞机主视觉、邮戳边框、天空蓝/黄色/珊瑚色装饰方向。交互流程和业务规则仍按各模块规范执行。
+
+## 1. 品牌表达
+
+Prompti 帮助用户为真实旅行中的下一次对话做好准备。视觉气质是清晰、温暖、轻快、可信。主句为 **“从开口，到远方。” / “Say hello to the world.”**。
+
+- 品牌核心是定制的 **P + 对话气泡**，使用翡翠绿、薄荷绿、奶白与深绿。它同时是 App Icon 的主体和独立 Logo。
+- 旅行由城市名称、地标、场景和地图定位符表达；飞机不承担 Logo、欢迎页主视觉或通用练习进度的职责。
+- 主视觉使用少量对话元素。正文区域保持安静；不要给每张卡片放 Logo、装饰气泡、彩色渐变、轨迹、邮戳虚线、发光或阴影。
+- 文案表达可观察的结果和下一步行动，不把用户“答错”包装成惩罚，不承诺无法验证的掌握程度或精确生成百分比。
+
+## 2. 标识与唯一来源
+
+| 场景 | 必须使用 |
+| --- | --- |
+| iOS 主图标 | `Prompti/AppIcon.icon`，由系统提供圆角与材质 |
+| App 内品牌组合 | `PromptiWordmark`；仅符号用 `PromptiBrandMark` |
+| 单色品牌物料 | `Documentation/Brand/Prompti-Mark*.svg` |
+| 功能图标 | SF Symbols；通用徽标用 `PromptiSymbolBadge` |
+
+所有标识由 `Tools/GenerateAppIcon.swift` 中同一条轮廓生成。App 内使用保留矢量的模板 PDF `BrandMark.imageset`，由前景色着色。不要复写路径、拼接系统气泡与字体 P，也不要在 App 内把完整 App Icon 当作 Logo。
+
+保持方向与长宽比；不挤压、不旋转 Logo，不给它增加飞机或额外气泡。独立 Logo 至少保留自身宽度 10% 的净空，推荐最小可见宽度 16px。欢迎页和设置页可展示完整字标；其他页面以内容为主。
+
+## 3. 语义配色
+
+唯一运行时定义是 `Prompti/DesignSystem/PromptiTheme.swift`。`AccentColor.colorset` 与 `promptAction` 的浅/深色值同步，用于原生导航和控件。以下数值由自动检查核验，页面不得重复硬编码。
+
+| 角色 | 浅色 | 深色 | 使用位置 |
+| --- | --- | --- | --- |
+| `promptCanvas` | `#F5F6F0` | `#101C18` | 全页面与底部操作遮罩 |
+| `promptSurface` | `#FFFFFF` | `#1A2A24` | 卡片、表单行、内容面 |
+| `promptSurfaceRaised` | `#EAF0E6` | `#263B32` | 输入区、图标徽标、次级分组 |
+| `promptHero` | `#E3EDDE` | `#203B2E` | 欢迎、目的地、练习完成主视觉 |
+| `promptText` | `#173D33` | `#EDF4EB` | 品牌正文与标题 |
+| `promptMuted` | `#52675B` | `#B2C5B7` | 自定义界面的次要文案 |
+| `promptAction` | `#08765D` | `#A3F2CE` | 主按钮、实底选择项 |
+| `promptOnAction` | `#F7FFEA` | `#103F38` | 主操作表面的文字与图标 |
+| `promptSelection` | `#DFEEE3` | `#264538` | 轻量选中背景 |
+| `promptSuccess` / Surface | `#176C47` / `#E5F1E6` | `#A3F2CE` / `#213C2C` | 明确成功、正确 |
+| `promptWarning` / Surface | `#815710` / `#F8EFD8` | `#E9C67D` / `#3C3221` | 重试建议、费用提示、隔离状态 |
+| `promptError` / Surface | `#AE392F` / `#FAE9E4` | `#FFAEA0` / `#442B27` | 错误答案、失败、正在录音的停止操作 |
+
+**必须成对使用前景和背景。** 深色主按钮是薄荷底配深绿文字，不能继续配白字。浅色次要文字不能用低对比的薄荷绿或天空蓝。
+
+成功、错误、警告都必须同时提供图标或文字。答题选项用 `PromptiAnswerStyle`，其选中、正确、错误状态保持布局稳定，并响应 Differentiate Without Color；搭配 `PromptiAnswerButtonStyle`，提交后禁用改答但不降低答案的阅读对比。提示条用 `InlineNotice(tone:)`，不传装饰色。未评分和跳过是中性状态。
+
+## 4. 页面与组件
+
+- 大面积背景使用 `PromptiBackground`，不把图标的饱和背景铺满整个阅读界面。
+- 内容面使用 `promptiSurface()`，采用不透明颜色和细边线，不使用玻璃、模糊和投影。品牌主视觉使用 `promptiHeroSurface()`。
+- 主操作使用 `PrimaryActionButtonStyle`：至少 52pt 高，稳定实底、明确对比；一屏同一决策层级只突出一个主操作。
+- 次操作使用 `SecondaryActionButtonStyle`；导航、辅助音频操作和紧凑浮动按钮使用 `CompactGlassButtonStyle` / `GlassIconButtonStyle`。只有这些位置在系统支持且未降低透明度时使用原生玻璃；降级表面必须不透明。
+- 录音按钮使用 `RecordingActionButtonStyle`，等待、录音与停止文字不能只靠颜色区分。
+- 统一输入区使用 `PromptiCredentialFieldModifier`；安全字段继续用 `SecureField`。口语转写使用 `TextEditor`，允许拒绝麦克风权限时手动编辑，并保留焦点与提交能力。原生 `Form`、`Picker`、`Menu`、确认对话框保留系统行为。
+- 空状态使用 `PromptiEmptyState`，可恢复故障使用 `PromptiRecoveryView`。不要用新的插画或品牌符号替代状态本身的含义。
+- 主流程底部操作继续通过 safe-area inset 固定，并用 `PromptiActionScrim` 阻止正文穿透；不要让操作覆盖最后一项内容。
+
+## 5. 字阶、间距和动效
+
+- Hero、内容标题、分区标题分别使用 `PromptiTypography.hero / title / section`；正文使用系统 `.body` / `.subheadline`，说明使用 `.footnote` / `.caption`。圆润标题与 Logo 呼应，不使用装饰字体。自定义文字使用 `promptMuted` 作为次级前景，避免继承的品牌前景被 `.secondary` 再次降低透明度。
+- 屏幕主体水平留白使用 `PromptiSpacing.page`（20pt）；欢迎、引导与独立表单可使用 24pt。8/12pt 用于关联元素，24pt 用于分区。避免用大量独立常数制造新层级。
+- 圆角保持 `PromptiRadius` 的 14 / 20 / 24 / 32pt，分别用于紧凑、操作、内容和主视觉；系统胶囊、分段控件保持原生。
+- 图标通常为 semibold，功能按钮触控区至少 44pt。统计数字使用等宽数字，不把正文缩小来塞满控件。
+- 仅在状态转换时使用短促淡入/位移；Logo 保持静止。不得增加无限旋转、呼吸光效或与实际进度无关的伪百分比。Reduce Motion 使用静态或淡入形式。
+- 默认字号与常规布局是当前验收范围；已有无障碍、VoiceOver、降低透明度和颜色区分实现必须保留。
+
+## 6. 页面覆盖清单
+
+| 页面或状态 | 本轮统一规则 |
+| --- | --- |
+| 欢迎 / 引导 | P 字标、问候主视觉、绿色语言选中态、一致按钮和卡片 |
+| 今日 | 品牌抬头、暖绿目的地卡、统一地标徽标和统计块 |
+| 目的地列表 / 筛选 / 自定义 | 地标表达内容，去邮戳虚线和黄色徽标，统一选择与输入区 |
+| 练习配置 / 自定义场景 | 共用选择状态、主操作、字段与错误提示 |
+| 生成 / 部分成功 / 失败 | 对话阶段图形、真实阶段文案、恢复操作与语义错误色 |
+| 完形 / 选择 / 口语 | 共用答案外观，正文对比、录音与播放按钮一致 |
+| 答题反馈 / 完成 | 正确、建议、未评分含义独立；对话进度与保存反馈 |
+| 复习 / 筛选 / 隔离 | 不透明卡片、中性空状态、警告语义与明确操作 |
+| 进度 / 有数据与空数据 | 单一绿色数据系列，中性说明、统一统计块 |
+| 设置 / Provider / 授权码 | 品牌身份、原生表单、统一输入与按钮；保持账户授权流程 |
+| 学习数据故障 / 会话不存在 | 共用恢复组件及明确下一步 |
+
+此表描述实现要求；实测结果和截图另见 [UI 验收记录](../Documentation/Brand/UI-Review.md)。
+
+## 7. 开发流程和门槛
+
+1. 修改共享 token/组件，再修改需要变化的页面，不复制样式。
+2. 标识变化运行 `swift Tools/GenerateAppIcon.swift`；新增源文件运行 `xcodegen generate`。
+3. 运行 `python3 Tools/CheckBrand.py`。检查覆盖旧配色与品牌飞机残留、页面内硬编码颜色、Logo 资源来源、主色配对和文本对比；通过不等于视觉验收完成。仓库的 `Brand contract` GitHub Actions 工作流在相关 PR 中执行同一检查。
+4. 构建并运行相关已有测试。修改选择/反馈组件时覆盖完形、选择、口语、提交后状态、取消与完成；不得改变计分和持久化语义。
+5. 在一台 iPhone 模拟器中检查默认字号的浅深色主流程，检查中文与英文文案。截图必须来自实际 App，并记录系统版本、模式和覆盖边界。
+6. PR 说明品牌规范的变更及验证结果；有意偏离规范时写明原因和影响，不把常规实现选择变成额外审批流程。

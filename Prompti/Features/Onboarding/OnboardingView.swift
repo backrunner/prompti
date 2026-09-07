@@ -21,7 +21,6 @@ private enum OnboardingStep: Int, CaseIterable {
 struct OnboardingView: View {
     @Environment(AppDependencies.self) private var dependencies
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var step: OnboardingStep = .welcome
     @State private var destinationID = "tokyo"
@@ -105,7 +104,7 @@ struct OnboardingView: View {
         HStack(spacing: 6) {
             ForEach(OnboardingStep.allCases.filter { $0 != .welcome }, id: \.rawValue) { item in
                 Capsule()
-                    .fill(item.rawValue <= step.rawValue ? Color.promptMintDeep : Color.secondary.opacity(0.2))
+                    .fill(item.rawValue <= step.rawValue ? Color.promptAccent : Color.promptMuted.opacity(0.2))
                     .frame(height: 5)
             }
         }
@@ -122,34 +121,22 @@ struct OnboardingView: View {
         GeometryReader { proxy in
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
-                    HStack(spacing: 10) {
-                        Image(systemName: "airplane")
-                            .font(.title)
-                            .foregroundStyle(Color.promptMintDeep)
-                        Text("Prompti")
-                            .font(.title2.weight(.semibold))
-                            .fontDesign(.rounded)
-                        Spacer()
-                        Image(systemName: "airplane.departure")
-                            .font(.headline)
-                            .foregroundStyle(Color.promptCoral)
-                            .symbolEffect(.bounce, value: reduceMotion ? false : landingVisible)
-                    }
+                    PromptiWordmark()
 
                     Spacer(minLength: 8)
 
-                    LandingRouteVisual()
+                    LandingConversationVisual()
                         .scaleEffect(landingVisible ? 1 : 0.96)
                         .opacity(landingVisible ? 1 : 0)
                         .animation(reduceMotion ? nil : .smooth(duration: 0.9), value: landingVisible)
 
                     VStack(alignment: .leading, spacing: 7) {
-                        Text("Speak anywhere.\nArrive ready.")
-                            .font(.system(.largeTitle, design: .rounded, weight: .bold))
+                        Text("Say hello to the world.")
+                            .font(PromptiTypography.hero)
                             .fontDesign(.rounded)
                         Text("Fast practice for any destination.")
                             .font(.body.weight(.medium))
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Color.promptMuted)
                     }
                     .offset(y: landingVisible ? 0 : 12)
                     .opacity(landingVisible ? 1 : 0)
@@ -157,11 +144,11 @@ struct OnboardingView: View {
 
                     ViewThatFits(in: .horizontal) {
                         HStack(spacing: 10) {
-                            LandingFeature(symbol: "mappin.and.ellipse", title: "Any destination", tint: .promptCoral)
+                            LandingFeature(symbol: "mappin.and.ellipse", title: "Any destination", tint: .promptAccent)
                             LandingFeature(symbol: "character.bubble.fill", title: "中文 + English", tint: .promptAccent)
                         }
                         VStack(spacing: 10) {
-                            LandingFeature(symbol: "mappin.and.ellipse", title: "Any destination", tint: .promptCoral)
+                            LandingFeature(symbol: "mappin.and.ellipse", title: "Any destination", tint: .promptAccent)
                             LandingFeature(symbol: "character.bubble.fill", title: "中文 + English", tint: .promptAccent)
                         }
                     }
@@ -190,19 +177,19 @@ struct OnboardingView: View {
                 Button {
                     showDestinationPicker = true
                 } label: {
-                    DestinationStamp(destination: destination, showsDisclosure: true)
+                    DestinationSummaryCard(destination: destination, showsDisclosure: true)
                 }
                 .buttonStyle(.plain)
                 .accessibilityIdentifier("onboarding.chooseDestination")
 
                 ViewThatFits(in: .horizontal) {
                     HStack(spacing: 10) {
-                        OnboardingFact(value: "\(destination.languages.count)", label: "languages", symbol: "character.bubble.fill", tint: .promptMintDeep)
-                        OnboardingFact(value: "\(destination.localScenes.count)", label: "local picks", symbol: "mappin.and.ellipse", tint: .promptCoral)
+                        OnboardingFact(value: "\(destination.languages.count)", label: "languages", symbol: "character.bubble.fill", tint: .promptAccent)
+                        OnboardingFact(value: "\(destination.localScenes.count)", label: "local picks", symbol: "mappin.and.ellipse", tint: .promptAccent)
                     }
                     VStack(spacing: 10) {
-                        OnboardingFact(value: "\(destination.languages.count)", label: "languages", symbol: "character.bubble.fill", tint: .promptMintDeep)
-                        OnboardingFact(value: "\(destination.localScenes.count)", label: "local picks", symbol: "mappin.and.ellipse", tint: .promptCoral)
+                        OnboardingFact(value: "\(destination.languages.count)", label: "languages", symbol: "character.bubble.fill", tint: .promptAccent)
+                        OnboardingFact(value: "\(destination.localScenes.count)", label: "local picks", symbol: "mappin.and.ellipse", tint: .promptAccent)
                     }
                 }
 
@@ -222,7 +209,7 @@ struct OnboardingView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
                 SectionLabel("Choose your language", subtitle: "You can change it for every practice set.")
-                DestinationStamp(destination: destination, compact: true)
+                DestinationSummaryCard(destination: destination, compact: true)
                 VStack(spacing: 8) {
                     ForEach(destination.languages) { language in
                         Button {
@@ -231,16 +218,16 @@ struct OnboardingView: View {
                             HStack {
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(language.localName).font(.headline)
-                                    Text(language.name).font(.caption).foregroundStyle(.secondary)
+                                    Text(language.name).font(.caption).foregroundStyle(Color.promptMuted)
                                 }
                                 Spacer()
                                 Image(systemName: language.code == languageCode ? "checkmark.circle.fill" : "circle")
                                     .font(.system(size: 20))
-                                    .foregroundStyle(language.code == languageCode ? onboardingAccent : Color.secondary)
+                                    .foregroundStyle(language.code == languageCode ? onboardingAccent : Color.promptMuted)
                             }
                             .padding(16)
                             .background(
-                                language.code == languageCode ? Color.promptMint.opacity(0.34) : Color.promptSky.opacity(0.16),
+                                language.code == languageCode ? Color.promptSelection : Color.promptSurface,
                                 in: RoundedRectangle(cornerRadius: PromptiRadius.surface)
                             )
                         }
@@ -295,7 +282,7 @@ struct OnboardingView: View {
                                         Image(systemName: item == difficulty ? "checkmark.circle.fill" : "circle")
                                     }
                                     .padding(12)
-                                    .background(Color.secondary.opacity(0.08), in: .rect(cornerRadius: PromptiRadius.control))
+                                    .background(Color.promptMuted.opacity(0.08), in: .rect(cornerRadius: PromptiRadius.control))
                                 }
                                 .buttonStyle(.plain)
                                 .accessibilityValue(Text(item == difficulty ? "Selected" : "Not selected"))
@@ -325,10 +312,10 @@ struct OnboardingView: View {
                     Toggle("Prepare questions in advance", isOn: $enablePreparation)
                     Text("When enabled, Prompti may call your selected model while the app is open. This can use extra tokens and create provider charges.")
                         .font(.footnote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Color.promptMuted)
                 }
 
-                if let errorMessage { InlineNotice(symbol: "exclamationmark.triangle", text: errorMessage) }
+                if let errorMessage { InlineNotice(symbol: "exclamationmark.triangle", text: errorMessage, tone: .error) }
 
                 InlineNotice(
                     symbol: "hand.raised.fill",
@@ -387,7 +374,7 @@ struct OnboardingView: View {
         } label: {
             Label(
                 step == .preferences ? "Start learning" : (step == .welcome ? "Let’s get started" : "Continue"),
-                systemImage: step == .preferences ? "airplane.departure" : "arrow.right"
+                systemImage: step == .preferences ? "bubble.left.and.bubble.right" : "arrow.right"
             )
         }
         .buttonStyle(PrimaryActionButtonStyle())
@@ -396,7 +383,7 @@ struct OnboardingView: View {
     }
 
     private var onboardingAccent: Color {
-        colorScheme == .dark ? .promptMint : .promptMintDeep
+        .promptAccent
     }
 
     private var canFinish: Bool {
@@ -455,9 +442,9 @@ private struct LandingFeature: View {
             Text(LocalizedStringKey(title)).font(.subheadline.weight(.semibold))
         }
         .frame(maxWidth: .infinity, minHeight: 48)
-        .background(tint.opacity(0.14), in: Capsule())
+        .background(Color.promptSurface, in: Capsule())
         .overlay {
-            Capsule().strokeBorder(tint.opacity(0.16))
+            Capsule().strokeBorder(Color.promptBorder, lineWidth: 0.75)
         }
     }
 }
@@ -473,13 +460,13 @@ private struct OnboardingFact: View {
             Image(systemName: symbol)
                 .foregroundStyle(tint)
             VStack(alignment: .leading, spacing: 1) {
-                Text(value).font(.title3.bold()).fontDesign(.rounded)
-                Text(LocalizedStringKey(label)).font(.caption).foregroundStyle(.secondary)
+                Text(value).font(PromptiTypography.section).fontDesign(.rounded)
+                Text(LocalizedStringKey(label)).font(.caption).foregroundStyle(Color.promptMuted)
             }
             Spacer()
         }
         .padding(16)
         .frame(maxWidth: .infinity)
-        .background(tint.opacity(0.14), in: RoundedRectangle(cornerRadius: PromptiRadius.compact, style: .continuous))
+        .promptiSurface(radius: PromptiRadius.control)
     }
 }

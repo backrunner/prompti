@@ -1,6 +1,8 @@
+import SwiftData
 import SwiftUI
 
 struct SettingsView: View {
+    @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Environment(AppDependencies.self) private var dependencies
     @State private var didLoad = false
@@ -9,7 +11,13 @@ struct SettingsView: View {
     @State private var explanationLanguage = ExplanationLanguage.english
     @State private var difficulty = TrainingDifficulty.basic
     @State private var questionCount = 5
+    @State private var speechRate: Float = 0.44
+    @State private var showImportConfirmation = false
+    @State private var showClearInventory = false
     @State private var isPreGenerationEnabled = false
+    @State private var inventoryTarget = 3
+    @State private var dailyPreparationLimit = 12
+    @State private var preparationWiFiOnly = true
     @State private var isTesting = false
     @State private var statusMessage: String?
     @State private var testSucceeded = false
@@ -19,6 +27,15 @@ struct SettingsView: View {
 
     var body: some View {
         Form {
+            Group {
+            Section {
+                VStack(alignment: .leading, spacing: 10) {
+                    PromptiWordmark()
+                    Text("Practice for your next conversation.")
+                        .font(.subheadline).foregroundStyle(Color.promptMuted)
+                }
+                .padding(.vertical, 8)
+            }
             Section("Model") {
                 if didLoad { ModelConnectionView(provider: $provider, apiKey: $apiKey,
                     isBusy: $isTesting, isVerified: $testSucceeded,
@@ -26,7 +43,7 @@ struct SettingsView: View {
                     .padding(.vertical, 8) }
             }
 
-            if let statusMessage { Section { Text(LocalizedStringKey(statusMessage)).font(.footnote).foregroundStyle(.secondary) } }
+            if let statusMessage { Section { Text(LocalizedStringKey(statusMessage)).font(.footnote).foregroundStyle(Color.promptMuted) } }
 
             Section("Practice defaults") {
                 Picker("Explanations", selection: $explanationLanguage) {
@@ -39,29 +56,95 @@ struct SettingsView: View {
                         Text(LocalizedStringKey(difficulty.title)).tag(difficulty)
                     }
                 }
+                Picker("Speech playback", selection: $speechRate) {
+                    Text("Slow").tag(Float(0.34))
+                    Text("Normal").tag(Float(0.44))
+                    Text("Fast").tag(Float(0.52))
+                }
                 Stepper(value: $questionCount, in: 3...20) {
                     LabeledContent("Questions", value: "\(questionCount)")
                 }
             }
 
             Section("Question inventory") {
-                Toggle("Prepare questions in advance", isOn: $isPreGenerationEnabled)
-                    .onChange(of: isPreGenerationEnabled) { _, enabled in
+                Toggle("Prepare questions in advance", isOn: Binding(
+                    get: { isPreGenerationEnabled },
+                    set: { enabled in
+                        isPreGenerationEnabled = enabled
                         if enabled { showCostWarning = true }
                     }
+                ))
                 Text("When enabled, Prompti may call your model while the app is active. This can use extra tokens and create provider charges.")
                     .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.promptMuted)
+                if isPreGenerationEnabled {
+                    Stepper("Inventory target: \(inventoryTarget)", value: $inventoryTarget, in: 3...20)
+                    Stepper("Daily preparation limit: \(dailyPreparationLimit)", value: $dailyPreparationLimit, in: 3...50)
+                    Toggle("Prepare only on Wi-Fi", isOn: $preparationWiFiOnly)
+                    Text("Preparation pauses in Low Power Mode, on low battery or a constrained connection. The daily limit resets at midnight UTC; failed or cancelled requests also use the limit.")
+                        .font(.footnote).foregroundStyle(Color.promptMuted)
+                }
+            }
+
+            Section("Model usage on this device") {
+                LabeledContent("Recent requests", value: "\(dependencies.usage.entries.count)")
+                LabeledContent("Reported input tokens", value: "\(dependencies.usage.reportedInputTokens)")
+                LabeledContent("Reported output tokens", value: "\(dependencies.usage.reportedOutputTokens)")
+                LabeledContent("Requests with unknown usage", value: "\(dependencies.usage.unknownUsageCount)")
+                Text("Includes generation, reviews, speech feedback and connection tests for the most recent 1,000 requests. Failed requests and fallbacks count too. Missing token usage is unknown; provider billing is authoritative.")
+                    .font(.footnote).foregroundStyle(Color.promptMuted)
+                ForEach(dependencies.usage.entries.suffix(5).reversed()) { entry in
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(entry.model).font(.subheadline)
+                        HStack {
+                            Text(LocalizedStringKey(entry.operationTitle))
+                            Text("·")
+                            Text(LocalizedStringKey(entry.statusTitle))
+                        }
+                        .font(.caption).foregroundStyle(Color.promptMuted)
+                        Text(entry.createdAt, style: .date).font(.caption).foregroundStyle(Color.promptMuted)
+                    }
+                }
+            }
+
+            Section {
+                Button("Clear unused questions", role: .destructive) { showClearInventory = true }
+                    .accessibilityIdentifier("settings.clearInventory")
+                    .confirmationDialog("Clear unused questions and pause preparation?", isPresented: $showClearInventory, titleVisibility: .visible) {
+                        Button("Clear unused questions", role: .destructive) {
+                            dependencies.settings.isPreGenerationEnabled = false
+                            isPreGenerationEnabled = false
+                            do { try QuestionInventory.clearUnused(context: modelContext) }
+                            catch { statusMessage = error.localizedDescription }
+                        }
+                        Button("Cancel", role: .cancel) { }
+                    } message: { Text("Answered questions and learning history stay saved.") }
             }
 
             Section("Sync & privacy") {
                 LabeledContent("Learning data") {
                     Text(LocalizedStringKey(persistenceLabel))
                 }
+                Text(LocalizedStringKey(dependencies.persistence.status)).font(.footnote)
+                if let date = dependencies.persistence.lastSync {
+                    LabeledContent("Last sync event") { Text(date, style: .relative) }
+                }
+                Button("Retry iCloud connection") { Task { await dependencies.persistence.refresh() } }
+                if !dependencies.persistence.importSources.isEmpty {
+                    Button("Import previous local data") { showImportConfirmation = true }
+                        .accessibilityIdentifier("settings.importLocal")
+                        .confirmationDialog("Import local learning data into this account?", isPresented: $showImportConfirmation, titleVisibility: .visible) {
+                            Button("Import local data") { dependencies.persistence.importLocalData() }
+                            Button("Cancel", role: .cancel) { }
+                        } message: {
+                            Text("Previous storage and signed-out learning data will be copied into the currently open account. It can sync to this iCloud account when available. Only import data that belongs here. Existing history and the original local copy stay saved.")
+                        }
+                }
+                if let message = dependencies.persistence.importMessage { Text(message).font(.footnote) }
                 LabeledContent("API keys", value: "This device only")
                 Text(LocalizedStringKey(persistenceDetail))
                     .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.promptMuted)
             }
 
             Section {
@@ -91,6 +174,8 @@ struct SettingsView: View {
                 }
             }
             .disabled(isTesting)
+            }
+            .listRowBackground(Color.promptSurface)
         }
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
@@ -124,7 +209,11 @@ struct SettingsView: View {
             || explanationLanguage != dependencies.settings.explanationLanguage
             || difficulty != dependencies.settings.difficulty
             || questionCount != dependencies.settings.questionCount
+            || speechRate != dependencies.settings.speechRate
             || isPreGenerationEnabled != dependencies.settings.isPreGenerationEnabled
+            || inventoryTarget != dependencies.settings.inventoryTarget
+            || dailyPreparationLimit != dependencies.settings.dailyPreparationLimit
+            || preparationWiFiOnly != dependencies.settings.preparationWiFiOnly
     }
 
     private var providerNeedsTest: Bool {
@@ -133,11 +222,16 @@ struct SettingsView: View {
     }
 
     private func loadSettings() {
+        guard !didLoad else { return }
         provider = dependencies.settings.provider
         explanationLanguage = dependencies.settings.explanationLanguage
         difficulty = dependencies.settings.difficulty
         questionCount = dependencies.settings.questionCount
+        speechRate = dependencies.settings.speechRate
         isPreGenerationEnabled = dependencies.settings.isPreGenerationEnabled
+        inventoryTarget = dependencies.settings.inventoryTarget
+        dailyPreparationLimit = dependencies.settings.dailyPreparationLimit
+        preparationWiFiOnly = dependencies.settings.preparationWiFiOnly
         didLoad = true
         testSucceeded = provider.kind == .apple || (provider.structuredOutputSupport != .unknown && dependencies.secureStore.readAPIKey(for: provider) != nil)
     }
@@ -151,7 +245,11 @@ struct SettingsView: View {
             dependencies.settings.explanationLanguage = explanationLanguage
             dependencies.settings.difficulty = difficulty
             dependencies.settings.questionCount = questionCount
+            dependencies.settings.speechRate = speechRate
             dependencies.settings.isPreGenerationEnabled = isPreGenerationEnabled
+            dependencies.settings.inventoryTarget = inventoryTarget
+            dependencies.settings.dailyPreparationLimit = dailyPreparationLimit
+            dependencies.settings.preparationWiFiOnly = preparationWiFiOnly
             dismiss()
         } catch {
             testSucceeded = false
@@ -171,7 +269,7 @@ struct SettingsView: View {
         case .iCloud:
             "Questions, attempts and progress use your private iCloud database. Keys never sync."
         case .localFallback:
-            "iCloud storage was unavailable when Prompti started, so learning data is being kept locally on this device. Keys never sync."
+            "Learning data is saved on this device. Each iCloud account uses separate storage; signing in does not automatically import signed-out data. Keys never sync."
         }
     }
 }

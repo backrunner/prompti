@@ -28,7 +28,10 @@ enum SpeechAnswerEvaluator {
         }
 
         let similarity = diceSimilarity(transcript, reference)
-        if transcript == reference || transcript.contains(reference) || reference.contains(transcript) || similarity >= 0.62 {
+        // Wording overlap cannot establish intent: a short fragment, negation or
+        // changed destination can still be almost identical to the reference.
+        // Only an exact normalized match is scored without a semantic evaluator.
+        if transcript == reference {
             return SpeechEvaluation(
                 result: .correct,
                 title: String(localized: "Expression matched"),

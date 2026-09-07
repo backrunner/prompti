@@ -1,0 +1,33 @@
+name: Brand contract
+
+on:
+  pull_request:
+    paths:
+      - 'Prompti/**'
+      - 'Tools/CheckBrand.py'
+      - 'Tools/GenerateAppIcon.swift'
+      - 'Documentation/Brand/**'
+      - '.agents/13-brand-and-ui-guidelines.md'
+      - '.github/workflows/brand.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'Prompti/**'
+      - 'Tools/CheckBrand.py'
+      - 'Tools/GenerateAppIcon.swift'
+      - 'Documentation/Brand/**'
+      - '.agents/13-brand-and-ui-guidelines.md'
+      - '.github/workflows/brand.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  brand:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 Tools/CheckBrand.py

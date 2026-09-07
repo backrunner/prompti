@@ -37,7 +37,7 @@
 - 生成取消、部分成功、失败重试和库存练习。
 - 完形、QA、口语权限拒绝、低置信转写、跳过和报告。
 - 错题复习、统计和 iCloud 离线提示。
-- 最大 Dynamic Type、VoiceOver identifiers、Reduce Motion、深色/浅色和较小屏幕。
+- 默认 Dynamic Type、VoiceOver identifiers、Reduce Motion、深色/浅色和较小屏幕。按当前 UI 验收约定，不把非常规超大字号作为本轮门槛，保留已有无障碍适配；品牌视觉验收范围按 [`13-brand-and-ui-guidelines.md`](13-brand-and-ui-guidelines.md) 记录。
 
 ## 2. Prompt 与内容评测
 
@@ -114,4 +114,3 @@
 - iCloud 不可用时不丢本地作答。
 - 后台预生成默认关闭且成本说明可见。
 - 开源许可证、第三方 notices、贡献指南、安全报告渠道和隐私政策齐备。
-

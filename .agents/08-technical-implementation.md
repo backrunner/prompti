@@ -1,5 +1,7 @@
 # 技术实现方案
 
+品牌与 UI 的现行实现约束见 [`13-brand-and-ui-guidelines.md`](13-brand-and-ui-guidelines.md)。DesignSystem 统一提供语义颜色、文本角色、按钮/内容面/答案状态与 P 品牌组件；`Tools/GenerateAppIcon.swift` 同时生成原生图标和 App 内的矢量模板 PDF。`python3 Tools/CheckBrand.py` 是 UI 贡献的静态检查入口。
+
 ## 1. 平台基线
 
 - Swift 6.2+，Complete Strict Concurrency。
@@ -130,3 +132,14 @@ func appleModelStatus(for locale: Locale) -> AppleModelStatus {
 - Privacy Manifest 声明使用的 required-reason API；Info.plist 提供麦克风、语音识别、iCloud 用途说明。
 - CI secret scanning；示例配置使用明显无效 key。
 
+
+## 2026-09-06：前台库存和音频修正
+
+- 库存默认关闭；仅在 App active、Today 可见时启动，每次最多申请 3 题。目标库存默认 3、可设 3–20；每日预生成上限默认 12、可设 3–50；默认仅 Wi-Fi，低数据模式、低电量和低电源模式下不启动新请求。
+- 预生成预算以 UTC 日键持久化，在发出请求前预扣申请题量；失败/取消不返还，避免反复进入页面或重启突破上限。用户手动开始练习不受此预生成上限限制。
+- 停止录音先释放麦克风，再等待最终转写；最多等待 3 秒，未完成时不评分。离开题目、退出会话、应用变为非活跃、音频中断或耳机断开时清理音频资源；旧回调不能覆盖新一题。
+- BGTask、token usage 仪表和清空库存操作尚未实现，不将以上前台维护描述为系统后台调度。
+
+## 2026-09-07：能力补齐
+
+已加入账户独立文件、同文件 CloudKit 回退恢复、旧库显式幂等导入、同步事件状态及真实 V1 磁盘迁移测试。真实 CloudKit mirroring 账户切换生命周期仍须双设备验收。 最新实现范围、测试结果和真实环境边界见 [能力补齐记录](12-capabilities-2026-09-07.md)。
