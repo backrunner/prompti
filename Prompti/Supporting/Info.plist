@@ -6,7 +6,7 @@
     <array>
         <dict>
             <key>CFBundleURLName</key>
-            <string>com.prompti.app.oauth</string>
+            <string>$(PRODUCT_BUNDLE_IDENTIFIER).oauth</string>
             <key>CFBundleURLSchemes</key>
             <array><string>prompti</string></array>
         </dict>
@@ -27,6 +27,8 @@
     <string>$(MARKETING_VERSION)</string>
     <key>CFBundleVersion</key>
     <string>$(CURRENT_PROJECT_VERSION)</string>
+    <key>PromptiCloudContainerIdentifier</key>
+    <string>$(PROMPTI_CLOUD_CONTAINER_IDENTIFIER)</string>
     <key>LSApplicationCategoryType</key>
     <string>public.app-category.education</string>
     <key>LSRequiresIPhoneOS</key>
@@ -52,4 +54,3 @@
     <dict/>
 </dict>
 </plist>
-

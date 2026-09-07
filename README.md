@@ -43,7 +43,9 @@ xcodebuild -project Prompti.xcodeproj \
 
 在 Xcode 中打开 `Prompti.xcodeproj` 也可以直接运行。
 
-CloudKit 同步需要在开发者账号中注册 `iCloud.com.prompti.app`，或将 bundle/container identifier 改为自己的标识。同一账户的 CloudKit 配置与本地回退使用相同的 SwiftData 文件；验证账户后启用同步。旧版本与未登录的数据可在设置中明确确认后导入，不会自动归入当前 iCloud 账户。
+App 标识为 `com.alkinum.prompti`，CloudKit 容器为 `iCloud.com.alkinum.prompti`。真机开发需要在 Xcode 登录开发者账号；`project.yml` 保存签名团队和自动签名配置，自动签名会准备对应的开发描述文件。Fork 需改为自己的团队和 `PRODUCT_BUNDLE_IDENTIFIER`，关联自己的 CloudKit 容器，并同步调整 entitlement 与运行时的 `PROMPTI_CLOUD_CONTAINER_IDENTIFIER` 设置。
+
+同一账户的 CloudKit 配置与本地回退使用相同的 SwiftData 文件；验证账户后启用同步。旧版本与未登录的数据可在设置中明确确认后导入，不会自动归入当前 iCloud 账户。
 
 ## 测试
 

@@ -466,6 +466,10 @@
 					8DE79F68B1B557FA33BBB72E = {
 						TestTargetID = E1B23BE50D4DB4FB2BA2120F;
 					};
+					E1B23BE50D4DB4FB2BA2120F = {
+						DevelopmentTeam = PB8H83VL3Z;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = 622386A1F0CC9E1228743E33 /* Build configuration list for PBXProject "Prompti" */;
@@ -609,7 +613,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.prompti.app.uitests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alkinum.prompti.uitests;
 				SDKROOT = iphoneos;
 				SWIFT_STRICT_CONCURRENCY = complete;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -627,7 +631,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.prompti.app.uitests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alkinum.prompti.uitests;
 				SDKROOT = iphoneos;
 				SWIFT_STRICT_CONCURRENCY = complete;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -709,14 +713,17 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Prompti/Supporting/Prompti.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = PB8H83VL3Z;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Prompti/Supporting/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.prompti.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alkinum.prompti;
 				PRODUCT_NAME = Prompti;
+				PROMPTI_CLOUD_CONTAINER_IDENTIFIER = "iCloud.$(PRODUCT_BUNDLE_IDENTIFIER)";
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -793,7 +800,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.prompti.app.tests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alkinum.prompti.tests;
 				SDKROOT = iphoneos;
 				SWIFT_STRICT_CONCURRENCY = complete;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -808,14 +815,17 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Prompti/Supporting/Prompti.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = PB8H83VL3Z;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Prompti/Supporting/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.prompti.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alkinum.prompti;
 				PRODUCT_NAME = Prompti;
+				PROMPTI_CLOUD_CONTAINER_IDENTIFIER = "iCloud.$(PRODUCT_BUNDLE_IDENTIFIER)";
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -832,7 +842,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.prompti.app.tests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alkinum.prompti.tests;
 				SDKROOT = iphoneos;
 				SWIFT_STRICT_CONCURRENCY = complete;
 				TARGETED_DEVICE_FAMILY = "1,2";
