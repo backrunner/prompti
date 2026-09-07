@@ -17,6 +17,8 @@ Keychain 选择 `ThisDeviceOnly` 意味着换机后必须重新输入 API Key；
 
 ## 2. CloudKit 行为
 
+- App 标识为 `com.alkinum.prompti`，默认容器为 `iCloud.com.alkinum.prompti`。`project.yml` 保留签名团队、自动签名与已关联的容器 entitlement；构建设置 `PROMPTI_CLOUD_CONTAINER_IDENTIFIER` 写入 `Info.plist`，SwiftData 与账户校验通过 `ModelContainerFactory.cloudContainerIdentifier` 共用该值。更换容器时必须同步修改 entitlement 与运行时设置，签名构建后核对两者一致。
+- App / 容器标识的配置不改变 schema、账户分库、Keychain service 或导入规则，也不自动搬迁另一个 App 标识下的沙盒数据。
 - 使用用户 private database，App 不拥有或读取其他用户的数据。
 - iCloud 默认启用；用户未登录、关闭 iCloud Drive、配额不足或网络异常时退化为本地 store。
 - 启动不等待同步完成；展示本地内容，并在后台收敛。
@@ -69,4 +71,3 @@ CloudKit 是最终一致，不假设另一设备的数据已经出现。
 - 导出建议为 JSON，包含 schema 版本、题目快照和 attempt；默认不含 Provider 配置和内部 prompt。
 - 删除全部数据需要二次确认，CloudKit 删除可能延迟；UI 展示进行中状态。
 - 崩溃报告、诊断导出和 issue 模板必须自动移除 Key、Authorization header、用户自定义 endpoint query 和用户场景原文。
-

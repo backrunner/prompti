@@ -127,7 +127,7 @@ final class PersistenceController {
             return
         }
         do {
-            let cloud = CKContainer(identifier: "iCloud.com.prompti.app")
+            let cloud = CKContainer(identifier: ModelContainerFactory.cloudContainerIdentifier)
             let accountStatus = try await cloud.accountStatus()
             guard refreshID == operationID else { return }
             guard accountStatus == .available else {

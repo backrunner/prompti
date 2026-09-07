@@ -19,6 +19,10 @@ enum PromptiMigrationPlan: SchemaMigrationPlan {
 }
 
 enum ModelContainerFactory {
+    // CloudKit clients share the configured container; keep signing entitlements in sync.
+    static let cloudContainerIdentifier = Bundle.main.object(forInfoDictionaryKey: "PromptiCloudContainerIdentifier") as? String
+        ?? "iCloud.com.alkinum.prompti"
+
     static func storeURL(scope: String, root: URL = URL.applicationSupportDirectory) -> URL {
         root.appending(path: "PromptiAccounts", directoryHint: .isDirectory)
             .appending(path: ContentFingerprint.hash(scope) + ".store")
@@ -30,7 +34,7 @@ enum ModelContainerFactory {
         let schema = Schema(versionedSchema: PromptiSchemaV2.self)
         func container(cloudEnabled: Bool) throws -> ModelContainer {
             let configuration = ModelConfiguration("Prompti", schema: schema, url: url,
-                cloudKitDatabase: cloudEnabled ? .private("iCloud.com.prompti.app") : .none)
+                cloudKitDatabase: cloudEnabled ? .private(cloudContainerIdentifier) : .none)
             return try ModelContainer(for: schema, migrationPlan: PromptiMigrationPlan.self, configurations: [configuration])
         }
         if cloud, let container = try? container(cloudEnabled: true) {
