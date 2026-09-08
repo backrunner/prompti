@@ -485,7 +485,7 @@ private struct CustomSceneView: View {
                     Button {
                         Task { await review() }
                     } label: {
-                        if isReviewing { ProgressView() } else { Text("Review") }
+                        if isReviewing { ProgressView() } else { Text("Add") }
                     }
                     .disabled(input.isEmpty || input.count > 80 || isReviewing)
                 }

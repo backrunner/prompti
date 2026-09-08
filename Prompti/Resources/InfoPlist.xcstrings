@@ -19,7 +19,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "Prompti 仅在你练习口语作答时使用麦克风。"
+            "value": "Prompti 仅在你录音作答时使用麦克风。"
           }
         }
       }
@@ -36,7 +36,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "Prompti 会将你的口语作答转写为文字，以提供语言反馈。"
+            "value": "Prompti 会把你的回答识别为文字，用于评估表达的意思是否准确。"
           }
         }
       }

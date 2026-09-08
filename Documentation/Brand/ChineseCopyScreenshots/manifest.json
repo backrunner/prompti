@@ -1,0 +1,339 @@
+{
+  "date": "2026-09-08",
+  "device": "iPhone 17e simulator",
+  "deviceID": "8A488D26-61E3-4C65-9975-FC0EF51CA6CF",
+  "system": "iOS 27.0",
+  "xcode": "27.0 beta (27A5228h)",
+  "contentSize": "large (system default)",
+  "data": "Demo fixtures; not user data",
+  "screenshots": [
+    {
+      "file": "light/practice-summary.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testCompletedPracticeReturnsToSetupWithoutRegenerating()",
+      "timestamp": 1788858488.64,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "light/destination-picker.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testDestinationPickerVisualState()",
+      "timestamp": 1788858498.743,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "light/home.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testHomeVisualState()",
+      "timestamp": 1788858520.505,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "light/progress-empty.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testProgressVisualState()",
+      "timestamp": 1788858559.498,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "light/review-empty.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testReviewVisualState()",
+      "timestamp": 1788858569.21,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "light/settings.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testSettingsVisualState()",
+      "timestamp": 1788858577.734,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "light/speech-feedback.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testTranscriptCanBeEditedWithoutMicrophonePermission()",
+      "timestamp": 1788858597.012,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "light/speech-edited.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testTranscriptCanBeEditedWithoutMicrophonePermission()",
+      "timestamp": 1788858592.758,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "light/welcome-default.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testWelcomeWithDefaultLayout()",
+      "timestamp": 1788858607.606,
+      "language": "en"
+    },
+    {
+      "file": "light/generation-failure.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testGenerationFailureVisualState()",
+      "timestamp": 1788858871.178,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "light/generation-partial.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testGenerationPartialSuccessVisualState()",
+      "timestamp": 1788858882.707,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "light/onboarding-preferences.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testOnboardingVisualStates()",
+      "timestamp": 1788858894.794,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "light/onboarding-model.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testOnboardingVisualStates()",
+      "timestamp": 1788858893.242,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "light/onboarding-language.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testOnboardingVisualStates()",
+      "timestamp": 1788858891.687,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "light/onboarding-destination.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testOnboardingVisualStates()",
+      "timestamp": 1788858890.18,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "light/onboarding-welcome.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testOnboardingVisualStates()",
+      "timestamp": 1788858888.669,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "light/practice-feedback.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "timestamp": 1788858911.023,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "light/practice-selected.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "timestamp": 1788858909.46,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "light/practice-question.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "timestamp": 1788858909.027,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "light/generation-ready.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "timestamp": 1788858907.415,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "light/generation-working.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "timestamp": 1788858904.24,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "light/practice-setup.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "timestamp": 1788858901.015,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "dark/practice-summary.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testCompletedPracticeReturnsToSetupWithoutRegenerating()",
+      "timestamp": 1788858991.518,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "dark/destination-picker.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testDestinationPickerVisualState()",
+      "timestamp": 1788859001.6,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "dark/generation-failure.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testGenerationFailureVisualState()",
+      "timestamp": 1788859008.926,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "dark/generation-partial.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testGenerationPartialSuccessVisualState()",
+      "timestamp": 1788859017.332,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "dark/home.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testHomeVisualState()",
+      "timestamp": 1788859023.507,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "dark/onboarding-preferences.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testOnboardingVisualStates()",
+      "timestamp": 1788859035.312,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "dark/onboarding-model.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testOnboardingVisualStates()",
+      "timestamp": 1788859033.822,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "dark/onboarding-language.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testOnboardingVisualStates()",
+      "timestamp": 1788859032.321,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "dark/onboarding-destination.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testOnboardingVisualStates()",
+      "timestamp": 1788859030.868,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "dark/onboarding-welcome.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testOnboardingVisualStates()",
+      "timestamp": 1788859029.386,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "dark/practice-feedback.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "timestamp": 1788859051.774,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "dark/practice-selected.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "timestamp": 1788859050.216,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "dark/practice-question.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "timestamp": 1788859049.776,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "dark/generation-ready.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "timestamp": 1788859047.874,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "dark/generation-working.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "timestamp": 1788859044.753,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "dark/practice-setup.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "timestamp": 1788859041.613,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "dark/progress-empty.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testProgressVisualState()",
+      "timestamp": 1788859061.47,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "dark/progress-with-data.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testReviewAndProgressWithData()",
+      "timestamp": 1788859108.886,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "dark/review-with-data.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testReviewAndProgressWithData()",
+      "timestamp": 1788859097.043,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "dark/review-empty.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testReviewVisualState()",
+      "timestamp": 1788859118.683,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "dark/settings.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testSettingsVisualState()",
+      "timestamp": 1788859127.26,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "dark/speech-feedback.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testTranscriptCanBeEditedWithoutMicrophonePermission()",
+      "timestamp": 1788859143.759,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "dark/speech-edited.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testTranscriptCanBeEditedWithoutMicrophonePermission()",
+      "timestamp": 1788859139.903,
+      "language": "zh-Hans"
+    },
+    {
+      "file": "dark/welcome-default.png",
+      "source": "XCTest attachment",
+      "test": "PromptiUITests/testWelcomeWithDefaultLayout()",
+      "timestamp": 1788859149.752,
+      "language": "en"
+    }
+  ],
+  "notes": [
+    "Images are unmodified XCTest attachments from actual App runs.",
+    "English welcome uses an explicit en_US launch locale; other images use zh-Hans/CN.",
+    "Demo question content and its explanation language are independent of the interface language.",
+    "Earlier brand and localization screenshots remain historical records."
+  ]
+}

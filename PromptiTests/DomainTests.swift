@@ -146,6 +146,26 @@ struct DomainTests {
         #expect(counts.undetermined == 1)
     }
 
+    @Test("Celebration requires a complete all-correct set, not just 100% scored accuracy")
+    func perfectSetCelebration() {
+        let cases: [([AttemptResult], Int, Int, Bool)] = [
+            ([.correct, .correct, .correct], 3, 3, true),
+            ([.correct], 1, 1, true),
+            ([], 0, 0, false),
+            ([.correct, .skipped, .skipped], 3, 3, false),
+            ([.correct, .undetermined], 2, 2, false),
+            ([.correct, .reported], 2, 2, false),
+            ([.correct, .incorrect], 2, 2, false),
+            ([.correct, .correct, .correct], 3, 5, false),
+            ([.skipped, .skipped, .skipped], 3, 3, false)
+        ]
+        for (results, prepared, requested, expected) in cases {
+            var counts = SessionResultCounts()
+            for result in results { counts.record(result) }
+            #expect(counts.isPerfectSet(preparedCount: prepared, requestedCount: requested) == expected)
+        }
+    }
+
     @Test("Practice streak includes today or yesterday but not stale activity")
     func practiceStreak() throws {
         var calendar = Calendar(identifier: .gregorian)

@@ -1,5 +1,7 @@
 # 模型选择与本地化验收
 
+本页记录模型预设与本地化覆盖的实现。后续中文文案修订及最新界面截图见 [中文文案验收](Brand/Chinese-Copy-Review.md)。
+
 日期：2026-09-08。iPhone 17e 模拟器，iOS 27.0，默认字号，浅色 / 深色。全部截图来自实际 App 的 XCTest 附件，练习数据为 Demo fixtures。原图、测试方法和时间见 [截图清单](ModelLocalizationScreenshots/manifest.json)。
 
 ## 模型选择

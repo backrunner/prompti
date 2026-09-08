@@ -1,0 +1,170 @@
+{
+  "date": "2026-09-08",
+  "scope": "Final presentation; 18 domain tests and 8 UI test executions across Chinese/English light/dark. Earlier exploratory light run excluded.",
+  "batches": [
+    {
+      "language": "zh-Hans",
+      "appearance": "dark",
+      "summary": {
+        "devicesAndConfigurations": [
+          {
+            "device": {
+              "architecture": "arm64",
+              "deviceId": "8A488D26-61E3-4C65-9975-FC0EF51CA6CF",
+              "deviceName": "Prompti Brand Final",
+              "modelName": "iPhone 17e",
+              "osBuildNumber": "24A5390f",
+              "osVersion": "27.0",
+              "platform": "iOS Simulator"
+            },
+            "expectedFailures": 0,
+            "failedTests": 0,
+            "passedTests": 21,
+            "skippedTests": 0,
+            "testPlanConfiguration": {
+              "configurationId": "1",
+              "configurationName": "Test Scheme Action"
+            }
+          }
+        ],
+        "environmentDescription": "Prompti · Built with macOS 27.0",
+        "expectedFailures": 0,
+        "failedTests": 0,
+        "finishTime": 1788862126.422,
+        "passedTests": 21,
+        "result": "Passed",
+        "runtimeWarnings": [],
+        "skippedTests": 0,
+        "startTime": 1788861997.366,
+        "statistics": [],
+        "testFailures": [],
+        "title": "Test - Prompti",
+        "topInsights": [],
+        "totalTestCount": 21
+      }
+    },
+    {
+      "language": "zh-Hans",
+      "appearance": "light",
+      "summary": {
+        "devicesAndConfigurations": [
+          {
+            "device": {
+              "architecture": "arm64",
+              "deviceId": "8A488D26-61E3-4C65-9975-FC0EF51CA6CF",
+              "deviceName": "Prompti Brand Final",
+              "modelName": "iPhone 17e",
+              "osBuildNumber": "24A5390f",
+              "osVersion": "27.0",
+              "platform": "iOS Simulator"
+            },
+            "expectedFailures": 0,
+            "failedTests": 0,
+            "passedTests": 3,
+            "skippedTests": 0,
+            "testPlanConfiguration": {
+              "configurationId": "1",
+              "configurationName": "Test Scheme Action"
+            }
+          }
+        ],
+        "environmentDescription": "Prompti · Built with macOS 27.0",
+        "expectedFailures": 0,
+        "failedTests": 0,
+        "finishTime": 1788862363.977,
+        "passedTests": 3,
+        "result": "Passed",
+        "runtimeWarnings": [],
+        "skippedTests": 0,
+        "startTime": 1788862249.293,
+        "statistics": [],
+        "testFailures": [],
+        "title": "Test - Prompti",
+        "topInsights": [],
+        "totalTestCount": 3
+      }
+    },
+    {
+      "language": "en",
+      "appearance": "dark",
+      "summary": {
+        "devicesAndConfigurations": [
+          {
+            "device": {
+              "architecture": "arm64",
+              "deviceId": "8A488D26-61E3-4C65-9975-FC0EF51CA6CF",
+              "deviceName": "Prompti Brand Final",
+              "modelName": "iPhone 17e",
+              "osBuildNumber": "24A5390f",
+              "osVersion": "27.0",
+              "platform": "iOS Simulator"
+            },
+            "expectedFailures": 0,
+            "failedTests": 0,
+            "passedTests": 1,
+            "skippedTests": 0,
+            "testPlanConfiguration": {
+              "configurationId": "1",
+              "configurationName": "Test Scheme Action"
+            }
+          }
+        ],
+        "environmentDescription": "Prompti · Built with macOS 27.0",
+        "expectedFailures": 0,
+        "failedTests": 0,
+        "finishTime": 1788862218.357,
+        "passedTests": 1,
+        "result": "Passed",
+        "runtimeWarnings": [],
+        "skippedTests": 0,
+        "startTime": 1788862154.847,
+        "statistics": [],
+        "testFailures": [],
+        "title": "Test - Prompti",
+        "topInsights": [],
+        "totalTestCount": 1
+      }
+    },
+    {
+      "language": "en",
+      "appearance": "light",
+      "summary": {
+        "devicesAndConfigurations": [
+          {
+            "device": {
+              "architecture": "arm64",
+              "deviceId": "8A488D26-61E3-4C65-9975-FC0EF51CA6CF",
+              "deviceName": "Prompti Brand Final",
+              "modelName": "iPhone 17e",
+              "osBuildNumber": "24A5390f",
+              "osVersion": "27.0",
+              "platform": "iOS Simulator"
+            },
+            "expectedFailures": 0,
+            "failedTests": 0,
+            "passedTests": 1,
+            "skippedTests": 0,
+            "testPlanConfiguration": {
+              "configurationId": "1",
+              "configurationName": "Test Scheme Action"
+            }
+          }
+        ],
+        "environmentDescription": "Prompti · Built with macOS 27.0",
+        "expectedFailures": 0,
+        "failedTests": 0,
+        "finishTime": 1788862453.053,
+        "passedTests": 1,
+        "result": "Passed",
+        "runtimeWarnings": [],
+        "skippedTests": 0,
+        "startTime": 1788862391.806,
+        "statistics": [],
+        "testFailures": [],
+        "title": "Test - Prompti",
+        "topInsights": [],
+        "totalTestCount": 1
+      }
+    }
+  ]
+}

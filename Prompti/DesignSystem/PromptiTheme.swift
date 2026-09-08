@@ -55,6 +55,7 @@ enum PromptiSpacing {
 }
 
 enum PromptiTypography {
+    static let resultValueSize: CGFloat = 56
     static let hero = Font.system(.largeTitle, design: .rounded, weight: .bold)
     static let title = Font.system(.title2, design: .rounded, weight: .bold)
     static let section = Font.system(.title3, design: .rounded, weight: .semibold)
@@ -94,9 +95,13 @@ extension View {
     }
 
     func promptiHeroSurface() -> some View {
-        background(Color.promptHero, in: .rect(cornerRadius: PromptiRadius.hero))
+        promptiHeroSurface(in: RoundedRectangle(cornerRadius: PromptiRadius.hero))
+    }
+
+    func promptiHeroSurface<S: InsettableShape>(in shape: S) -> some View {
+        background(Color.promptHero, in: shape)
             .overlay {
-                RoundedRectangle(cornerRadius: PromptiRadius.hero)
+                shape
                     .strokeBorder(Color.promptBorder.opacity(0.6), lineWidth: 0.75)
                     .allowsHitTesting(false)
             }

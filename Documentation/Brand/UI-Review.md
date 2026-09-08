@@ -4,6 +4,10 @@
 
 后续模型预设与中英文目录 / 动态文案完善的实际截图和验证范围见 [模型与本地化验收](../Model-and-Localization-Review.md)。
 
+中文文案已在同日后续修订，最新主句、端内用词与实际截图见 [中文文案验收](Chinese-Copy-Review.md)。本页原有截图保留为此前视觉版本的记录。
+
+完成页后续改为圆形结果、短标题与紧凑统计，并加入全对礼花，见 [完成页与庆祝动效验收](Result-Celebration-Review.md)；[第一次布局调整](Summary-Layout-Review.md) 保留为历史记录。
+
 本轮把 P 对话标识延伸到全部 11 个功能页面及 App 的恢复界面。翡翠绿用于操作，暖中性表面用于阅读；深色主操作采用薄荷底配深绿文字。目的地继续用城市、地标和场景表达旅行。
 
 [打开实际截图画廊，切换浅色 / 深色](UI-Review.html)。36 张原始截图与来源保存在 [UIScreenshots](UIScreenshots) 及 [截图清单](UIScreenshots/manifest.json)；下面的对照图仅缩放拼排原图，没有重绘界面。

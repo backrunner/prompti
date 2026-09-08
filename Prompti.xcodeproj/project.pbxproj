@@ -30,6 +30,7 @@
 		5B893D514FEF54A141B6178F /* ProviderDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C96D9268874EB63409A40A /* ProviderDetector.swift */; };
 		5E816CA239B940EB7DBDB312 /* ModelRecommendations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D6A3311FCBC6CCE0A7667E /* ModelRecommendations.swift */; };
 		60AE713554DE8F38B098332A /* QuestionGenerationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6EBC0E2A0753FDDB733EEA3 /* QuestionGenerationService.swift */; };
+		6204A8505560E72FEB1C857C /* PromptiResultVisual.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4CDEFA0F13E3201998D7CF /* PromptiResultVisual.swift */; };
 		641137A9FF0D1DF7D93F3E74 /* CatalogLocalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5D9BF25F6B65732B9B54C6 /* CatalogLocalization.swift */; };
 		6414968B8242E4BEDE4B24DF /* QuestionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612660BA3E4A0191097A1960 /* QuestionProvider.swift */; };
 		673938B215463BB707E95E99 /* GenerationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8DF6A458E2E119D5DD048 /* GenerationView.swift */; };
@@ -138,6 +139,7 @@
 		9696B831DD791D7541729F9B /* DomainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainTests.swift; sourceTree = "<group>"; };
 		991311A2F24EF0A13D7D5067 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 		9D4B80A4D8C397C6B977F99E /* GenerationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerationError.swift; sourceTree = "<group>"; };
+		9D4CDEFA0F13E3201998D7CF /* PromptiResultVisual.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptiResultVisual.swift; sourceTree = "<group>"; };
 		A4A43C7FE87567372D23D17B /* ProviderDeadline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderDeadline.swift; sourceTree = "<group>"; };
 		A6DA56EDEDCA371AE3BC0A44 /* PersistenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceTests.swift; sourceTree = "<group>"; };
 		A9F94A2D0CDC6969DC4C20DF /* ReviewRegressionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewRegressionTests.swift; sourceTree = "<group>"; };
@@ -261,6 +263,7 @@
 				E23CE64F34142A29866C8603 /* LandingConversationVisual.swift */,
 				47A30C6C807C9FF9D5D35850 /* PromptiBrand.swift */,
 				08E5148F4013543DE1FD4A6D /* PromptiComponents.swift */,
+				9D4CDEFA0F13E3201998D7CF /* PromptiResultVisual.swift */,
 				62C312F2378189D5E19F29DC /* PromptiTheme.swift */,
 			);
 			path = DesignSystem;
@@ -579,6 +582,7 @@
 				B197630C6D19C7C163372F91 /* PromptiApp.swift in Sources */,
 				FDF6CECC0A029960468E5DB5 /* PromptiBrand.swift in Sources */,
 				E9A42B8F6EA12AB9E06ADC2A /* PromptiComponents.swift in Sources */,
+				6204A8505560E72FEB1C857C /* PromptiResultVisual.swift in Sources */,
 				55D649A9144CD9530D4B5588 /* PromptiSchemaV1.swift in Sources */,
 				2DB2B20A78B39B49066A516F /* PromptiTheme.swift in Sources */,
 				700069379D68282EF717DAD2 /* ProviderDeadline.swift in Sources */,

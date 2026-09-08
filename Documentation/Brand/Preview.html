@@ -16,7 +16,7 @@
   .hero, .store { border: 1px solid #dee5db; border-radius: 28px; padding: 32px; }
   .hero { background: #e6eee2; display: flex; align-items: center; gap: 32px; min-height: 340px; }
   .hero-icon { width: 238px; height: 238px; }
-  h1 { font-size: 46px; line-height: 1.06; letter-spacing: -2px; margin: 12px 0 18px; }
+  h1 { font-size: 46px; line-height: 1.06; letter-spacing: -2px; margin: 12px 0 18px; text-wrap: balance; }
   .hero p { color: #4e6c60; line-height: 1.8; font-size: 14px; margin: 0; }
   .store { background: #fff; }
   .store .eyebrow { margin-bottom: 22px; }
@@ -24,7 +24,7 @@
   .store-result img { width: 64px; height: 64px; }
   .app-title { font-size: 19px; font-weight: 600; letter-spacing: -.4px; margin-bottom: 5px; color: #192521; }
   .subtitle { font-size: 12px; color: #718078; }
-  .get { margin-left: auto; padding: 7px 23px; border-radius: 24px; background: #f1f3f7; color: #007aff; font-size: 14px; font-weight: 600; }
+  .get { margin-left: auto; padding: 7px 23px; border-radius: 24px; background: #f1f3f7; color: #007aff; font-size: 14px; font-weight: 600; white-space: nowrap; flex-shrink: 0; }
   .divider { height: 1px; background: #edf0eb; margin: 24px 0; }
   .product img { width: 100px; height: 100px; }
   .product .app-title { font-size: 25px; }
@@ -50,7 +50,7 @@
   footer { justify-content: space-between; margin-top: 24px; color: #7b877d; font-size: 10px; line-height: 1.6; }
   a { color: inherit; text-decoration-color: #9bab9c; }
   @media(max-width:1000px) { body { padding: 24px; } .layout,.bottom { grid-template-columns: 1fr; } .hero { justify-content: center; } .variants { flex-wrap: wrap; } .variant { min-width: 28%; } }
-  @media(max-width:520px) { .hero { flex-direction: column; align-items: flex-start; } .hero-icon { width: 180px; height: 180px; } h1 { font-size: 40px; } .sizes { flex-wrap: wrap; gap: 18px; } .lockup { font-size: 22px; } header .eyebrow { display: none; } }
+  @media(max-width:520px) { .hero { flex-direction: column; align-items: flex-start; } .hero-icon { width: 180px; height: 180px; } h1 { font-size: 34px; } .sizes { flex-wrap: wrap; gap: 18px; } .lockup { font-size: 22px; } header .eyebrow { display: none; } }
 </style>
 <header>
   <div class="brand"><img src="Prompti-Mark.svg" alt="">Prompti</div>
@@ -60,16 +60,16 @@
   <div class="layout">
     <section class="hero">
       <img class="hero-icon" src="Previews/Default.png" alt="Prompti：翡翠绿底色，奶白色 P 与对话气泡轮廓">
-      <div><div class="eyebrow">SAY HELLO TO THE WORLD</div><h1>从开口，<br>到远方。</h1><p>一个 P，一次对话。<br>让每一段旅程，从自信表达开始。</p></div>
+      <div><div class="eyebrow">SAY HELLO TO THE WORLD</div><h1>出发前，<br>练好旅行常用语。</h1><p>选好目的地，练习点餐、问路、入住等常用对话。</p></div>
     </section>
     <section class="store">
       <div class="eyebrow">APP STORE · 搜索列表 / 产品页示意</div>
-      <div class="store-result"><img src="Previews/Default.png" alt="搜索结果中的图标"><div><div class="app-title">Prompti</div><div class="subtitle">旅行语言练习</div></div><span class="get">获取</span></div>
+      <div class="store-result"><img src="Previews/Default.png" alt="搜索结果中的图标"><div><div class="app-title">Prompti</div><div class="subtitle">按目的地练习旅行常用语</div></div><span class="get">获取</span></div>
       <div class="divider"></div>
-      <div class="store-result product"><img src="Previews/Default.png" alt="产品页中的图标"><div><div class="app-title">Prompti</div><div class="subtitle">为下一段旅程，练习开口</div><span class="get">获取</span></div></div>
+      <div class="store-result product"><img src="Previews/Default.png" alt="产品页中的图标"><div><div class="app-title">Prompti</div><div class="subtitle">按目的地练习旅行常用语</div><span class="get">获取</span></div></div>
     </section>
   </div>
-  <div class="section-title"><h2>一种轮廓，适应每一种外观</h2><span>Icon Composer · iOS 26 系统渲染</span></div>
+  <div class="section-title"><h2>同一标识，六种系统外观</h2><span>Icon Composer · iOS 26 系统渲染</span></div>
   <section class="variants" aria-label="系统外观">
     <figure class="variant"><img src="Previews/Default.png" alt="默认"><figcaption>默认 · 翡翠绿</figcaption></figure>
     <figure class="variant dark"><img src="Previews/Dark.png" alt="深色"><figcaption>深色 · 薄荷绿</figcaption></figure>
@@ -79,7 +79,7 @@
     <figure class="variant dark"><img src="Previews/ClearDark.png" alt="深色透明"><figcaption>透明 · 深色</figcaption></figure>
   </section>
   <div class="bottom">
-    <section><div class="section-title"><h2>缩小，仍然一眼认出</h2><span>按 1 CSS px ≈ 1 pt 排列</span></div><div class="sizes">
+    <section><div class="section-title"><h2>小尺寸显示效果</h2><span>按 1 CSS px ≈ 1 pt 排列</span></div><div class="sizes">
       <figure><img src="Previews/Default.png" width="20" height="20" alt="20pt"><figcaption>20 pt</figcaption></figure>
       <figure><img src="Previews/Default.png" width="29" height="29" alt="29pt"><figcaption>29 pt</figcaption></figure>
       <figure><img src="Previews/Default.png" width="40" height="40" alt="40pt"><figcaption>40 pt</figcaption></figure>
@@ -87,7 +87,7 @@
       <figure><img src="Previews/Default.png" width="80" height="80" alt="80pt"><figcaption>80 pt</figcaption></figure>
       <figure><img src="Previews/Default.png" width="120" height="120" alt="120pt"><figcaption>120 pt</figcaption></figure>
     </div></section>
-    <section><div class="section-title"><h2>离开图标，也是品牌</h2><span>单色矢量 · 字标组合示意</span></div><div class="lockups"><div class="lockup"><img src="Prompti-Mark.svg" alt="">Prompti</div><div class="lockup dark"><img src="Prompti-Mark-Reversed.svg" alt="">Prompti</div></div></section>
+    <section><div class="section-title"><h2>标识与品牌名组合</h2><span>单色矢量 · 字标组合示意</span></div><div class="lockups"><div class="lockup"><img src="Prompti-Mark.svg" alt="">Prompti</div><div class="lockup dark"><img src="Prompti-Mark-Reversed.svg" alt="">Prompti</div></div></section>
   </div>
 </main>
 <footer><span>商店排版为设计示意，不代表已发布页面。系统光效与着色会随版本、壁纸和用户设置变化。</span><a href="README.md">品牌资源与生成说明 ↗</a></footer>

@@ -1,0 +1,56 @@
+{
+  "date": "2026-09-08",
+  "checks": {
+    "brand": "passed",
+    "localization": "passed",
+    "catalogEntries": 642,
+    "dynamicLabels": 185,
+    "compilerExtractedUses": 323,
+    "buildForTesting": "passed",
+    "gitDiffCheck": "passed"
+  },
+  "finalRuns": [
+    {
+      "appearance": "light",
+      "result": "Passed",
+      "passedTests": 11,
+      "failedTests": 0,
+      "startTime": 1788858850.668,
+      "finishTime": 1788858911.574,
+      "uiTests": [
+        "testGenerationFailureVisualState",
+        "testGenerationPartialSuccessVisualState",
+        "testOnboardingVisualStates",
+        "testPracticeVisualStates"
+      ]
+    },
+    {
+      "appearance": "dark",
+      "result": "Passed",
+      "passedTests": 13,
+      "failedTests": 0,
+      "startTime": 1788858955.16,
+      "finishTime": 1788859151.677,
+      "uiTests": [
+        "testCompletedPracticeReturnsToSetupWithoutRegenerating",
+        "testDestinationPickerVisualState",
+        "testGenerationFailureVisualState",
+        "testGenerationPartialSuccessVisualState",
+        "testHomeVisualState",
+        "testOnboardingVisualStates",
+        "testPracticeVisualStates",
+        "testProgressVisualState",
+        "testReviewAndProgressWithData",
+        "testReviewVisualState",
+        "testSettingsVisualState",
+        "testTranscriptCanBeEditedWithoutMicrophonePermission",
+        "testWelcomeWithDefaultLayout"
+      ]
+    }
+  ],
+  "notes": [
+    "The first light run passed 11 UI tests and 7 Swift tests; its partial-generation UI test expected English text and failed under Chinese.",
+    "After correcting that assertion and finalizing the welcome line break and generation labels, the final light run passed 4 affected UI tests and the same 7 Swift tests.",
+    "The final dark run passed all 13 selected UI tests. Counts across batches are not a single uninterrupted full suite."
+  ]
+}

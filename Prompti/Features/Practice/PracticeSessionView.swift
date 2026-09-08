@@ -7,7 +7,6 @@ struct PracticeSessionView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.openURL) private var openURL
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.scenePhase) private var scenePhase
 
     @Environment(AppDependencies.self) private var dependencies
@@ -33,9 +32,8 @@ struct PracticeSessionView: View {
     @State private var speechEvaluation: SpeechEvaluation?
     @State private var persistenceError: String?
     @State private var showPersistenceError = false
-    @State private var summaryRouteProgress: CGFloat = 0
-    @State private var summaryReveal = false
-    @State private var summaryCelebrated = false
+    @State private var summaryPresented = false
+    @State private var showCelebration = false
     @State private var correctFeedback = 0
     @State private var incorrectFeedback = 0
 
@@ -71,15 +69,20 @@ struct PracticeSessionView: View {
         .toolbar(.hidden, for: .tabBar)
         .safeAreaInset(edge: .bottom) {
             if completed {
-                Button("Done", action: finishFlow)
-                    .buttonStyle(PrimaryActionButtonStyle())
-                    .accessibilityIdentifier("session.done")
-                    .frame(maxWidth: 640)
-                    .frame(maxWidth: .infinity)
-                    .padding(.horizontal, PromptiSpacing.page)
-                    .padding(.top, 10)
-                    .padding(.bottom, 8)
-                    .background(PromptiActionScrim())
+                VStack(spacing: PromptiSpacing.related) {
+                    Label("Saved", systemImage: "checkmark.circle")
+                        .font(.footnote)
+                        .foregroundStyle(Color.promptMuted)
+                    Button("Done", action: finishFlow)
+                        .buttonStyle(PrimaryActionButtonStyle())
+                        .accessibilityIdentifier("session.done")
+                }
+                .frame(maxWidth: 640)
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal, PromptiSpacing.page)
+                .padding(.top, PromptiSpacing.related)
+                .padding(.bottom, PromptiSpacing.inline)
+                .background(PromptiActionScrim())
 
             } else if index < records.count {
                 primaryQuestionAction
@@ -501,178 +504,108 @@ struct PracticeSessionView: View {
     private var summary: some View {
         GeometryReader { proxy in
             ScrollView {
-                VStack(spacing: 16) {
-                    summaryHero
+                VStack(spacing: PromptiSpacing.section) {
+                    PromptiResultVisual(
+                        value: scoredCount > 0 ? "\(accuracy)%" : "—",
+                        label: scoredCount > 0 ? "accuracy" : "not scored",
+                        accuracy: scoredCount > 0 ? Double(counts.correct) / Double(scoredCount) : nil,
+                        isPerfect: isPerfectSet
+                    )
 
-                    LazyVGrid(columns: summaryMetricColumns, spacing: 10) {
-                        SummaryMetricCell(value: "\(counts.correct)", label: "correct", symbol: "checkmark", tint: .promptSuccess)
-                        SummaryMetricCell(value: "\(counts.incorrect)", label: "review", symbol: "arrow.counterclockwise", tint: .promptWarning)
-                        SummaryMetricCell(value: "\(counts.skipped)", label: "skipped", symbol: "forward.fill", tint: .promptMuted)
-                        SummaryMetricCell(value: "\(counts.undetermined)", label: "not scored", symbol: "waveform", tint: .promptMuted)
+                    VStack(spacing: PromptiSpacing.inline) {
+                        Text(LocalizedStringKey(summaryTitle))
+                            .font(PromptiTypography.hero)
+                            .multilineTextAlignment(.center)
+                            .accessibilityIdentifier("session.summary")
+                        if session.hasRemaining {
+                            Text("\(records.count) of \(session.requestedCount) questions prepared")
+                                .font(.subheadline)
+                                .foregroundStyle(Color.promptMuted)
+                        }
                     }
-                    .opacity(summaryReveal ? 1 : 0)
-                    .offset(y: summaryReveal ? 0 : 10)
 
-                    if counts.reported > 0 {
-                        InlineNotice(
-                            symbol: "exclamationmark.bubble.fill",
-                            text: String(localized: "\(counts.reported) reported questions were removed from future practice."),
-                            tone: .warning
-                        )
-                    }
-
-                    summaryReward
-                        .opacity(summaryReveal ? 1 : 0)
-                        .scaleEffect(summaryReveal ? 1 : 0.94)
+                    summaryStatistics
                 }
-                .padding(.horizontal, PromptiSpacing.page)
-                .padding(.vertical, 12)
+                .padding(PromptiSpacing.page)
                 .frame(maxWidth: 640)
-                .frame(
-                    maxWidth: .infinity,
-                    minHeight: max(proxy.size.height - 24, 0),
-                    alignment: .center
-                )
+                .frame(maxWidth: .infinity, minHeight: proxy.size.height)
             }
             .scrollIndicators(.hidden)
-        }
-        .onAppear(perform: playSummaryCelebration)
-    }
-
-    private var summaryHero: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            ViewThatFits(in: .horizontal) {
-                HStack(alignment: .top, spacing: 16) {
-                    summaryHeaderCopy
-                    Spacer(minLength: 0)
-                    summaryScoreBadge
-                }
-                VStack(alignment: .leading, spacing: 12) {
-                    summaryHeaderCopy
-                    summaryScoreBadge
+            .overlay {
+                if showCelebration {
+                    PromptiConfettiBurst()
                 }
             }
-
-            PracticeJourneyVisual(
-                progress: summaryRouteProgress,
-                destinationSymbol: "flag.checkered",
-                isComplete: summaryReveal
-            )
-            .frame(height: dynamicTypeSize.isAccessibilitySize ? 126 : 112)
         }
-        .padding(18)
-        .promptiHeroSurface()
-        .accessibilityElement(children: .contain)
+        .task { await celebratePerfectSet() }
+        .onChange(of: reduceMotion) { _, reduced in
+            if reduced { showCelebration = false }
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase != .active { showCelebration = false }
+        }
+        .onDisappear { showCelebration = false }
     }
 
-    private var summaryHeaderCopy: some View {
-        VStack(alignment: .leading, spacing: 5) {
-            Label(LocalizedStringKey(session.hasRemaining ? "Prepared questions completed" : "Practice complete"), systemImage: "checkmark.circle.fill")
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(Color.promptAccent)
-            Text("A little more confident.")
-                .font(PromptiTypography.hero)
-                .fontDesign(.rounded)
-                .accessibilityIdentifier("session.summary")
-            if session.hasRemaining {
-                Text("\(records.count) of \(session.requestedCount) questions prepared")
-                    .font(.subheadline).foregroundStyle(Color.promptMuted)
-            }
-            Text(LocalizedStringKey(summaryMessage))
-                .font(.subheadline)
-                .foregroundStyle(Color.promptMuted)
-                .fixedSize(horizontal: false, vertical: true)
+    private var summaryStatistics: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: PromptiSpacing.section) { summaryStatisticItems }
+            VStack(spacing: PromptiSpacing.related) { summaryStatisticItems }
         }
+        .padding(.horizontal, PromptiSpacing.page)
+        .padding(.vertical, PromptiSpacing.related)
+        .promptiSurface()
+        .accessibilityIdentifier("session.summaryStatistics")
     }
 
-    private var summaryScoreBadge: some View {
-        VStack(spacing: 1) {
-            Text(summaryPrimaryValue)
-                .font(.title.bold())
-                .fontDesign(.rounded)
+    @ViewBuilder
+    private var summaryStatisticItems: some View {
+        if counts.correct > 0 { summaryStatistic(counts.correct, label: "correct") }
+        if counts.incorrect > 0 { summaryStatistic(counts.incorrect, label: "review") }
+        if counts.skipped > 0 { summaryStatistic(counts.skipped, label: "skipped") }
+        if counts.undetermined > 0 { summaryStatistic(counts.undetermined, label: "not scored") }
+        if counts.reported > 0 { summaryStatistic(counts.reported, label: "Reported") }
+    }
+
+    private func summaryStatistic(_ count: Int, label: String) -> some View {
+        HStack(alignment: .firstTextBaseline, spacing: PromptiSpacing.inline) {
+            Text("\(count)")
+                .font(PromptiTypography.section)
                 .monospacedDigit()
-            Text(LocalizedStringKey(summaryPrimaryLabel))
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(Color.promptMuted)
-        }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 10)
-        .background(Color.promptSurface, in: RoundedRectangle(cornerRadius: PromptiRadius.control, style: .continuous))
-        .scaleEffect(summaryReveal ? 1 : 0.94)
-        .opacity(summaryReveal ? 1 : 0)
-    }
-
-    private var summaryReward: some View {
-        VStack(spacing: 9) {
-            PromptiSymbolBadge(symbol: "checkmark.bubble.fill", size: 56)
-                .symbolEffect(.bounce, value: reduceMotion ? false : summaryReveal)
-                .accessibilityHidden(true)
-            Text("Progress saved")
-                .font(.headline)
-            Text("Your next conversation just got easier.")
+            Text(LocalizedStringKey(label))
                 .font(.subheadline)
                 .foregroundStyle(Color.promptMuted)
-                .multilineTextAlignment(.center)
         }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 8)
+        .fixedSize(horizontal: true, vertical: false)
         .accessibilityElement(children: .combine)
     }
 
-    private var summaryMetricColumns: [GridItem] {
-        if dynamicTypeSize.isAccessibilitySize {
-            [GridItem(.flexible())]
-        } else {
-            [GridItem(.flexible()), GridItem(.flexible())]
-        }
-    }
-
-    private var scoredCount: Int {
-        counts.correct + counts.incorrect
-    }
+    private var scoredCount: Int { counts.correct + counts.incorrect }
 
     private var accuracy: Int {
         guard scoredCount > 0 else { return 0 }
         return Int((Double(counts.correct) / Double(scoredCount) * 100).rounded())
     }
 
-    private var summaryPrimaryValue: String {
-        scoredCount > 0 ? "\(accuracy)%" : "\(records.count)"
+    private var isPerfectSet: Bool {
+        counts.isPerfectSet(preparedCount: records.count, requestedCount: session.requestedCount)
     }
 
-    private var summaryPrimaryLabel: String {
-        scoredCount > 0 ? "accuracy" : "finished"
+    private var summaryTitle: String {
+        if isPerfectSet { return "All correct!" }
+        if session.hasRemaining { return "That's it for now" }
+        return "Practice complete"
     }
 
-    private var summaryMessage: String {
-        guard scoredCount > 0 else {
-            return "You completed the route and kept every question moving."
-        }
-        if accuracy >= 80 {
-            return "Strong work. These phrases are ready for real conversations."
-        }
-        if accuracy >= 50 {
-            return "Good progress. A quick review will make this route feel easier."
-        }
-        return "You finished the set. Review the tricky turns, then try the route again."
-    }
-
-    private func playSummaryCelebration() {
-        guard !summaryCelebrated else { return }
-        summaryCelebrated = true
-
-        if reduceMotion {
-            summaryRouteProgress = 1
-            summaryReveal = true
-            return
-        }
-
-        withAnimation(.smooth(duration: 0.85)) {
-            summaryRouteProgress = 1
-        }
-        withAnimation(.bouncy(duration: 0.55).delay(0.28)) {
-            summaryReveal = true
-        }
+    private func celebratePerfectSet() async {
+        guard !summaryPresented else { return }
+        summaryPresented = true
+        guard isPerfectSet, !reduceMotion, scenePhase == .active else { return }
+        showCelebration = true
+        do {
+            try await Task.sleep(for: .seconds(PromptiConfettiBurst.duration))
+        } catch { /* Navigating away ends the burst immediately. */ }
+        showCelebration = false
     }
 
     private func submit() {

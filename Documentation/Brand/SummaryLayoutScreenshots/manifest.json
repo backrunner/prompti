@@ -1,0 +1,107 @@
+{
+  "date": "2026-09-08",
+  "device": "iPhone 17e simulator",
+  "system": "iOS 27.0",
+  "contentSize": "large (system default)",
+  "source": "Unmodified XCTest screenshot attachments; Demo fixtures",
+  "screenshots": [
+    {
+      "file": "zh-Hans/light/practice-summary-partial.png",
+      "test": "PromptiUITests/testAutomaticFillFailureAllowsPartialCompletion()",
+      "timestamp": 1788860261.203
+    },
+    {
+      "file": "zh-Hans/light/practice-summary.png",
+      "test": "PromptiUITests/testCompletedPracticeReturnsToSetupWithoutRegenerating()",
+      "timestamp": 1788860295.181
+    },
+    {
+      "file": "zh-Hans/light/practice-summary-correct.png",
+      "test": "PromptiUITests/testReviewAndProgressWithData()",
+      "timestamp": 1788860337.607
+    },
+    {
+      "file": "zh-Hans/light/practice-summary-incorrect.png",
+      "test": "PromptiUITests/testReviewAndProgressWithData()",
+      "timestamp": 1788860328.012
+    },
+    {
+      "file": "zh-Hans/dark/practice-summary-partial.png",
+      "test": "PromptiUITests/testAutomaticFillFailureAllowsPartialCompletion()",
+      "timestamp": 1788860676.547
+    },
+    {
+      "file": "zh-Hans/dark/practice-summary.png",
+      "test": "PromptiUITests/testCompletedPracticeReturnsToSetupWithoutRegenerating()",
+      "timestamp": 1788860710.218
+    },
+    {
+      "file": "zh-Hans/dark/practice-summary-correct.png",
+      "test": "PromptiUITests/testReviewAndProgressWithData()",
+      "timestamp": 1788860752.326
+    },
+    {
+      "file": "zh-Hans/dark/practice-summary-incorrect.png",
+      "test": "PromptiUITests/testReviewAndProgressWithData()",
+      "timestamp": 1788860742.879
+    },
+    {
+      "file": "en/light/practice-summary-correct.png",
+      "test": "PromptiUITests/testReviewAndProgressWithData()",
+      "timestamp": 1788860803.028
+    },
+    {
+      "file": "en/light/practice-summary-incorrect.png",
+      "test": "PromptiUITests/testReviewAndProgressWithData()",
+      "timestamp": 1788860793.603
+    },
+    {
+      "file": "en/dark/practice-summary-correct.png",
+      "test": "PromptiUITests/testReviewAndProgressWithData()",
+      "timestamp": 1788860853.993
+    },
+    {
+      "file": "en/dark/practice-summary-incorrect.png",
+      "test": "PromptiUITests/testReviewAndProgressWithData()",
+      "timestamp": 1788860844.547
+    }
+  ],
+  "testRuns": [
+    {
+      "language": "zh-Hans",
+      "appearance": "light",
+      "result": "passed",
+      "methods": [
+        "testAutomaticFillFailureAllowsPartialCompletion",
+        "testCompletedPracticeReturnsToSetupWithoutRegenerating",
+        "testReviewAndProgressWithData"
+      ]
+    },
+    {
+      "language": "zh-Hans",
+      "appearance": "dark",
+      "result": "passed",
+      "methods": [
+        "testAutomaticFillFailureAllowsPartialCompletion",
+        "testCompletedPracticeReturnsToSetupWithoutRegenerating",
+        "testReviewAndProgressWithData"
+      ]
+    },
+    {
+      "language": "en",
+      "appearance": "light",
+      "result": "passed",
+      "methods": [
+        "testReviewAndProgressWithData"
+      ]
+    },
+    {
+      "language": "en",
+      "appearance": "dark",
+      "result": "passed",
+      "methods": [
+        "testReviewAndProgressWithData"
+      ]
+    }
+  ]
+}

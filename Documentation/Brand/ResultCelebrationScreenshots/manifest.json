@@ -1,0 +1,78 @@
+{
+  "date": "2026-09-08",
+  "device": "iPhone 17e simulator",
+  "system": "iOS 27.0",
+  "contentSize": "large (system default)",
+  "source": "Unmodified XCTest screenshot attachments; Demo fixtures",
+  "screenshots": [
+    {
+      "file": "zh-Hans/dark/practice-summary-partial.png",
+      "test": "PromptiUITests/testAutomaticFillFailureAllowsPartialCompletion()",
+      "timestamp": 1788862031.187
+    },
+    {
+      "file": "zh-Hans/dark/practice-summary.png",
+      "test": "PromptiUITests/testCompletedPracticeReturnsToSetupWithoutRegenerating()",
+      "timestamp": 1788862066.222
+    },
+    {
+      "file": "zh-Hans/dark/practice-summary-correct.png",
+      "test": "PromptiUITests/testReviewAndProgressWithData()",
+      "timestamp": 1788862112.512
+    },
+    {
+      "file": "zh-Hans/dark/practice-summary-incorrect.png",
+      "test": "PromptiUITests/testReviewAndProgressWithData()",
+      "timestamp": 1788862102.638
+    },
+    {
+      "file": "en/dark/practice-summary-correct.png",
+      "test": "PromptiUITests/testReviewAndProgressWithData()",
+      "timestamp": 1788862208.753
+    },
+    {
+      "file": "en/dark/practice-summary-incorrect.png",
+      "test": "PromptiUITests/testReviewAndProgressWithData()",
+      "timestamp": 1788862194.791
+    },
+    {
+      "file": "zh-Hans/light/practice-summary-partial.png",
+      "test": "PromptiUITests/testAutomaticFillFailureAllowsPartialCompletion()",
+      "timestamp": 1788862270.49
+    },
+    {
+      "file": "zh-Hans/light/practice-summary.png",
+      "test": "PromptiUITests/testCompletedPracticeReturnsToSetupWithoutRegenerating()",
+      "timestamp": 1788862306.061
+    },
+    {
+      "file": "zh-Hans/light/practice-summary-correct.png",
+      "test": "PromptiUITests/testReviewAndProgressWithData()",
+      "timestamp": 1788862355.756
+    },
+    {
+      "file": "zh-Hans/light/practice-summary-incorrect.png",
+      "test": "PromptiUITests/testReviewAndProgressWithData()",
+      "timestamp": 1788862343.751
+    },
+    {
+      "file": "en/light/practice-summary-correct.png",
+      "test": "PromptiUITests/testReviewAndProgressWithData()",
+      "timestamp": 1788862443.869
+    },
+    {
+      "file": "en/light/practice-summary-incorrect.png",
+      "test": "PromptiUITests/testReviewAndProgressWithData()",
+      "timestamp": 1788862430.993
+    }
+  ],
+  "video": {
+    "file": "Celebration.mp4",
+    "source": "simctl io recordVideo; actual Demo review session, one correct answer out of one requested",
+    "test": "PromptiUITests/testReviewAndProgressWithData()",
+    "language": "zh-Hans",
+    "appearance": "light",
+    "edit": "3.4-second excerpt beginning at 99.95 seconds; frame rate normalized to 30 fps, no time scaling or image compositing",
+    "gif": "Celebration.gif (390px wide, 20fps, plays once)"
+  }
+}

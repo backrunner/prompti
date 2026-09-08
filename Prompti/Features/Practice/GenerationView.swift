@@ -83,7 +83,7 @@ private enum GenerationStage: Int, CaseIterable, Identifiable {
         switch self {
         case .context: "Context"
         case .questions: "Create"
-        case .review: "Review"
+        case .review: "Check quality"
         }
     }
 
