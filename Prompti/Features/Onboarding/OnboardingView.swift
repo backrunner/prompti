@@ -119,7 +119,7 @@ struct OnboardingView: View {
 
     private var welcome: some View {
         GeometryReader { proxy in
-            ScrollView {
+            PromptiScrollView {
                 VStack(alignment: .leading, spacing: 18) {
                     PromptiWordmark()
 
@@ -170,7 +170,7 @@ struct OnboardingView: View {
     }
 
     private var destinationPicker: some View {
-        ScrollView {
+        PromptiScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 SectionLabel("Pick your next stop")
 
@@ -206,7 +206,7 @@ struct OnboardingView: View {
     }
 
     private var languagePicker: some View {
-        ScrollView {
+        PromptiScrollView {
             VStack(alignment: .leading, spacing: 18) {
                 SectionLabel("Choose your language", subtitle: "You can change it for every practice set.")
                 DestinationSummaryCard(destination: destination, compact: true)
@@ -244,7 +244,7 @@ struct OnboardingView: View {
     }
 
     private var modelPicker: some View {
-        ScrollView {
+        PromptiScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 SectionLabel("Choose your AI", subtitle: "Connect an account, or use your own API key.")
                 PromptiSectionSurface {
@@ -264,7 +264,7 @@ struct OnboardingView: View {
     }
 
     private var preferencesPicker: some View {
-        ScrollView {
+        PromptiScrollView {
             VStack(alignment: .leading, spacing: 22) {
                 SectionLabel("Set your pace", subtitle: "These defaults can be changed for every practice set.")
 

@@ -6,6 +6,7 @@ Run from any directory. This catches resource and style drift; it is not a visua
 from pathlib import Path
 import json
 import re
+import runpy
 import struct
 import sys
 import xml.etree.ElementTree as ET
@@ -88,6 +89,11 @@ for folder in ("Prompti/Features", "Prompti/App", "Prompti/DesignSystem"):
         if path.name != "PromptiTheme.swift":
             check(not re.search(r"(?:UI)?Color\s*\(\s*(?:red:|hex:|\.sRGB|\.displayP3)", source),
                   f"Hard-coded page color in {path.relative_to(ROOT)}; define a semantic role")
+        if "Features" in path.parts:
+            check(not re.search(r"\bScrollView\s*\{", source),
+                  f"Use PromptiScrollView for vertical scroll edges: {path.relative_to(ROOT)}")
+            check("destination.symbol" not in source,
+                  f"Use DestinationArtwork for destination identity: {path.relative_to(ROOT)}")
         check(".foregroundStyle(.secondary)" not in source,
               f"Use promptMuted for readable secondary text over branded foregrounds: {path.relative_to(ROOT)}")
         check(not re.search(r"\bColor\.(?:red|green|blue|orange|yellow|purple|white)\b|"
@@ -95,6 +101,30 @@ for folder in ("Prompti/Features", "Prompti/App", "Prompti/DesignSystem"):
               f"Use a paired semantic foreground/background role: {path.relative_to(ROOT)}")
 
 ns = {"svg": "http://www.w3.org/2000/svg"}
+artwork_source = runpy.run_path(str(ROOT / "Tools/DrawDestinationArtwork.py"))
+drawings = artwork_source["ART"]
+destination_source = (ROOT / "Prompti/Domain/DestinationModels.swift").read_text()
+destination_ids = set(re.findall(r'id: "([\w-]+)", city:', destination_source))
+destination_ids.update(re.findall(r'\.init\("([\w-]+)", "[^"]+", "[^"]+", -?\d', destination_source))
+check(set(drawings) == destination_ids, "Every built-in destination needs an individual SVG drawing")
+check(len({shapes for _, _, shapes in drawings.values()}) == len(drawings),
+      "Destination artwork must not reuse a generic drawing")
+for key, (title, _, shapes) in drawings.items():
+    folder = ROOT / f"Prompti/Assets.xcassets/Destinations/Destination-{key}.imageset"
+    svg_path = folder / f"{key}.svg"
+    check(svg_path.exists(), f"Missing destination SVG: {key}")
+    if not svg_path.exists():
+        continue
+    svg = ET.parse(svg_path).getroot()
+    check(svg.attrib.get("viewBox") == "0 0 64 64", f"Destination viewBox differs: {key}")
+    check(shapes in svg_path.read_text(), f"Destination SVG differs from its drawing source: {key}")
+    check(svg.find("svg:title", ns).text == title, f"Wrong destination subject: {key}")
+    check(svg.find(".//svg:image", ns) is None and svg.find(".//svg:text", ns) is None,
+          f"Destination SVG must contain drawn vectors, not raster images or fonts: {key}")
+    properties = json.loads((folder / "Contents.json").read_text())["properties"]
+    check(properties == {"preserves-vector-representation": True, "template-rendering-intent": "template"},
+          f"Destination artwork must remain a vector template: {key}")
+
 source_mark = ROOT / "Prompti/AppIcon.icon/Assets/Prompti.svg"
 contour = ET.parse(source_mark).getroot().find("svg:path", ns).attrib["d"]
 for path in (ROOT / "Documentation/Brand").glob("Prompti-Mark*.svg"):

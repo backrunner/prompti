@@ -23,11 +23,14 @@ Prompti 帮助用户练习旅行中常用的对话。视觉气质是清晰、温
 | iOS 主图标 | `Prompti/AppIcon.icon`，由系统提供圆角与材质 |
 | App 内品牌组合 | `PromptiWordmark`；仅符号用 `PromptiBrandMark` |
 | 单色品牌物料 | `Documentation/Brand/Prompti-Mark*.svg` |
+| 内置目的地 | `DestinationArtwork`，使用 `Tools/DrawDestinationArtwork.py` 逐个绘制的地标 / 代表物 SVG |
 | 功能图标 | SF Symbols；通用徽标用 `PromptiSymbolBadge` |
 
-所有标识由 `Tools/GenerateAppIcon.swift` 中同一条轮廓生成。App 内使用保留矢量的模板 PDF `BrandMark.imageset`，由前景色着色。不要复写路径、拼接系统气泡与字体 P，也不要在 App 内把完整 App Icon 当作 Logo。
+P 对话品牌标识由 `Tools/GenerateAppIcon.swift` 中同一条轮廓生成。App 内使用保留矢量的模板 PDF `BrandMark.imageset`，由前景色着色。不要复写路径、拼接系统气泡与字体 P，也不要在 App 内把完整 App Icon 当作 Logo。
 
 保持方向与长宽比；不挤压、不旋转 Logo，不给它增加飞机或额外气泡。独立 Logo 至少保留自身宽度 10% 的净空，推荐最小可见宽度 16px。欢迎页和设置页可展示完整字标；其他页面以内容为主。
+
+内置目的地不得再复用通用楼房、交通工具等 SF Symbols。每个稳定 ID 对应一幅独立的当地地标或知名代表物 SVG，原始绘制与资源清单见 [目的地图稿](../Documentation/Brand/DestinationArtwork/Gallery.html)。原生资源保留矢量并按语义色着色；自定义地点使用中性定位符，不虚构当地地标。目的地绘图源与 P 品牌标识源分别维护，不能互相替代。
 
 ## 3. 语义配色
 
@@ -62,6 +65,9 @@ Prompti 帮助用户练习旅行中常用的对话。视觉气质是清晰、温
 - 统一输入区使用 `PromptiCredentialFieldModifier`；安全字段继续用 `SecureField`。口语转写使用 `TextEditor`，允许拒绝麦克风权限时手动编辑，并保留焦点与提交能力。原生 `Form`、`Picker`、`Menu`、确认对话框保留系统行为。
 - 空状态使用 `PromptiEmptyState`，可恢复故障使用 `PromptiRecoveryView`。不要用新的插画或品牌符号替代状态本身的含义。
 - 主流程底部操作继续通过 safe-area inset 固定，并用 `PromptiActionScrim` 阻止正文穿透；不要让操作覆盖最后一项内容。
+- 全部自有纵向滚动内容使用 `PromptiScrollView`；原生 `Form` 使用 `promptiScrollEdges()`。上方还有内容时才显示顶部渐隐，下方还能继续滚动时才显示底部渐隐；到达边界、内容不满一屏或筛选缩短列表时及时移除对应遮罩。遮罩不截获手势，保留导航、底部安全区和键盘适配。
+- 目的地语言筛选与支持语言使用当前界面语言名称；支持语言以可换行的小标签展示。筛选项未选中时不保留勾选占位，选中后自然变宽，使用一次 0.26 秒平滑过渡；降低动态效果时直接切换。
+- 场景选项按名称所需宽度排列，空间不足时整项移到下一行；每项的名称保持单行，图标、文字和勾选垂直居中。内置场景完整显示，不预留第二行高度；超过整屏可用宽度的自定义场景保留字号并可横向查看全文。
 
 ## 5. 字阶、间距和动效
 

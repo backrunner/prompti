@@ -125,7 +125,7 @@ struct GenerationView: View {
         ZStack {
             PromptiBackground()
             GeometryReader { proxy in
-                ScrollView {
+                PromptiScrollView {
                     VStack(spacing: 20) {
                         routeCard
                         status
@@ -202,7 +202,7 @@ struct GenerationView: View {
 
             PracticeJourneyVisual(
                 progress: routeProgress,
-                destinationSymbol: request.destination.symbol,
+                destination: request.destination,
                 isComplete: phase == .ready
             )
             .frame(height: 112)

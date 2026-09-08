@@ -45,7 +45,7 @@ struct ProgressDashboardView: View {
     var body: some View {
         ZStack {
             PromptiBackground()
-            ScrollView {
+            PromptiScrollView {
                 VStack(spacing: 20) {
                     if scored.isEmpty {
                         VStack(spacing: 14) {

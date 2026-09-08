@@ -205,7 +205,7 @@ struct ReviewView: View {
                 .frame(maxWidth: 560)
             }
         } else {
-            ScrollView {
+            PromptiScrollView {
                 LazyVStack(spacing: 12) {
                     ForEach(visibleQuestions) { question in
                         if mode == .reported {

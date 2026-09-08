@@ -1,0 +1,398 @@
+{
+  "source": "Tools/DrawDestinationArtwork.py",
+  "license": "Original Prompti artwork; repository license",
+  "viewBox": "0 0 64 64",
+  "count": 65,
+  "destinations": [
+    {
+      "id": "tokyo",
+      "subject": "Tokyo Tower",
+      "subject_zh": "东京塔",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-tokyo.imageset/tokyo.svg"
+    },
+    {
+      "id": "osaka",
+      "subject": "Osaka Castle",
+      "subject_zh": "大阪城",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-osaka.imageset/osaka.svg"
+    },
+    {
+      "id": "kyoto",
+      "subject": "Fushimi Inari torii",
+      "subject_zh": "伏见稻荷鸟居",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-kyoto.imageset/kyoto.svg"
+    },
+    {
+      "id": "sapporo",
+      "subject": "Sapporo Clock Tower",
+      "subject_zh": "札幌钟楼",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-sapporo.imageset/sapporo.svg"
+    },
+    {
+      "id": "fukuoka",
+      "subject": "Hakata yatai stall",
+      "subject_zh": "博多屋台",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-fukuoka.imageset/fukuoka.svg"
+    },
+    {
+      "id": "naha",
+      "subject": "Shureimon gate",
+      "subject_zh": "守礼门",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-naha.imageset/naha.svg"
+    },
+    {
+      "id": "seoul",
+      "subject": "Gyeongbokgung palace",
+      "subject_zh": "景福宫",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-seoul.imageset/seoul.svg"
+    },
+    {
+      "id": "busan",
+      "subject": "Gwangan Bridge",
+      "subject_zh": "广安大桥",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-busan.imageset/busan.svg"
+    },
+    {
+      "id": "jeju",
+      "subject": "Dol hareubang stone guardian",
+      "subject_zh": "济州石头爷爷",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-jeju.imageset/jeju.svg"
+    },
+    {
+      "id": "beijing",
+      "subject": "Forbidden City palace roof",
+      "subject_zh": "故宫宫殿",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-beijing.imageset/beijing.svg"
+    },
+    {
+      "id": "shanghai",
+      "subject": "Oriental Pearl Tower",
+      "subject_zh": "东方明珠塔",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-shanghai.imageset/shanghai.svg"
+    },
+    {
+      "id": "guangzhou",
+      "subject": "Canton Tower",
+      "subject_zh": "广州塔",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-guangzhou.imageset/guangzhou.svg"
+    },
+    {
+      "id": "shenzhen",
+      "subject": "Ping An Finance Centre",
+      "subject_zh": "平安金融中心",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-shenzhen.imageset/shenzhen.svg"
+    },
+    {
+      "id": "chengdu",
+      "subject": "Giant panda",
+      "subject_zh": "大熊猫",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-chengdu.imageset/chengdu.svg"
+    },
+    {
+      "id": "xian",
+      "subject": "Xi’an City Wall gate",
+      "subject_zh": "西安城墙",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-xian.imageset/xian.svg"
+    },
+    {
+      "id": "hangzhou",
+      "subject": "Three Pools Mirroring the Moon",
+      "subject_zh": "三潭印月",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-hangzhou.imageset/hangzhou.svg"
+    },
+    {
+      "id": "chongqing",
+      "subject": "Hongya Cave stilt houses",
+      "subject_zh": "洪崖洞吊脚楼",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-chongqing.imageset/chongqing.svg"
+    },
+    {
+      "id": "berlin",
+      "subject": "Brandenburg Gate",
+      "subject_zh": "勃兰登堡门",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-berlin.imageset/berlin.svg"
+    },
+    {
+      "id": "munich",
+      "subject": "Frauenkirche twin domes",
+      "subject_zh": "慕尼黑圣母教堂",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-munich.imageset/munich.svg"
+    },
+    {
+      "id": "hamburg",
+      "subject": "Elbphilharmonie",
+      "subject_zh": "易北爱乐音乐厅",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-hamburg.imageset/hamburg.svg"
+    },
+    {
+      "id": "frankfurt",
+      "subject": "Römer stepped gables",
+      "subject_zh": "法兰克福罗马广场",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-frankfurt.imageset/frankfurt.svg"
+    },
+    {
+      "id": "vienna",
+      "subject": "Schönbrunn Palace",
+      "subject_zh": "美泉宫",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-vienna.imageset/vienna.svg"
+    },
+    {
+      "id": "salzburg",
+      "subject": "Hohensalzburg Fortress",
+      "subject_zh": "霍亨萨尔茨堡",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-salzburg.imageset/salzburg.svg"
+    },
+    {
+      "id": "zurich",
+      "subject": "Grossmünster by the Limmat",
+      "subject_zh": "苏黎世大教堂",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-zurich.imageset/zurich.svg"
+    },
+    {
+      "id": "cologne",
+      "subject": "Cologne Cathedral",
+      "subject_zh": "科隆大教堂",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-cologne.imageset/cologne.svg"
+    },
+    {
+      "id": "madrid",
+      "subject": "Puerta de Alcalá",
+      "subject_zh": "阿尔卡拉门",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-madrid.imageset/madrid.svg"
+    },
+    {
+      "id": "barcelona",
+      "subject": "Sagrada Família",
+      "subject_zh": "圣家堂",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-barcelona.imageset/barcelona.svg"
+    },
+    {
+      "id": "seville",
+      "subject": "Plaza de España",
+      "subject_zh": "西班牙广场",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-seville.imageset/seville.svg"
+    },
+    {
+      "id": "valencia",
+      "subject": "L’Hemisfèric",
+      "subject_zh": "艺术科学城天文馆",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-valencia.imageset/valencia.svg"
+    },
+    {
+      "id": "mexico-city",
+      "subject": "Palacio de Bellas Artes",
+      "subject_zh": "墨西哥美术宫",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-mexico-city.imageset/mexico-city.svg"
+    },
+    {
+      "id": "cancun",
+      "subject": "El Rey Maya ruins and Caribbean palms",
+      "subject_zh": "雷伊玛雅遗址与棕榈",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-cancun.imageset/cancun.svg"
+    },
+    {
+      "id": "buenos-aires",
+      "subject": "Obelisco",
+      "subject_zh": "布宜诺斯艾利斯方尖碑",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-buenos-aires.imageset/buenos-aires.svg"
+    },
+    {
+      "id": "lima",
+      "subject": "Lima Cathedral",
+      "subject_zh": "利马主教座堂",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-lima.imageset/lima.svg"
+    },
+    {
+      "id": "santiago",
+      "subject": "San Cristóbal hill statue",
+      "subject_zh": "圣克里斯托瓦尔山",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-santiago.imageset/santiago.svg"
+    },
+    {
+      "id": "bogota",
+      "subject": "Monserrate sanctuary",
+      "subject_zh": "蒙塞拉特山圣所",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-bogota.imageset/bogota.svg"
+    },
+    {
+      "id": "cartagena",
+      "subject": "Cartagena Clock Tower",
+      "subject_zh": "卡塔赫纳钟楼",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-cartagena.imageset/cartagena.svg"
+    },
+    {
+      "id": "havana",
+      "subject": "Havana classic car",
+      "subject_zh": "哈瓦那老爷车",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-havana.imageset/havana.svg"
+    },
+    {
+      "id": "san-juan",
+      "subject": "El Morro sentry box",
+      "subject_zh": "圣胡安城堡哨塔",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-san-juan.imageset/san-juan.svg"
+    },
+    {
+      "id": "london",
+      "subject": "Tower Bridge",
+      "subject_zh": "伦敦塔桥",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-london.imageset/london.svg"
+    },
+    {
+      "id": "new-york",
+      "subject": "Statue of Liberty",
+      "subject_zh": "自由女神像",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-new-york.imageset/new-york.svg"
+    },
+    {
+      "id": "los-angeles",
+      "subject": "Hollywood Sign",
+      "subject_zh": "好莱坞标志",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-los-angeles.imageset/los-angeles.svg"
+    },
+    {
+      "id": "san-francisco",
+      "subject": "Golden Gate Bridge",
+      "subject_zh": "金门大桥",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-san-francisco.imageset/san-francisco.svg"
+    },
+    {
+      "id": "edinburgh",
+      "subject": "Edinburgh Castle",
+      "subject_zh": "爱丁堡城堡",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-edinburgh.imageset/edinburgh.svg"
+    },
+    {
+      "id": "dublin",
+      "subject": "Irish harp",
+      "subject_zh": "爱尔兰竖琴",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-dublin.imageset/dublin.svg"
+    },
+    {
+      "id": "toronto",
+      "subject": "CN Tower",
+      "subject_zh": "加拿大国家电视塔",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-toronto.imageset/toronto.svg"
+    },
+    {
+      "id": "vancouver",
+      "subject": "Canada Place sails",
+      "subject_zh": "加拿大广场帆顶",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-vancouver.imageset/vancouver.svg"
+    },
+    {
+      "id": "sydney",
+      "subject": "Sydney Opera House",
+      "subject_zh": "悉尼歌剧院",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-sydney.imageset/sydney.svg"
+    },
+    {
+      "id": "melbourne",
+      "subject": "Melbourne W-class tram",
+      "subject_zh": "墨尔本有轨电车",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-melbourne.imageset/melbourne.svg"
+    },
+    {
+      "id": "singapore",
+      "subject": "Marina Bay Sands",
+      "subject_zh": "滨海湾金沙",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-singapore.imageset/singapore.svg"
+    },
+    {
+      "id": "moscow",
+      "subject": "Saint Basil’s Cathedral",
+      "subject_zh": "圣瓦西里大教堂",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-moscow.imageset/moscow.svg"
+    },
+    {
+      "id": "saint-petersburg",
+      "subject": "Hermitage Winter Palace",
+      "subject_zh": "冬宫博物馆",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-saint-petersburg.imageset/saint-petersburg.svg"
+    },
+    {
+      "id": "kazan",
+      "subject": "Kul Sharif Mosque",
+      "subject_zh": "库尔谢里夫清真寺",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-kazan.imageset/kazan.svg"
+    },
+    {
+      "id": "sochi",
+      "subject": "Sochi Maritime Terminal",
+      "subject_zh": "索契海港码头",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-sochi.imageset/sochi.svg"
+    },
+    {
+      "id": "vladivostok",
+      "subject": "Golden Bridge",
+      "subject_zh": "金角湾大桥",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-vladivostok.imageset/vladivostok.svg"
+    },
+    {
+      "id": "paris",
+      "subject": "Eiffel Tower",
+      "subject_zh": "埃菲尔铁塔",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-paris.imageset/paris.svg"
+    },
+    {
+      "id": "rome",
+      "subject": "Colosseum",
+      "subject_zh": "罗马斗兽场",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-rome.imageset/rome.svg"
+    },
+    {
+      "id": "amsterdam",
+      "subject": "Amsterdam canal houses",
+      "subject_zh": "阿姆斯特丹运河屋",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-amsterdam.imageset/amsterdam.svg"
+    },
+    {
+      "id": "prague",
+      "subject": "Charles Bridge tower",
+      "subject_zh": "查理大桥桥塔",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-prague.imageset/prague.svg"
+    },
+    {
+      "id": "lisbon",
+      "subject": "Lisbon Tram 28",
+      "subject_zh": "里斯本28路电车",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-lisbon.imageset/lisbon.svg"
+    },
+    {
+      "id": "athens",
+      "subject": "Parthenon",
+      "subject_zh": "帕特农神庙",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-athens.imageset/athens.svg"
+    },
+    {
+      "id": "istanbul",
+      "subject": "Hagia Sophia",
+      "subject_zh": "圣索菲亚大教堂",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-istanbul.imageset/istanbul.svg"
+    },
+    {
+      "id": "dubai",
+      "subject": "Burj Khalifa",
+      "subject_zh": "哈利法塔",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-dubai.imageset/dubai.svg"
+    },
+    {
+      "id": "bangkok",
+      "subject": "Wat Arun prang",
+      "subject_zh": "郑王庙佛塔",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-bangkok.imageset/bangkok.svg"
+    },
+    {
+      "id": "bali",
+      "subject": "Balinese split gate",
+      "subject_zh": "巴厘岛善恶门",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-bali.imageset/bali.svg"
+    },
+    {
+      "id": "honolulu",
+      "subject": "Diamond Head and surfboard",
+      "subject_zh": "钻石头山与冲浪板",
+      "asset": "Prompti/Assets.xcassets/Destinations/Destination-honolulu.imageset/honolulu.svg"
+    }
+  ]
+}

@@ -191,6 +191,7 @@ struct SettingsView: View {
         }
         .onAppear(perform: loadSettings)
         .interactiveDismissDisabled(isTesting || hasUnsavedChanges)
+        .promptiScrollEdges()
         .scrollContentBackground(.hidden)
         .background(PromptiBackground())
         .accessibilityIdentifier("settings.root")

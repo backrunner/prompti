@@ -12,6 +12,7 @@ struct DestinationPickerView: View {
     @State private var customCountry = ""
     @State private var pendingDestination: Destination?
     @State private var selectionFeedback = 0
+    @State private var listPosition = ScrollPosition(edge: .top)
 
     private var availableDestinations: [Destination] {
         selection.isCustom ? [selection] + dependencies.catalog.destinations : dependencies.catalog.destinations
@@ -95,7 +96,7 @@ struct DestinationPickerView: View {
             )
             .frame(maxHeight: .infinity)
         } else {
-            ScrollView {
+            PromptiScrollView {
                 LazyVStack(spacing: 12) {
                     if offersCustomDestination {
                         Button {
@@ -129,40 +130,55 @@ struct DestinationPickerView: View {
                 .frame(maxWidth: .infinity)
             }
             .scrollIndicators(.hidden)
+            .scrollPosition($listPosition)
+            .accessibilityIdentifier("destination.list")
+            .onChange(of: languageFilter) { _, _ in listPosition.scrollTo(edge: .top) }
+            .onChange(of: query) { _, _ in listPosition.scrollTo(edge: .top) }
         }
     }
 
     private var languageFilters: some View {
-        ScrollView(.horizontal) {
-            HStack(spacing: 8) {
-                Button {
-                    selectLanguageFilter("all")
-                } label: {
-                    DestinationFilterChip(title: "All", isSelected: languageFilter == "all")
-                }
-                .buttonStyle(.plain)
-                .accessibilityValue(Text(languageFilter == "all" ? "Selected" : "Not selected"))
-
-                ForEach(languages) { language in
+        ScrollViewReader { proxy in
+            ScrollView(.horizontal) {
+                HStack(spacing: 8) {
                     Button {
-                        selectLanguageFilter(language.code)
+                        selectLanguageFilter("all")
                     } label: {
-                        DestinationFilterChip(title: LocalizedStringKey(language.localName), isSelected: languageFilter == language.code)
+                        DestinationFilterChip(title: String(localized: "All"), isSelected: languageFilter == "all")
                     }
+                    .id("all")
+                    .accessibilityIdentifier("destination.filter.all")
                     .buttonStyle(.plain)
-                    .accessibilityValue(Text(languageFilter == language.code ? "Selected" : "Not selected"))
+                    .accessibilityValue(Text(languageFilter == "all" ? "Selected" : "Not selected"))
+
+                    ForEach(languages) { language in
+                        Button {
+                            selectLanguageFilter(language.code)
+                        } label: {
+                            DestinationFilterChip(title: language.localizedName, isSelected: languageFilter == language.code)
+                        }
+                        .id(language.code)
+                        .accessibilityIdentifier("destination.filter.\(language.code)")
+                        .buttonStyle(.plain)
+                        .accessibilityValue(Text(languageFilter == language.code ? "Selected" : "Not selected"))
+                    }
+                }
+                .padding(.horizontal, PromptiSpacing.page)
+                .padding(.vertical, 10)
+                .animation(reduceMotion ? nil : .smooth(duration: 0.26), value: languageFilter)
+            }
+            .scrollIndicators(.hidden)
+            .accessibilityIdentifier("destination.filters")
+            .onChange(of: languageFilter) { _, code in
+                withAnimation(reduceMotion ? nil : .smooth(duration: 0.26)) {
+                    proxy.scrollTo(code, anchor: .center)
                 }
             }
-            .padding(.horizontal, PromptiSpacing.page)
-            .padding(.vertical, 10)
         }
-        .scrollIndicators(.hidden)
     }
 
     private func selectLanguageFilter(_ code: String) {
-        withAnimation(reduceMotion ? nil : .smooth(duration: 0.18)) {
-            languageFilter = code
-        }
+        languageFilter = code
         selectionFeedback += 1
     }
 
@@ -191,8 +207,8 @@ private struct DestinationChoiceRow: View {
     let isSelected: Bool
 
     var body: some View {
-        HStack(spacing: 14) {
-            PromptiSymbolBadge(symbol: destination.symbol, size: 56)
+        HStack(alignment: .top, spacing: PromptiSpacing.related) {
+            DestinationArtwork(destination: destination, size: 64)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(destination.localizedCity)
@@ -203,21 +219,26 @@ private struct DestinationChoiceRow: View {
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(Color.promptMuted)
                     .lineLimit(2)
-                Text(destination.languages.map(\.localName).joined(separator: " · "))
-                    .font(.subheadline)
-                    .foregroundStyle(isSelected ? Color.promptAction : Color.promptMuted)
-                    .lineLimit(2)
+                PromptiFlowLayout(spacing: 6) {
+                    ForEach(destination.languages) { language in
+                        Text(verbatim: language.localizedName)
+                            .font(.caption.weight(.medium))
+                            .foregroundStyle(Color.promptMuted)
+                            .padding(.horizontal, PromptiSpacing.inline)
+                            .padding(.vertical, 4)
+                            .background(Color.promptSurfaceRaised, in: Capsule())
+                    }
+                }
+                .padding(.top, PromptiSpacing.inline)
             }
             Spacer(minLength: 4)
             Image(systemName: isSelected ? "checkmark.circle.fill" : "chevron.right")
                 .font(.system(size: 20, weight: .semibold))
                 .foregroundStyle(isSelected ? Color.promptAction : Color.promptMuted)
+                .padding(.top, 3)
         }
         .padding(16)
-        .background(
-            isSelected ? Color.promptSelection : Color.promptSurface,
-            in: RoundedRectangle(cornerRadius: PromptiRadius.surface, style: .continuous)
-        )
+        .promptiSurface(tint: isSelected ? .promptSelection : .clear)
         .overlay {
             if isSelected {
                 RoundedRectangle(cornerRadius: PromptiRadius.surface, style: .continuous)
@@ -253,19 +274,24 @@ private struct AddDestinationRow: View {
 }
 
 private struct DestinationFilterChip: View {
-    let title: LocalizedStringKey
+    let title: String
     let isSelected: Bool
 
     var body: some View {
         HStack(spacing: 6) {
-            Image(systemName: "checkmark").opacity(isSelected ? 1 : 0)
-            Text(title)
+            if isSelected {
+                Image(systemName: "checkmark")
+                    .transition(.scale(scale: 0.7).combined(with: .opacity))
+                    .accessibilityHidden(true)
+            }
+            Text(verbatim: title)
         }
         .font(.subheadline.weight(.semibold))
         .foregroundStyle(isSelected ? Color.promptOnAction : Color.promptText)
         .padding(.horizontal, 15)
         .frame(minHeight: 44)
         .background(isSelected ? Color.promptAction : Color.promptSurface, in: Capsule())
+        .fixedSize(horizontal: true, vertical: false)
     }
 }
 
@@ -303,7 +329,7 @@ private struct CustomDestinationView: View {
         NavigationStack {
             ZStack {
                 PromptiBackground()
-                ScrollView {
+                PromptiScrollView {
                     VStack(alignment: .leading, spacing: 22) {
                         VStack(alignment: .leading, spacing: 6) {
                             Image(systemName: "mappin.and.ellipse")
@@ -333,7 +359,7 @@ private struct CustomDestinationView: View {
                                 Text("Default practice")
                                     .font(.subheadline.weight(.semibold))
                                 Spacer()
-                                Text(destination.languages[0].localName)
+                                Text(destination.languages[0].localizedName)
                                     .font(.subheadline.bold())
                                     .foregroundStyle(Color.promptAccent)
                             }

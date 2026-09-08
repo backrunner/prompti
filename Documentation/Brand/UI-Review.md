@@ -8,6 +8,8 @@
 
 完成页后续改为圆形结果、短标题与紧凑统计，并加入全对礼花，见 [完成页与庆祝动效验收](Result-Celebration-Review.md)；[第一次布局调整](Summary-Layout-Review.md) 保留为历史记录。
 
+目的地图标后续已替换为 65 幅独立 SVG，同时更新语言筛选和全部纵向滚动边缘，最新实测见 [目的地界面验收](Destination-UI-Review.md)。
+
 本轮把 P 对话标识延伸到全部 11 个功能页面及 App 的恢复界面。翡翠绿用于操作，暖中性表面用于阅读；深色主操作采用薄荷底配深绿文字。目的地继续用城市、地标和场景表达旅行。
 
 [打开实际截图画廊，切换浅色 / 深色](UI-Review.html)。36 张原始截图与来源保存在 [UIScreenshots](UIScreenshots) 及 [截图清单](UIScreenshots/manifest.json)；下面的对照图仅缩放拼排原图，没有重绘界面。
