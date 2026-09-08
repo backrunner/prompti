@@ -22,6 +22,10 @@ Prompti 是一款开源、原生 SwiftUI 旅游语言学习应用。用户选择
 
 全 App 的品牌实施与实际模拟器截图见 [UI 验收记录](Documentation/Brand/UI-Review.md)；开发约束见 [品牌与 UI 规范](.agents/13-brand-and-ui-guidelines.md)。
 
+引导与设置内置当前快速模型，并提供 OpenAI、Gemini、DeepSeek、Anthropic 和 OpenRouter 连接预设。OpenRouter 候选按有来源的近 7 天请求次数快照排序，显示数据日期；未知调用量单独列出，已有模型与手填 ID 保留。维护时运行 `python3 Tools/UpdateModelRecommendations.py`，发布前复核型号与数据日期。详细口径见 [模型规范](.agents/05-ai-byok-and-generation.md)。
+
+界面支持英文和简体中文，包含目的地 / 地标 / 场景、动态提示和系统权限文案；支持用中文或英文搜索内置目的地。运行 `python3 Tools/CheckLocalization.py` 检查翻译和占位符，实际界面与验证范围见 [模型与本地化验收](Documentation/Model-and-Localization-Review.md)。
+
 ## 环境
 
 - Xcode 26.6 或更高版本

@@ -185,3 +185,13 @@ Adapter 不把所有非 2xx 都映射成“网络错误”。UI 根据错误提�
 ## 2026-09-07：能力补齐
 
 已接入逐题审核、口语语义评估、小批次生成/边练边补、有界重试和本机实际请求/token 用量。 最新实现范围、测试结果和真实环境边界见 [能力补齐记录](12-capabilities-2026-09-07.md)。
+
+## 2026-09-08：快速模型与连接预设
+
+- 引导和设置共用 `ModelConnectionView` / `ModelRecommendations`。默认推荐快速、低成本的文本模型：OpenAI GPT-5.6 Luna、Gemini 3.8 Flash / 3.5 Flash-Lite、DeepSeek V4 Flash、Claude Haiku 4.5；OpenRouter 另含 GLM、Qwen 等快速模型。未将旗舰、图像、音频、医学或金融专用模型作为默认练习模型。
+- `ProviderPreset` 是连接快捷方式，继续使用既有 Responses / Chat / Messages 协议与凭据隔离。Gemini 使用官方 OpenAI 兼容的完整 `v1beta/openai/chat/completions` 端点；完整端点不再追加 `/v1`。不引入新的持久化 Provider 类型。
+- `OpenRouterRecommendations.json` 是带日期、来源和许可的近 7 天请求次数快照。只在已核实的快速模型候选中按 `weeklyRequests` 降序排列，未知调用量单列；并不宣称是所有模型的全量请求排行榜。OpenRouter 网站可见榜单主要按 token 排名，不能直接把其名次当成调用次数排名。
+- `Tools/UpdateModelRecommendations.py` 从 `/api/v1/models` 核对模型 ID、文本输出与 canonical slug，并读取公开排名页 `rankings/models/view=week` 数据中的 `count`。页面内嵌数据不是稳定 API，格式变化、缺少请求数或全部匹配失败时停止且保留原快照；绝不以 token 数代替请求数。App 运行时只读取内置资源，不抓网页，不在 landing 请求用户凭据或产生模型调用。
+- 每次发布前刷新快照，复核候选型号。新增版本不能仅凭名称自动收入；核对官方型号、用途、结构化输出后维护名单。已存模型、手填 ID 和连接验证保持原行为，选择不同模型后必须重新验证。
+- 数据来源：Source: OpenRouter (openrouter.ai/rankings), as of 2026-09-06. Licensed under CC BY 4.0. 当前快照读取的是公开流量，缺少请求数不代表零调用。
+- 官方型号与接口依据：[OpenAI 模型目录](https://developers.openai.com/api/docs/models)、[GPT-5.6 Luna](https://developers.openai.com/api/docs/models/gpt-5.6-luna)、[Gemini 模型](https://ai.google.dev/gemini-api/docs/models)、[Gemini OpenAI compatibility](https://ai.google.dev/gemini-api/docs/openai)、[Claude 模型](https://platform.claude.com/docs/en/models/overview)、[DeepSeek 模型](https://api-docs.deepseek.com/quick_start/pricing)、[OpenRouter 数据口径](https://openrouter.ai/docs/cookbook/administration/data-api)。账号权限、额度及模型服务质量仍需真实账号验证；本轮不进行收费推理调用。

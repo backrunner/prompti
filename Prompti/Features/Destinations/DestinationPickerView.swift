@@ -22,7 +22,7 @@ struct DestinationPickerView: View {
         return dependencies.catalog.destinations
             .flatMap(\.languages)
             .filter { seen.insert($0.code).inserted }
-            .sorted { $0.name < $1.name }
+            .sorted { $0.localizedName.localizedStandardCompare($1.localizedName) == .orderedAscending }
     }
 
     private var query: String {
@@ -33,17 +33,15 @@ struct DestinationPickerView: View {
         availableDestinations.filter { destination in
             let matchesLanguage = languageFilter == "all" || destination.languages.contains { $0.code == languageFilter }
             let matchesSearch = query.isEmpty
-                || destination.city.localizedStandardContains(query)
-                || destination.country.localizedStandardContains(query)
-                || "\(destination.city), \(destination.country)".localizedStandardContains(query)
+                || destination.matchesSearch(query)
             return matchesLanguage && matchesSearch
         }
     }
 
     private var offersCustomDestination: Bool {
         !query.isEmpty && !availableDestinations.contains {
-            $0.city.compare(query, options: [.caseInsensitive, .diacriticInsensitive]) == .orderedSame
-                || "\($0.city), \($0.country)".compare(query, options: [.caseInsensitive, .diacriticInsensitive]) == .orderedSame
+            [$0.city, $0.localizedCity, "\($0.city), \($0.country)", "\($0.localizedCity)，\($0.localizedCountry)"]
+                .contains { $0.compare(query, options: [.caseInsensitive, .diacriticInsensitive]) == .orderedSame }
         }
     }
 
@@ -197,11 +195,11 @@ private struct DestinationChoiceRow: View {
             PromptiSymbolBadge(symbol: destination.symbol, size: 56)
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(destination.city)
+                Text(destination.localizedCity)
                     .font(.title3.weight(.bold))
                     .fontDesign(.rounded)
                     .lineLimit(2)
-                Text(destination.country)
+                Text(destination.localizedCountry)
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(Color.promptMuted)
                     .lineLimit(2)
@@ -377,7 +375,7 @@ private struct CustomDestinationView: View {
     }
 
     private func destinationField(_ title: String, text: Binding<String>, field: Field) -> some View {
-        TextField(title, text: text)
+        TextField(LocalizedStringKey(title), text: text)
             .font(.body.weight(.semibold))
             .textInputAutocapitalization(.words)
             .autocorrectionDisabled()

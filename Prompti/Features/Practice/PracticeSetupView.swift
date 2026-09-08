@@ -144,7 +144,7 @@ struct PracticeSetupView: View {
         VStack(alignment: .leading, spacing: 3) {
             Text("Travel brief")
                 .font(PromptiTypography.section)
-            Text("\(destination.city), \(destination.country)")
+            Text("\(destination.localizedCity), \(destination.localizedCountry)")
                 .font(.subheadline)
                 .foregroundStyle(Color.promptMuted)
                 .accessibilityIdentifier("practice.destination.\(destination.id)")
@@ -165,7 +165,7 @@ struct PracticeSetupView: View {
     private var languagePicker: some View {
         Picker("Language", selection: $languageCode) {
             ForEach(destination.languages) { language in
-                Text(dynamicTypeSize.isAccessibilitySize ? language.localName : "\(language.localName) · \(language.name)")
+                Text(dynamicTypeSize.isAccessibilitySize ? language.localName : "\(language.localName) · \(language.localizedName)")
                     .tag(language.code)
             }
         }
@@ -244,7 +244,7 @@ struct PracticeSetupView: View {
                         )
                     }
                     .buttonStyle(.plain)
-                    .accessibilityLabel(Text(LocalizedStringKey(scene.title)))
+                    .accessibilityLabel(Text(scene.localizedTitle))
                     .accessibilityValue(Text(isSelected ? "Selected" : "Not selected"))
                 }
             }

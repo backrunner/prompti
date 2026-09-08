@@ -2,7 +2,26 @@
   "sourceLanguage": "en",
   "strings": {
     "%lld active filters": {
+      "extractionState": "manual",
       "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld active filter"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld active filters"
+                }
+              }
+            }
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -12,6 +31,7 @@
       }
     },
     "%lld of %lld questions passed review. You can start now or try to add the rest.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -22,6 +42,7 @@
       }
     },
     "%lld of %lld questions prepared": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -37,6 +58,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld 道题"
+          }
+        },
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld question"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld questions"
+                }
+              }
+            }
           }
         }
       }
@@ -62,6 +101,7 @@
       }
     },
     "A flight route arriving at a city": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -126,6 +166,7 @@
       }
     },
     "API key": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -136,6 +177,7 @@
       }
     },
     "API key deleted from this device.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -146,6 +188,7 @@
       }
     },
     "API keys": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -156,6 +199,7 @@
       }
     },
     "Add": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -166,6 +210,7 @@
       }
     },
     "Add a custom scene": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -176,6 +221,7 @@
       }
     },
     "Add a destination": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -186,6 +232,7 @@
       }
     },
     "Add an API key in Model Settings.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -196,6 +243,7 @@
       }
     },
     "Add credits to your model account, or choose another model in Settings.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -216,6 +264,7 @@
       }
     },
     "Adjust practice": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -226,6 +275,7 @@
       }
     },
     "Advance preparation has reached today's limit. You can still start practice yourself.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -236,6 +286,7 @@
       }
     },
     "All": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -266,6 +317,7 @@
       }
     },
     "All questions passed review.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -296,6 +348,7 @@
       }
     },
     "Answered questions, excluding skips": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -306,6 +359,7 @@
       }
     },
     "Anthropic Messages": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -316,6 +370,7 @@
       }
     },
     "Anthropic Messages API": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -326,6 +381,7 @@
       }
     },
     "Any destination": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -336,6 +392,7 @@
       }
     },
     "Any time": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -346,6 +403,7 @@
       }
     },
     "Apple On-Device": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -366,6 +424,7 @@
       }
     },
     "Approved questions will wait here.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -376,6 +435,7 @@
       }
     },
     "Attractions": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -386,6 +446,7 @@
       }
     },
     "Authorization code": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -396,6 +457,7 @@
       }
     },
     "Back": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -406,6 +468,7 @@
       }
     },
     "Base URL": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -416,6 +479,7 @@
       }
     },
     "Basic": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -426,6 +490,7 @@
       }
     },
     "Browse cities": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -436,6 +501,7 @@
       }
     },
     "Cancel": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -446,6 +512,7 @@
       }
     },
     "Cancel generation": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -456,6 +523,7 @@
       }
     },
     "Cancelled": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -466,6 +534,7 @@
       }
     },
     "Change destination": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -476,6 +545,7 @@
       }
     },
     "Chat Completions and compatible endpoints": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -486,6 +556,7 @@
       }
     },
     "Check answer": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -496,6 +567,7 @@
       }
     },
     "Check the meaning": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -506,6 +578,7 @@
       }
     },
     "Checking meaning": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -516,6 +589,7 @@
       }
     },
     "Checking safety and quality": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -526,6 +600,7 @@
       }
     },
     "Choose a destination": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -536,6 +611,7 @@
       }
     },
     "Choose at least one scene, one question style and 1–20 questions.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -546,6 +622,7 @@
       }
     },
     "Choose the language used for translations and explanations": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -556,6 +633,7 @@
       }
     },
     "Choose your AI": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -566,6 +644,7 @@
       }
     },
     "Choose your language": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -576,6 +655,7 @@
       }
     },
     "City": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -596,6 +676,7 @@
       }
     },
     "City or country": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -606,6 +687,7 @@
       }
     },
     "Clear": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -616,6 +698,7 @@
       }
     },
     "Clear a filter or choose a broader review range.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -626,6 +709,7 @@
       }
     },
     "Clear filters": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -636,6 +720,7 @@
       }
     },
     "Clear unused questions": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -646,6 +731,7 @@
       }
     },
     "Clear unused questions and pause preparation?": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -656,6 +742,7 @@
       }
     },
     "Close": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -666,6 +753,7 @@
       }
     },
     "Compare answer": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -676,6 +764,7 @@
       }
     },
     "Compare your answer": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -686,6 +775,7 @@
       }
     },
     "Complete a practice set to build your travel phrase history.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -696,6 +786,7 @@
       }
     },
     "Complete a scored question to unlock accuracy and weekly trends.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -706,6 +797,7 @@
       }
     },
     "Connect a model in Settings to continue.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -716,6 +808,7 @@
       }
     },
     "Connect an account, or use your own API key.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -736,6 +829,7 @@
       }
     },
     "Connect using an authorization code": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -746,6 +840,7 @@
       }
     },
     "Connect with OpenRouter": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -756,6 +851,7 @@
       }
     },
     "Connect your account": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -766,6 +862,7 @@
       }
     },
     "Connected. Your model is ready.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -776,6 +873,7 @@
       }
     },
     "Connection": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -786,6 +884,7 @@
       }
     },
     "Connection check": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -796,6 +895,7 @@
       }
     },
     "Connection verified": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -806,6 +906,7 @@
       }
     },
     "Connection verified. JSON mode will be used.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -816,6 +917,7 @@
       }
     },
     "Connection verified. Structured Outputs enabled.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -826,6 +928,7 @@
       }
     },
     "Context": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -836,6 +939,7 @@
       }
     },
     "Continue": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -846,6 +950,7 @@
       }
     },
     "Country or region": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -856,6 +961,7 @@
       }
     },
     "Create": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -866,6 +972,7 @@
       }
     },
     "Creating useful questions": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -876,6 +983,7 @@
       }
     },
     "Customize": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -886,6 +994,7 @@
       }
     },
     "Customize practice": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -896,6 +1005,7 @@
       }
     },
     "Daily preparation limit: %lld": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -906,6 +1016,7 @@
       }
     },
     "Date": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -926,6 +1037,7 @@
       }
     },
     "Default set": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -936,6 +1048,7 @@
       }
     },
     "Delete API key": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -946,6 +1059,7 @@
       }
     },
     "Delete the API key from this device?": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -956,6 +1070,7 @@
       }
     },
     "Destination": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -966,6 +1081,7 @@
       }
     },
     "Destination picks": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -976,6 +1092,7 @@
       }
     },
     "Difficulty": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -986,6 +1103,7 @@
       }
     },
     "Dining": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -996,6 +1114,7 @@
       }
     },
     "Directions": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1006,6 +1125,7 @@
       }
     },
     "Disconnect this model": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1016,6 +1136,7 @@
       }
     },
     "Disconnected on this device. You can revoke the key in your provider account.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1026,6 +1147,7 @@
       }
     },
     "Done": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1036,6 +1158,7 @@
       }
     },
     "Enable microphone and speech recognition in Settings to practice speaking.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1046,6 +1169,7 @@
       }
     },
     "End practice": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1056,6 +1180,7 @@
       }
     },
     "English": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1066,6 +1191,7 @@
       }
     },
     "Enter a short travel situation.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1076,6 +1202,7 @@
       }
     },
     "Everyday sentences for simple conversations": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1086,6 +1213,7 @@
       }
     },
     "Everyday travel": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1106,6 +1234,7 @@
       }
     },
     "Explanations": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1116,6 +1245,7 @@
       }
     },
     "Expression matched": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1126,6 +1256,7 @@
       }
     },
     "Extra model usage": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1156,6 +1287,7 @@
       }
     },
     "Fill the gap": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1166,6 +1298,7 @@
       }
     },
     "Filter review": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1176,6 +1309,7 @@
       }
     },
     "Finish with completed questions": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1186,6 +1320,7 @@
       }
     },
     "Finishing transcript": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1196,6 +1331,7 @@
       }
     },
     "Fluent": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1206,6 +1342,7 @@
       }
     },
     "Food delivery": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1226,11 +1363,12 @@
       }
     },
     "Gap %lld": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "第 %lld 空"
+            "value": "第 %lld 个空"
           }
         }
       }
@@ -1246,6 +1384,7 @@
       }
     },
     "Good progress. A quick review will make this route feel easier.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1256,6 +1395,7 @@
       }
     },
     "Hear prompt": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1266,6 +1406,7 @@
       }
     },
     "Hear sample answer": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1276,6 +1417,7 @@
       }
     },
     "Help": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1286,6 +1428,7 @@
       }
     },
     "History": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1296,6 +1439,7 @@
       }
     },
     "Hotel": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1306,6 +1450,7 @@
       }
     },
     "How Prompti counts": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1316,6 +1461,7 @@
       }
     },
     "IC card": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1326,6 +1472,7 @@
       }
     },
     "If sign in cannot return to Prompti, use an authorization code instead.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1336,6 +1483,7 @@
       }
     },
     "Import local data": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1346,6 +1494,7 @@
       }
     },
     "Import local learning data into this account?": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1356,6 +1505,7 @@
       }
     },
     "Import previous local data": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1366,6 +1516,7 @@
       }
     },
     "Imported %lld records. Existing history was preserved.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1386,6 +1537,7 @@
       }
     },
     "Inventory target: %lld": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1396,6 +1548,7 @@
       }
     },
     "Keep enabled": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1406,6 +1559,7 @@
       }
     },
     "Keep practicing": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1416,6 +1570,7 @@
       }
     },
     "Keep the situation under 80 characters.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1426,6 +1581,7 @@
       }
     },
     "Keep your route moving": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1436,6 +1592,7 @@
       }
     },
     "Keys stay in your iPhone Keychain and never sync to iCloud.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1446,6 +1603,7 @@
       }
     },
     "Language": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1456,6 +1614,7 @@
       }
     },
     "Languages": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1466,6 +1625,7 @@
       }
     },
     "Last 30 days": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1476,6 +1636,7 @@
       }
     },
     "Last 7 days": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1486,6 +1647,7 @@
       }
     },
     "Last sync event": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1496,6 +1658,7 @@
       }
     },
     "Learning data": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1506,6 +1669,7 @@
       }
     },
     "Learning data could not be opened. Retry before practicing.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1516,6 +1680,7 @@
       }
     },
     "Learning data is saved on this device. Each iCloud account uses separate storage; signing in does not automatically import signed-out data. Keys never sync.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1526,6 +1691,7 @@
       }
     },
     "Learning data unavailable": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1536,6 +1702,7 @@
       }
     },
     "Let’s get started": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1546,6 +1713,7 @@
       }
     },
     "Links and instruction-like text are not allowed.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1556,6 +1724,7 @@
       }
     },
     "Manage OpenRouter account": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1566,6 +1735,7 @@
       }
     },
     "Meaning matched": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1576,6 +1746,7 @@
       }
     },
     "Mistakes": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1596,6 +1767,7 @@
       }
     },
     "Model ID": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1606,6 +1778,7 @@
       }
     },
     "Model usage on this device": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1616,6 +1789,7 @@
       }
     },
     "More connection options": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1626,6 +1800,7 @@
       }
     },
     "Mostly understandable": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1636,6 +1811,7 @@
       }
     },
     "Natural": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1646,6 +1822,7 @@
       }
     },
     "Natural phrasing and closer distractors": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1656,6 +1833,7 @@
       }
     },
     "Needs another look": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1666,6 +1844,7 @@
       }
     },
     "Next question": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1686,6 +1865,7 @@
       }
     },
     "No active filters": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1696,6 +1876,7 @@
       }
     },
     "No match yet": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1706,6 +1887,7 @@
       }
     },
     "No matching questions": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1716,6 +1898,7 @@
       }
     },
     "No mistakes waiting": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1726,6 +1909,7 @@
       }
     },
     "No question history yet": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1736,6 +1920,7 @@
       }
     },
     "No questions passed Prompti's safety and quality checks.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1746,6 +1931,7 @@
       }
     },
     "No reported questions": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1756,6 +1942,7 @@
       }
     },
     "No response recorded": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1766,6 +1953,7 @@
       }
     },
     "No skipped questions": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1776,6 +1964,7 @@
       }
     },
     "No system voice is available for this language.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1796,6 +1985,7 @@
       }
     },
     "Not counted": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1806,6 +1996,7 @@
       }
     },
     "Not ready for this device or language": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1816,6 +2007,7 @@
       }
     },
     "Not selected": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1826,6 +2018,7 @@
       }
     },
     "Nothing appears in your tray until it passes review.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1836,6 +2029,7 @@
       }
     },
     "Nuanced, region-aware conversation": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1846,6 +2040,7 @@
       }
     },
     "Offline; saved on this device": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1856,6 +2051,7 @@
       }
     },
     "On this device": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1876,6 +2072,7 @@
       }
     },
     "One quick question": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1886,6 +2083,7 @@
       }
     },
     "Open Settings": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1896,6 +2094,7 @@
       }
     },
     "Open model settings": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1906,6 +2105,7 @@
       }
     },
     "Open secure sign in": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1916,6 +2116,7 @@
       }
     },
     "OpenAI Chat / Compatible": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1926,6 +2127,7 @@
       }
     },
     "OpenAI Responses": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1936,6 +2138,7 @@
       }
     },
     "OpenRouter could not finish connecting this device. Try signing in again.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1946,6 +2149,7 @@
       }
     },
     "OpenRouter · Sign in": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1956,6 +2160,7 @@
       }
     },
     "Packing your travel context": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1966,6 +2171,7 @@
       }
     },
     "Pick your next stop": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1976,6 +2182,7 @@
       }
     },
     "Practice": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -1986,6 +2193,7 @@
       }
     },
     "Practice all mistakes": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2013,6 +2221,7 @@
       }
     },
     "Practice defaults": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2040,6 +2249,7 @@
       }
     },
     "Practice landed": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2050,6 +2260,7 @@
       }
     },
     "Practice mix": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2070,6 +2281,7 @@
       }
     },
     "Practice set": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2080,6 +2292,7 @@
       }
     },
     "Practice skipped questions": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2090,6 +2303,7 @@
       }
     },
     "Practice this question": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2110,6 +2324,7 @@
       }
     },
     "Prepare only on Wi-Fi": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2120,6 +2335,7 @@
       }
     },
     "Prepare questions in advance": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2140,6 +2356,7 @@
       }
     },
     "Preparing a few approved questions while Prompti is open.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2160,6 +2377,7 @@
       }
     },
     "Preparing the remaining questions": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2197,6 +2415,7 @@
       }
     },
     "Private and on-device": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2207,6 +2426,7 @@
       }
     },
     "Progress": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2227,6 +2447,7 @@
       }
     },
     "Prompti": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2237,6 +2458,7 @@
       }
     },
     "Prompti could not confidently match the key phrase, so this attempt was not scored.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2247,6 +2469,7 @@
       }
     },
     "Prompti did not score this attempt. Try again somewhere quieter or compare the sample answer.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2257,6 +2480,7 @@
       }
     },
     "Provider": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2267,6 +2491,7 @@
       }
     },
     "Question %lld of %lld": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2277,6 +2502,7 @@
       }
     },
     "Question generation": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2287,6 +2513,7 @@
       }
     },
     "Question inventory": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2297,6 +2524,7 @@
       }
     },
     "Question may be wrong": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2307,6 +2535,7 @@
       }
     },
     "Question options": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2317,6 +2546,7 @@
       }
     },
     "Question review": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2327,6 +2557,7 @@
       }
     },
     "Question styles": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2337,6 +2568,7 @@
       }
     },
     "Question tray": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2357,6 +2589,7 @@
       }
     },
     "Questions answered during the last 7 days": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2367,6 +2600,7 @@
       }
     },
     "Questions you miss wait here until you answer them correctly. All attempts remain in History.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2377,6 +2611,7 @@
       }
     },
     "Questions you miss will appear here for a calm second look.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2387,6 +2622,7 @@
       }
     },
     "Questions you miss will stay here, even after you master them later.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2397,6 +2633,7 @@
       }
     },
     "Questions you report are isolated and listed here for reference.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2407,6 +2644,7 @@
       }
     },
     "Questions you skip will wait here when you are ready to return.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2417,6 +2655,7 @@
       }
     },
     "Questions, attempts and progress use your private iCloud database. Keys never sync.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2427,6 +2666,7 @@
       }
     },
     "Quick Q&A": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2437,6 +2677,7 @@
       }
     },
     "Quick question": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2447,6 +2688,7 @@
       }
     },
     "Ramen shop": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2457,6 +2699,7 @@
       }
     },
     "Ready for departure": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2467,6 +2710,7 @@
       }
     },
     "Ready for your next stop": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2494,6 +2738,7 @@
       }
     },
     "Ready when you are": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2504,6 +2749,7 @@
       }
     },
     "Recent requests": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2514,6 +2760,7 @@
       }
     },
     "Recently mastered": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2524,6 +2771,7 @@
       }
     },
     "Recommended for new OpenAI setups": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2534,6 +2782,7 @@
       }
     },
     "Reconnect OpenRouter": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2544,6 +2793,7 @@
       }
     },
     "Record again": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2554,6 +2804,7 @@
       }
     },
     "Record answer": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2564,6 +2815,7 @@
       }
     },
     "Recording could not start. You can still compare the sample answer.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2574,6 +2826,7 @@
       }
     },
     "Removed from future practice": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2584,6 +2837,7 @@
       }
     },
     "Replace API key": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2594,6 +2848,7 @@
       }
     },
     "Reported": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2604,6 +2859,7 @@
       }
     },
     "Reported input tokens": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2614,6 +2870,7 @@
       }
     },
     "Reported output tokens": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2624,6 +2881,7 @@
       }
     },
     "Request failed": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2634,6 +2892,7 @@
       }
     },
     "Requests with unknown usage": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2644,6 +2903,7 @@
       }
     },
     "Response received": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2654,6 +2914,7 @@
       }
     },
     "Retry iCloud connection": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2664,6 +2925,7 @@
       }
     },
     "Retry remaining questions": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2684,6 +2946,7 @@
       }
     },
     "Review mode": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2694,6 +2957,7 @@
       }
     },
     "Right on route": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2704,6 +2968,7 @@
       }
     },
     "Route complete": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2714,6 +2979,7 @@
       }
     },
     "Run setup again": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2724,6 +2990,7 @@
       }
     },
     "Run setup again?": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2744,6 +3011,7 @@
       }
     },
     "Saved on this device; waiting for iCloud": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2771,6 +3039,7 @@
       }
     },
     "Scene": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2781,6 +3050,7 @@
       }
     },
     "Scene review": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2791,6 +3061,7 @@
       }
     },
     "Scenes": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2801,6 +3072,7 @@
       }
     },
     "Search another city or add your own.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2811,6 +3083,7 @@
       }
     },
     "See trip summary": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2821,6 +3094,7 @@
       }
     },
     "Selected": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2831,6 +3105,7 @@
       }
     },
     "Selected scenes: %@": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2841,6 +3116,7 @@
       }
     },
     "Semantic feedback is unavailable. This attempt was not scored. Compare the sample answer or try again.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2851,6 +3127,7 @@
       }
     },
     "Set your pace": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2861,6 +3138,7 @@
       }
     },
     "Settings": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2871,6 +3149,7 @@
       }
     },
     "Shopping": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2881,6 +3160,7 @@
       }
     },
     "Short phrases and generous hints": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2891,6 +3171,7 @@
       }
     },
     "Sign in cancelled. You can try again whenever you’re ready.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2901,6 +3182,7 @@
       }
     },
     "Sign in to another account": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2911,6 +3193,7 @@
       }
     },
     "Sign in was cancelled or not approved.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2921,6 +3204,7 @@
       }
     },
     "Skip question": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2931,6 +3215,7 @@
       }
     },
     "Skipped": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2941,6 +3226,7 @@
       }
     },
     "Skipped and reported questions never reduce your accuracy.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2951,6 +3237,7 @@
       }
     },
     "Skipped earlier": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2961,6 +3248,7 @@
       }
     },
     "Skipped, reported and uncertain spoken answers never reduce your accuracy.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2981,6 +3269,7 @@
       }
     },
     "Some questions did not pass review. Retry to prepare the rest.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -2991,6 +3280,7 @@
       }
     },
     "Speak": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3001,6 +3291,7 @@
       }
     },
     "Speak anywhere.\nArrive ready.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3011,6 +3302,7 @@
       }
     },
     "Speech feedback": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3021,6 +3313,7 @@
       }
     },
     "Speech is transcribed for this attempt. Raw audio is not saved or synced.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3031,6 +3324,7 @@
       }
     },
     "Speech is transcribed for this attempt. Your model receives the transcript for meaning feedback. Raw audio is not saved or synced.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3041,6 +3335,7 @@
       }
     },
     "Speech playback": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3051,6 +3346,7 @@
       }
     },
     "Spoken answers with uncertain transcription are saved for practice but not scored.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3071,6 +3367,7 @@
       }
     },
     "Start learning": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3091,6 +3388,7 @@
       }
     },
     "Start practicing": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3101,6 +3399,7 @@
       }
     },
     "Start prepared questions · %lld": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3111,6 +3410,7 @@
       }
     },
     "Start with approved questions. The rest will be prepared as you practice.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3121,6 +3421,7 @@
       }
     },
     "Step %lld of %lld": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3131,6 +3432,7 @@
       }
     },
     "Stop recording": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3141,6 +3443,7 @@
       }
     },
     "Strong work. These phrases are ready for real conversations.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3151,6 +3454,7 @@
       }
     },
     "Surprise me with one": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3161,6 +3465,7 @@
       }
     },
     "Survival": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3171,6 +3476,7 @@
       }
     },
     "Sync & privacy": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3181,6 +3487,7 @@
       }
     },
     "Sync paused; saved on this device": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3191,6 +3498,7 @@
       }
     },
     "Syncing with iCloud": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3201,6 +3509,7 @@
       }
     },
     "Taxi": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3211,6 +3520,7 @@
       }
     },
     "Test connection": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3221,6 +3531,7 @@
       }
     },
     "That situation is outside Prompti's travel-learning scope.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3241,6 +3552,7 @@
       }
     },
     "The generated batch did not pass safety review.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3251,6 +3563,7 @@
       }
     },
     "The model declined this request. Choose another travel scene and try again.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3261,6 +3574,7 @@
       }
     },
     "The model is busy or rate-limited. Try again shortly.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3271,6 +3585,7 @@
       }
     },
     "The model or API endpoint was not found. Check your model settings.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3281,6 +3596,7 @@
       }
     },
     "The model provider is temporarily unavailable.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3291,6 +3607,7 @@
       }
     },
     "The model request timed out. Retry with fewer questions.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3301,6 +3618,7 @@
       }
     },
     "The model returned an unexpected response.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3311,6 +3629,7 @@
       }
     },
     "The model stopped before finishing. Try a smaller practice set.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3321,6 +3640,7 @@
       }
     },
     "The provider could not be reached. Check your connection and try again.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3331,6 +3651,7 @@
       }
     },
     "The provider rejected this API key.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3341,6 +3662,7 @@
       }
     },
     "The transcript was uncertain": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3351,6 +3673,7 @@
       }
     },
     "These defaults can be changed for every practice set.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3361,6 +3684,7 @@
       }
     },
     "This device only": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3371,6 +3695,7 @@
       }
     },
     "This model is not available for the selected language.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3381,6 +3706,7 @@
       }
     },
     "This provider configuration is not supported.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3391,6 +3717,7 @@
       }
     },
     "This set could not be prepared": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3401,6 +3728,7 @@
       }
     },
     "This trip": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3411,6 +3739,7 @@
       }
     },
     "Today": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3421,6 +3750,7 @@
       }
     },
     "Transcription did not finish. Try again or compare the sample answer.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3431,6 +3761,7 @@
       }
     },
     "Transit": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3451,6 +3782,7 @@
       }
     },
     "Try again": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3461,6 +3793,7 @@
       }
     },
     "Try recording again, or compare your wording with the sample answer.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3471,6 +3804,7 @@
       }
     },
     "Try to add %lld more": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3481,6 +3815,7 @@
       }
     },
     "Turn off": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3491,6 +3826,7 @@
       }
     },
     "Unable to judge": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3501,6 +3837,7 @@
       }
     },
     "Unable to open secure sign in. Try again.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3511,6 +3848,7 @@
       }
     },
     "Use a valid public HTTPS endpoint.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3521,6 +3859,7 @@
       }
     },
     "Use one short line.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3531,6 +3870,7 @@
       }
     },
     "Use plain text without invisible control characters.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3541,6 +3881,7 @@
       }
     },
     "Use this destination": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3551,6 +3892,7 @@
       }
     },
     "Using approved destination facts.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3561,6 +3903,7 @@
       }
     },
     "Verify model": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3571,6 +3914,7 @@
       }
     },
     "View sample answer": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3611,6 +3955,7 @@
       }
     },
     "Worth another look": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3621,6 +3966,7 @@
       }
     },
     "Worth another try": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3631,6 +3977,7 @@
       }
     },
     "You can change it for every practice set.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3641,6 +3988,7 @@
       }
     },
     "You completed the route and kept every question moving.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3651,6 +3999,7 @@
       }
     },
     "You finished the set. Review the tricky turns, then try the route again.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3661,6 +4010,7 @@
       }
     },
     "Your account does not have access to this model. Check provider permissions or choose another model.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3681,6 +4031,7 @@
       }
     },
     "Your destination, language and selected scenes are sent directly to your provider. Prompti does not run a proxy server.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3701,6 +4052,7 @@
       }
     },
     "Your model connection has expired or was revoked. Reconnect in Settings.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3711,6 +4063,7 @@
       }
     },
     "Your model is generating a small, practical set.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3721,6 +4074,7 @@
       }
     },
     "Your most practiced languages and situations": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3731,6 +4085,7 @@
       }
     },
     "Your next chapter": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3768,6 +4123,7 @@
       }
     },
     "Your progress starts here": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3778,6 +4134,7 @@
       }
     },
     "Your scenes": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3788,6 +4145,7 @@
       }
     },
     "Your transcript captured the key wording in the sample answer.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3808,6 +4166,7 @@
       }
     },
     "Your wording is close. Compare the transcript with the sample and try once more if you like.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3818,6 +4177,7 @@
       }
     },
     "accuracy": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3828,6 +4188,7 @@
       }
     },
     "active days": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3838,6 +4199,7 @@
       }
     },
     "answered": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3848,6 +4210,7 @@
       }
     },
     "complete": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3858,6 +4221,7 @@
       }
     },
     "correct": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3868,6 +4232,7 @@
       }
     },
     "days": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3878,6 +4243,7 @@
       }
     },
     "finished": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3888,6 +4254,7 @@
       }
     },
     "iCloud account unavailable; saved on this device": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3898,6 +4265,7 @@
       }
     },
     "iCloud private database": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3908,6 +4276,7 @@
       }
     },
     "iCloud ready; waiting for sync": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3918,6 +4287,7 @@
       }
     },
     "iCloud storage is full; saved on this device": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3928,6 +4298,7 @@
       }
     },
     "iCloud storage was unavailable when Prompti started, so learning data is being kept locally on this device. Keys never sync.": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3938,6 +4309,7 @@
       }
     },
     "iCloud sync finished": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3948,6 +4320,7 @@
       }
     },
     "iCloud unavailable; saved on this device": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3958,6 +4331,7 @@
       }
     },
     "in progress": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3968,6 +4342,7 @@
       }
     },
     "languages": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3978,6 +4353,7 @@
       }
     },
     "local picks": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -3988,6 +4364,7 @@
       }
     },
     "not scored": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -4008,6 +4385,7 @@
       }
     },
     "review": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -4018,6 +4396,7 @@
       }
     },
     "skipped": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -4028,6 +4407,7 @@
       }
     },
     "streak": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -4038,6 +4418,7 @@
       }
     },
     "today": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -4048,6 +4429,7 @@
       }
     },
     "up next": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -4058,6 +4440,7 @@
       }
     },
     "中文 + English": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -4068,6 +4451,7 @@
       }
     },
     "简体中文": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -4076,6 +4460,2506 @@
           }
         }
       }
+    },
+    "%@": {
+      "shouldTranslate": false
+    },
+    "%@ / %@": {
+      "shouldTranslate": false
+    },
+    "%@ / 80": {
+      "shouldTranslate": false
+    },
+    "%@ of %@ questions prepared": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@ of %2$@ questions prepared"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已准备 %1$@ / %2$@ 道题"
+          }
+        }
+      }
+    },
+    "%@ questions": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ 道题"
+          }
+        }
+      }
+    },
+    "%@ · %@": {
+      "shouldTranslate": false
+    },
+    "%@ · %@ requests/week": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · 每周 %2$@ 次调用"
+          }
+        }
+      }
+    },
+    "%@, %@": {
+      "shouldTranslate": false
+    },
+    "%lld": {
+      "shouldTranslate": false
+    },
+    "%lld / %lld": {
+      "shouldTranslate": false
+    },
+    "%lld / 80": {
+      "shouldTranslate": false
+    },
+    "%lld of %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld / %2$lld"
+          }
+        }
+      }
+    },
+    "%lld reported questions were removed from future practice.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld reported question was removed from future practice."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld reported questions were removed from future practice."
+                }
+              }
+            }
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已从后续练习中移除 %lld 道被报告的题目。"
+          }
+        }
+      }
+    },
+    "Acropolis": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "雅典卫城"
+          }
+        }
+      }
+    },
+    "Add %@": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加%@"
+          }
+        }
+      }
+    },
+    "Advance preparation is on and can use additional provider tokens.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已启用提前准备，可能消耗额外的模型 token。"
+          }
+        }
+      }
+    },
+    "Advance preparation paused: %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "提前准备已暂停：%@"
+          }
+        }
+      }
+    },
+    "Amsterdam": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "阿姆斯特丹"
+          }
+        }
+      }
+    },
+    "Answer: %@": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "答案：%@"
+          }
+        }
+      }
+    },
+    "Anthropic": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anthropic"
+          }
+        }
+      }
+    },
+    "Argentina": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "阿根廷"
+          }
+        }
+      }
+    },
+    "Around %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@周边"
+          }
+        }
+      }
+    },
+    "Athens": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "雅典"
+          }
+        }
+      }
+    },
+    "Australia": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "澳大利亚"
+          }
+        }
+      }
+    },
+    "Austria": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "奥地利"
+          }
+        }
+      }
+    },
+    "Bali": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "巴厘岛"
+          }
+        }
+      }
+    },
+    "Bangkok": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "曼谷"
+          }
+        }
+      }
+    },
+    "Barcelona": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "巴塞罗那"
+          }
+        }
+      }
+    },
+    "Beijing": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "北京"
+          }
+        }
+      }
+    },
+    "Berlin": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "柏林"
+          }
+        }
+      }
+    },
+    "Bike hire": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "自行车租赁"
+          }
+        }
+      }
+    },
+    "Black Sea coast": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "黑海海岸"
+          }
+        }
+      }
+    },
+    "Bogotá": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "波哥大"
+          }
+        }
+      }
+    },
+    "Brandenburg Gate": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "勃兰登堡门"
+          }
+        }
+      }
+    },
+    "Buenos Aires": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "布宜诺斯艾利斯"
+          }
+        }
+      }
+    },
+    "Burj Khalifa": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "哈利法塔"
+          }
+        }
+      }
+    },
+    "Busan": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "釜山"
+          }
+        }
+      }
+    },
+    "CN Tower": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "加拿大国家电视塔"
+          }
+        }
+      }
+    },
+    "Cafe": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "咖啡馆"
+          }
+        }
+      }
+    },
+    "Canada": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "加拿大"
+          }
+        }
+      }
+    },
+    "Canal City": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "博多运河城"
+          }
+        }
+      }
+    },
+    "Canal Ring": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "阿姆斯特丹运河带"
+          }
+        }
+      }
+    },
+    "Cancún": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "坎昆"
+          }
+        }
+      }
+    },
+    "Canton Tower": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "广州塔"
+          }
+        }
+      }
+    },
+    "Caribbean beaches": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "加勒比海滩"
+          }
+        }
+      }
+    },
+    "Cartagena": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "卡塔赫纳"
+          }
+        }
+      }
+    },
+    "Castillo San Felipe": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "圣费利佩城堡"
+          }
+        }
+      }
+    },
+    "Cerro San Cristóbal": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "圣克里斯托瓦尔山"
+          }
+        }
+      }
+    },
+    "Charles Bridge": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查理大桥"
+          }
+        }
+      }
+    },
+    "Chengdu": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "成都"
+          }
+        }
+      }
+    },
+    "Chile": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "智利"
+          }
+        }
+      }
+    },
+    "China": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "中国"
+          }
+        }
+      }
+    },
+    "Chinese": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "中文"
+          }
+        }
+      }
+    },
+    "Chongqing": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重庆"
+          }
+        }
+      }
+    },
+    "Choose another destination": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择其他目的地"
+          }
+        }
+      }
+    },
+    "City Wall": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "西安城墙"
+          }
+        }
+      }
+    },
+    "City centre": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "市中心"
+          }
+        }
+      }
+    },
+    "City of Arts": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "艺术科学城"
+          }
+        }
+      }
+    },
+    "Civic Center": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "市民中心"
+          }
+        }
+      }
+    },
+    "Cologne": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "科隆"
+          }
+        }
+      }
+    },
+    "Cologne Cathedral": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "科隆大教堂"
+          }
+        }
+      }
+    },
+    "Colombia": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "哥伦比亚"
+          }
+        }
+      }
+    },
+    "Colosseum": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "罗马斗兽场"
+          }
+        }
+      }
+    },
+    "Completed answers are saved. The current unanswered question will not be counted.": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已完成的作答已保存，当前未作答的题目不计入统计。"
+          }
+        }
+      }
+    },
+    "Correct answer": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正确答案"
+          }
+        }
+      }
+    },
+    "Cuba": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "古巴"
+          }
+        }
+      }
+    },
+    "Custom scene": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "自定义场景"
+          }
+        }
+      }
+    },
+    "Czechia": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "捷克"
+          }
+        }
+      }
+    },
+    "Day": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日期"
+          }
+        }
+      }
+    },
+    "DeepSeek": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "DeepSeek"
+          }
+        }
+      }
+    },
+    "Dotonbori": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "道顿堀"
+          }
+        }
+      }
+    },
+    "Dubai": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "迪拜"
+          }
+        }
+      }
+    },
+    "Dublin": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "都柏林"
+          }
+        }
+      }
+    },
+    "Edinburgh": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "爱丁堡"
+          }
+        }
+      }
+    },
+    "Edinburgh Castle": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "爱丁堡城堡"
+          }
+        }
+      }
+    },
+    "Eiffel Tower": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "埃菲尔铁塔"
+          }
+        }
+      }
+    },
+    "Elbphilharmonie": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "易北爱乐音乐厅"
+          }
+        }
+      }
+    },
+    "End this practice set?": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "结束这组练习？"
+          }
+        }
+      }
+    },
+    "Federation Square": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "联邦广场"
+          }
+        }
+      }
+    },
+    "Food market": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "美食市场"
+          }
+        }
+      }
+    },
+    "Forbidden City": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "故宫"
+          }
+        }
+      }
+    },
+    "France": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "法国"
+          }
+        }
+      }
+    },
+    "Frankfurt": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "法兰克福"
+          }
+        }
+      }
+    },
+    "Fukuoka": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "福冈"
+          }
+        }
+      }
+    },
+    "Fushimi Inari": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "伏见稻荷大社"
+          }
+        }
+      }
+    },
+    "Gap %@": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "第 %@ 个空"
+          }
+        }
+      }
+    },
+    "German": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "德语"
+          }
+        }
+      }
+    },
+    "Germany": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "德国"
+          }
+        }
+      }
+    },
+    "Golden Bridge": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "金角湾大桥"
+          }
+        }
+      }
+    },
+    "Golden Gate Bridge": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "金门大桥"
+          }
+        }
+      }
+    },
+    "Google Gemini": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Google Gemini"
+          }
+        }
+      }
+    },
+    "Grand Palace": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "大皇宫"
+          }
+        }
+      }
+    },
+    "Greece": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "希腊"
+          }
+        }
+      }
+    },
+    "Guangzhou": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "广州"
+          }
+        }
+      }
+    },
+    "Gyeongbokgung": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "景福宫"
+          }
+        }
+      }
+    },
+    "Haeundae Beach": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "海云台海滩"
+          }
+        }
+      }
+    },
+    "Hagia Sophia": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "圣索菲亚大教堂"
+          }
+        }
+      }
+    },
+    "Hallasan": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "汉拿山"
+          }
+        }
+      }
+    },
+    "Hamburg": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "汉堡"
+          }
+        }
+      }
+    },
+    "Hangzhou": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "杭州"
+          }
+        }
+      }
+    },
+    "Havana": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "哈瓦那"
+          }
+        }
+      }
+    },
+    "Hermitage Museum": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "艾尔米塔什博物馆"
+          }
+        }
+      }
+    },
+    "Hohensalzburg": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "萨尔茨堡要塞"
+          }
+        }
+      }
+    },
+    "Hollywood": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "好莱坞"
+          }
+        }
+      }
+    },
+    "Hongya Cave": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "洪崖洞"
+          }
+        }
+      }
+    },
+    "Honolulu": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "檀香山"
+          }
+        }
+      }
+    },
+    "Indonesia": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "印度尼西亚"
+          }
+        }
+      }
+    },
+    "Ireland": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "爱尔兰"
+          }
+        }
+      }
+    },
+    "Istanbul": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "伊斯坦布尔"
+          }
+        }
+      }
+    },
+    "It is unrelated to the destination": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "内容与目的地无关"
+          }
+        }
+      }
+    },
+    "Italy": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "意大利"
+          }
+        }
+      }
+    },
+    "Japan": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日本"
+          }
+        }
+      }
+    },
+    "Japanese": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日语"
+          }
+        }
+      }
+    },
+    "Jeju": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "济州"
+          }
+        }
+      }
+    },
+    "Kazan": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "喀山"
+          }
+        }
+      }
+    },
+    "Kazan Kremlin": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "喀山克里姆林宫"
+          }
+        }
+      }
+    },
+    "Korean": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "韩语"
+          }
+        }
+      }
+    },
+    "Kyoto": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "京都"
+          }
+        }
+      }
+    },
+    "Lake Zürich": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "苏黎世湖"
+          }
+        }
+      }
+    },
+    "Lima": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "利马"
+          }
+        }
+      }
+    },
+    "Lisbon": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "里斯本"
+          }
+        }
+      }
+    },
+    "London": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "伦敦"
+          }
+        }
+      }
+    },
+    "Los Angeles": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "洛杉矶"
+          }
+        }
+      }
+    },
+    "Madrid": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "马德里"
+          }
+        }
+      }
+    },
+    "Marienplatz": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "玛利亚广场"
+          }
+        }
+      }
+    },
+    "Marina Bay": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "滨海湾"
+          }
+        }
+      }
+    },
+    "Market": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "市场"
+          }
+        }
+      }
+    },
+    "Melbourne": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "墨尔本"
+          }
+        }
+      }
+    },
+    "Metro": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "地铁"
+          }
+        }
+      }
+    },
+    "Mexico": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "墨西哥"
+          }
+        }
+      }
+    },
+    "Mexico City": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "墨西哥城"
+          }
+        }
+      }
+    },
+    "Models without public request counts appear separately.": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "暂无公开调用量的模型单独列出。"
+          }
+        }
+      }
+    },
+    "Monserrate": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "蒙塞拉特山"
+          }
+        }
+      }
+    },
+    "More fast models · usage unavailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更多快速模型 · 暂无调用量数据"
+          }
+        }
+      }
+    },
+    "Moscow": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "莫斯科"
+          }
+        }
+      }
+    },
+    "Munich": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "慕尼黑"
+          }
+        }
+      }
+    },
+    "Naha": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "那霸"
+          }
+        }
+      }
+    },
+    "Netherlands": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "荷兰"
+          }
+        }
+      }
+    },
+    "New York": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "纽约"
+          }
+        }
+      }
+    },
+    "No questions available": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "暂无可用题目"
+          }
+        }
+      }
+    },
+    "Obelisco": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "方尖碑"
+          }
+        }
+      }
+    },
+    "Odori Park": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "大通公园"
+          }
+        }
+      }
+    },
+    "Old Havana": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "哈瓦那旧城"
+          }
+        }
+      }
+    },
+    "OpenAI": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OpenAI"
+          }
+        }
+      }
+    },
+    "OpenRouter": {
+      "shouldTranslate": false
+    },
+    "Osaka": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "大阪"
+          }
+        }
+      }
+    },
+    "Palacio de Bellas Artes": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "墨西哥城艺术宫"
+          }
+        }
+      }
+    },
+    "Paris": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "巴黎"
+          }
+        }
+      }
+    },
+    "Peru": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "秘鲁"
+          }
+        }
+      }
+    },
+    "Plaza Mayor": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "马约尔广场"
+          }
+        }
+      }
+    },
+    "Plaza de España": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "西班牙广场"
+          }
+        }
+      }
+    },
+    "Popular fast models": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "热门快速模型"
+          }
+        }
+      }
+    },
+    "Portugal": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "葡萄牙"
+          }
+        }
+      }
+    },
+    "Practice unavailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "练习暂不可用"
+          }
+        }
+      }
+    },
+    "Prague": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "布拉格"
+          }
+        }
+      }
+    },
+    "Progress was not saved": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "进度未能保存"
+          }
+        }
+      }
+    },
+    "Prompti asks your selected model to classify the scene before it is saved. Political persuasion, sexual content and prompt injection are rejected.": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prompti 会先使用你选择的模型审核场景，再进行保存。政治劝诱、色情内容和提示词注入将被拒绝。"
+          }
+        }
+      }
+    },
+    "Puerto Rico": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "波多黎各"
+          }
+        }
+      }
+    },
+    "Question %@ of %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Question %1$@ of %2$@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "第 %1$@ 题，共 %2$@ 题"
+          }
+        }
+      }
+    },
+    "Ranked by weekly requests · %@": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "按每周调用量排序 · 截至 %@"
+          }
+        }
+      }
+    },
+    "Red Square": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "红场"
+          }
+        }
+      }
+    },
+    "Requesting access": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在请求权限"
+          }
+        }
+      }
+    },
+    "Return to practice": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "返回练习"
+          }
+        }
+      }
+    },
+    "Return to practice and prepare another set.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请返回练习页面，准备另一组题目。"
+          }
+        }
+      }
+    },
+    "Rome": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "罗马"
+          }
+        }
+      }
+    },
+    "Russia": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "俄罗斯"
+          }
+        }
+      }
+    },
+    "Russian": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "俄语"
+          }
+        }
+      }
+    },
+    "Römerberg": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "罗马广场"
+          }
+        }
+      }
+    },
+    "Sagrada Família": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "圣家堂"
+          }
+        }
+      }
+    },
+    "Saint Petersburg": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "圣彼得堡"
+          }
+        }
+      }
+    },
+    "Salzburg": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "萨尔茨堡"
+          }
+        }
+      }
+    },
+    "San Francisco": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "旧金山"
+          }
+        }
+      }
+    },
+    "San Juan": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "圣胡安"
+          }
+        }
+      }
+    },
+    "Santiago": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "圣地亚哥"
+          }
+        }
+      }
+    },
+    "Sapporo": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "札幌"
+          }
+        }
+      }
+    },
+    "Schönbrunn Palace": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "美泉宫"
+          }
+        }
+      }
+    },
+    "Seoul": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "首尔"
+          }
+        }
+      }
+    },
+    "Seville": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "塞维利亚"
+          }
+        }
+      }
+    },
+    "Shanghai": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "上海"
+          }
+        }
+      }
+    },
+    "Shenzhen": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "深圳"
+          }
+        }
+      }
+    },
+    "Shibuya Crossing": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "涩谷十字路口"
+          }
+        }
+      }
+    },
+    "Short situation": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "简短描述场景"
+          }
+        }
+      }
+    },
+    "Shurijo Castle": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "首里城"
+          }
+        }
+      }
+    },
+    "Simplified Chinese": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "简体中文"
+          }
+        }
+      }
+    },
+    "Singapore": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "新加坡"
+          }
+        }
+      }
+    },
+    "Sochi": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "索契"
+          }
+        }
+      }
+    },
+    "Something else": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "其他问题"
+          }
+        }
+      }
+    },
+    "Source: OpenRouter · CC BY 4.0": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "来源：OpenRouter · CC BY 4.0"
+          }
+        }
+      }
+    },
+    "South Korea": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "韩国"
+          }
+        }
+      }
+    },
+    "Spain": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "西班牙"
+          }
+        }
+      }
+    },
+    "Spanish": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "西班牙语"
+          }
+        }
+      }
+    },
+    "Stanley Park": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "斯坦利公园"
+          }
+        }
+      }
+    },
+    "Statue of Liberty": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "自由女神像"
+          }
+        }
+      }
+    },
+    "Step %@ of %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Step %1$@ of %2$@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "第 %1$@ 步，共 %2$@ 步"
+          }
+        }
+      }
+    },
+    "Switzerland": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "瑞士"
+          }
+        }
+      }
+    },
+    "Sydney": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "悉尼"
+          }
+        }
+      }
+    },
+    "Sydney Opera House": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "悉尼歌剧院"
+          }
+        }
+      }
+    },
+    "Tapas bar": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "西班牙小食酒吧"
+          }
+        }
+      }
+    },
+    "Thailand": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "泰国"
+          }
+        }
+      }
+    },
+    "The Bund": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "外滩"
+          }
+        }
+      }
+    },
+    "The Tube": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "伦敦地铁"
+          }
+        }
+      }
+    },
+    "The answer looks wrong": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "答案可能有误"
+          }
+        }
+      }
+    },
+    "The content is inappropriate": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "内容不适宜"
+          }
+        }
+      }
+    },
+    "The language feels unnatural": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "语言表达不自然"
+          }
+        }
+      }
+    },
+    "The question will be removed from future practice and will not count as a wrong answer.": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "这道题将从后续练习中移除，不计入答错。"
+          }
+        }
+      }
+    },
+    "This practice set is no longer available.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "这组练习已不可用。"
+          }
+        }
+      }
+    },
+    "Tianfu Square": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "天府广场"
+          }
+        }
+      }
+    },
+    "Tokyo": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "东京"
+          }
+        }
+      }
+    },
+    "Toronto": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "多伦多"
+          }
+        }
+      }
+    },
+    "Tower Bridge": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "伦敦塔桥"
+          }
+        }
+      }
+    },
+    "Tram 28": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "28 路电车"
+          }
+        }
+      }
+    },
+    "Trinity College": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "三一学院"
+          }
+        }
+      }
+    },
+    "Try again.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请重试。"
+          }
+        }
+      }
+    },
+    "Türkiye": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "土耳其"
+          }
+        }
+      }
+    },
+    "Uluwatu": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "乌鲁瓦图"
+          }
+        }
+      }
+    },
+    "United Arab Emirates": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "阿拉伯联合酋长国"
+          }
+        }
+      }
+    },
+    "United Kingdom": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "英国"
+          }
+        }
+      }
+    },
+    "United States": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "美国"
+          }
+        }
+      }
+    },
+    "Valencia": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "瓦伦西亚"
+          }
+        }
+      }
+    },
+    "Vancouver": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "温哥华"
+          }
+        }
+      }
+    },
+    "Vienna": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "维也纳"
+          }
+        }
+      }
+    },
+    "Vladivostok": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "符拉迪沃斯托克"
+          }
+        }
+      }
+    },
+    "Waikīkī": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "威基基海滩"
+          }
+        }
+      }
+    },
+    "Walled City": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "卡塔赫纳古城"
+          }
+        }
+      }
+    },
+    "West Lake": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "西湖"
+          }
+        }
+      }
+    },
+    "What seems wrong?": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "这道题有什么问题？"
+          }
+        }
+      }
+    },
+    "Xi'an": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "西安"
+          }
+        }
+      }
+    },
+    "Your answer, incorrect": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "你的答案，回答错误"
+          }
+        }
+      }
+    },
+    "Your approved question tray has been topped up.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已补充通过审核的待练题目。"
+          }
+        }
+      }
+    },
+    "Zurich": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "苏黎世"
+          }
+        }
+      }
+    },
+    "e.g. buying a local pastry": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "例如：购买当地糕点"
+          }
+        }
+      }
+    },
+    "·": {
+      "shouldTranslate": false
+    },
+    "· %@": {
+      "shouldTranslate": false
+    },
+    "· %lld": {
+      "shouldTranslate": false
     }
   },
   "version": "1.0"

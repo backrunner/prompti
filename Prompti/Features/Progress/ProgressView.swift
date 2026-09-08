@@ -37,7 +37,9 @@ struct ProgressDashboardView: View {
         }
     }
     private var sceneProgress: [ProgressDistributionItem] {
-        distribution(for: scored.map(\.sceneTitle)) { $0 }
+        distribution(for: scored.map(\.sceneTitle)) { title in
+            scored.first(where: { $0.sceneTitle == title })?.localizedSceneTitle ?? title
+        }
     }
 
     var body: some View {
@@ -70,8 +72,8 @@ struct ProgressDashboardView: View {
                             SectionLabel("Last 7 days", subtitle: "Answered questions, excluding skips")
                             Chart(dayProgress) { day in
                                 BarMark(
-                                    x: .value("Day", day.date, unit: .day),
-                                    y: .value("Questions", day.count)
+                                    x: .value(String(localized: "Day"), day.date, unit: .day),
+                                    y: .value(String(localized: "Questions"), day.count)
                                 )
                                 .foregroundStyle(Color.promptAccent.gradient)
                                 .cornerRadius(4)
@@ -136,7 +138,7 @@ struct ProgressDashboardView: View {
             ForEach(items.prefix(3)) { item in
                 VStack(alignment: .leading, spacing: 5) {
                     HStack {
-                        Text(LocalizedStringKey(item.label))
+                        Text(item.label)
                             .font(.subheadline.weight(.semibold))
                         Spacer()
                         Text("\(item.count)")

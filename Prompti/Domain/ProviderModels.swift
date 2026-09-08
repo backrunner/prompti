@@ -31,10 +31,10 @@ enum ProviderKind: String, Codable, CaseIterable, Identifiable, Sendable {
     var defaultModel: String {
         switch self {
         case .apple: "system"
-        case .openRouterOAuth: "openai/gpt-5-mini"
-        case .openAIResponses: "gpt-5-mini"
-        case .openAIChat: "gpt-4o-mini"
-        case .anthropic: "claude-sonnet-4-5"
+        case .openRouterOAuth: ModelRecommendations.openRouter.models.first?.id ?? "openai/gpt-5.6-luna"
+        case .openAIResponses: "gpt-5.6-luna"
+        case .openAIChat: "gpt-5.6-luna"
+        case .anthropic: "claude-haiku-4-5-20251001"
         }
     }
 }

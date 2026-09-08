@@ -187,7 +187,7 @@ struct GenerationView: View {
     private var routeCard: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(alignment: .firstTextBaseline) {
-                Label(request.destination.city, systemImage: "mappin.and.ellipse")
+                Label(request.destination.localizedCity, systemImage: "mappin.and.ellipse")
                     .font(.headline)
                     .accessibilityIdentifier("generation.destination.\(request.destination.id)")
                 Spacer()
@@ -328,7 +328,7 @@ struct GenerationView: View {
 
     private var localizedSceneList: String {
         request.scenes
-            .map { NSLocalizedString($0.title, comment: "Practice scene title") }
+            .map(\.localizedTitle)
             .joined(separator: " · ")
     }
 

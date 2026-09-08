@@ -44,7 +44,7 @@ final class AppSettings {
         hasCompletedOnboarding = defaults.bool(forKey: Key.onboarding)
         destinationID = defaults.string(forKey: Key.destination) ?? "tokyo"
         languageCode = defaults.string(forKey: Key.language) ?? "ja"
-        explanationLanguage = ExplanationLanguage(rawValue: defaults.string(forKey: Key.explanationLanguage) ?? "") ?? .english
+        explanationLanguage = ExplanationLanguage(rawValue: defaults.string(forKey: Key.explanationLanguage) ?? "") ?? .suggested()
         difficulty = TrainingDifficulty(rawValue: defaults.string(forKey: Key.difficulty) ?? "") ?? .basic
         let storedCount = defaults.integer(forKey: Key.questionCount)
         questionCount = storedCount == 0 ? 5 : min(20, max(3, storedCount))
