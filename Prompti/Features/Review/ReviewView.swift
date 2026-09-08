@@ -100,7 +100,7 @@ struct ReviewView: View {
     private var destinationOptions: [ReviewFilterOption] {
         Dictionary(grouping: questions, by: \QuestionRecord.destinationID)
             .compactMap { id, questions in
-                questions.first.map { ReviewFilterOption(id: id, title: $0.destinationName) }
+                questions.first.map { ReviewFilterOption(id: id, title: $0.localizedDestinationName) }
             }
             .sorted { $0.title < $1.title }
     }
@@ -117,8 +117,10 @@ struct ReviewView: View {
     }
 
     private var sceneOptions: [ReviewFilterOption] {
-        Set(questions.map(\.sceneTitle))
-            .map { ReviewFilterOption(id: $0, title: $0) }
+        Dictionary(grouping: questions, by: \.sceneTitle)
+            .compactMap { title, records in
+                records.first.map { ReviewFilterOption(id: title, title: $0.localizedSceneTitle) }
+            }
             .sorted { $0.title < $1.title }
     }
 
@@ -231,9 +233,9 @@ struct ReviewView: View {
         let status = status(for: question)
         return VStack(alignment: .leading, spacing: 9) {
             HStack {
-                Label(LocalizedStringKey(question.sceneTitle), systemImage: question.question.kind.symbol)
+                Label(question.localizedSceneTitle, systemImage: question.question.kind.symbol)
                 Spacer()
-                Text(question.destinationName)
+                Text(question.localizedDestinationName)
             }
             .font(.caption.weight(.semibold))
             .foregroundStyle(Color.promptMuted)
@@ -281,7 +283,7 @@ struct ReviewView: View {
                 Picker("Scene", selection: $sceneFilter) {
                     Text("All scenes").tag("all")
                     ForEach(sceneOptions) { option in
-                        Text(LocalizedStringKey(option.title)).tag(option.id)
+                        Text(option.title).tag(option.id)
                     }
                 }
                 Picker("Date", selection: $dateFilter) {

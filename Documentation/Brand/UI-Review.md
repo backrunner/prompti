@@ -2,6 +2,8 @@
 
 日期：2026-09-08。实施规范见 [品牌与 UI 开发规范](../../.agents/13-brand-and-ui-guidelines.md)，图标与商店排版见 [品牌说明](README.md)。
 
+后续模型预设与中英文目录 / 动态文案完善的实际截图和验证范围见 [模型与本地化验收](../Model-and-Localization-Review.md)。
+
 本轮把 P 对话标识延伸到全部 11 个功能页面及 App 的恢复界面。翡翠绿用于操作，暖中性表面用于阅读；深色主操作采用薄荷底配深绿文字。目的地继续用城市、地标和场景表达旅行。
 
 [打开实际截图画廊，切换浅色 / 深色](UI-Review.html)。36 张原始截图与来源保存在 [UIScreenshots](UIScreenshots) 及 [截图清单](UIScreenshots/manifest.json)；下面的对照图仅缩放拼排原图，没有重绘界面。

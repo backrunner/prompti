@@ -279,7 +279,7 @@ struct RemoteAIClient: QuestionProvider {
             return base.appending(path: route)
         }
         let normalizedPath = base.path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
-        if normalizedPath.hasSuffix("v1/\(route)") {
+        if normalizedPath.hasSuffix("/\(route)") {
             return base
         }
         return base.appending(path: "v1").appending(path: route)

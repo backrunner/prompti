@@ -334,6 +334,63 @@ final class PromptiUITests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["onboarding.destination"].waitForExistence(timeout: 5))
     }
 
+    func testLocalizedModelSelectionInChinese() {
+        checkLocalizedModelSelection(language: "zh-Hans", locale: "zh_CN")
+    }
+
+    func testLocalizedModelSelectionInEnglish() {
+        checkLocalizedModelSelection(language: "en", locale: "en_US")
+    }
+
+    private func checkLocalizedModelSelection(language: String, locale: String) {
+        launch(arguments: ["-prompti-onboarding", "-AppleLanguages", "(\(language))", "-AppleLocale", locale])
+        let next = app.buttons["onboarding.continue"]
+        XCTAssertTrue(next.waitForExistence(timeout: 5))
+        for _ in 0..<3 { next.tap() }
+        let selection = app.buttons["model.selection"]
+        XCTAssertTrue(selection.waitForExistence(timeout: 5))
+        XCTAssertTrue(selection.label.contains("DeepSeek V4 Flash 0731"))
+        XCTAssertFalse(next.isEnabled)
+        attachScreenshot(named: "model-\(language)")
+        selection.tap()
+        // UIKit menus expose their localized title rather than the SwiftUI identifier.
+        let gemini = app.buttons["Gemini 3.8 Flash"]
+        XCTAssertTrue(gemini.waitForExistence(timeout: 3))
+        XCTAssertTrue(app.staticTexts[language == "en" ? "Popular fast models" : "热门快速模型"].exists)
+        attachScreenshot(named: "model-options-\(language)")
+        gemini.tap()
+        XCTAssertTrue(selection.label.contains("Gemini 3.8 Flash"))
+        XCTAssertFalse(next.isEnabled)
+        app.buttons["model.provider"].tap()
+        app.buttons["Google Gemini"].tap()
+        let modelID = app.textFields["model.customID"]
+        XCTAssertTrue(modelID.waitForExistence(timeout: 3))
+        XCTAssertEqual(modelID.value as? String, "gemini-3.8-flash")
+        XCTAssertFalse(next.isEnabled)
+        attachScreenshot(named: "gemini-\(language)")
+    }
+
+    func testChineseDestinationSearchAndPractice() {
+        launch(arguments: ["-prompti-demo", "-AppleLanguages", "(zh-Hans)", "-AppleLocale", "zh_CN"])
+        XCTAssertTrue(app.buttons["home.destination"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["东京"].exists)
+        attachScreenshot(named: "home-zh-Hans")
+        app.buttons["home.destination"].tap()
+        let search = app.searchFields.firstMatch
+        XCTAssertTrue(search.waitForExistence(timeout: 3))
+        search.tap()
+        search.typeText("北京")
+        let beijing = app.buttons["destination.beijing"]
+        XCTAssertTrue(beijing.waitForExistence(timeout: 3))
+        attachScreenshot(named: "destination-search-zh-Hans")
+        beijing.tap()
+        XCTAssertTrue(app.staticTexts["北京"].waitForExistence(timeout: 3))
+        app.buttons["home.startPractice"].tap()
+        XCTAssertTrue(app.buttons["generation.start"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["北京"].exists)
+        attachScreenshot(named: "generation-zh-Hans")
+    }
+
     func testMultipleBlanksRequireEveryAnswer() {
         launch(arguments: ["-prompti-demo", "-prompti-practice", "-prompti-ui-multiple-blanks"])
         startFiveQuestionSession()

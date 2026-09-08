@@ -36,7 +36,7 @@ struct OnboardingView: View {
     @State private var difficulty = TrainingDifficulty.basic
     @State private var questionCount = 5
     @State private var enablePreparation = false
-    @State private var explanationLanguage = ExplanationLanguage.english
+    @State private var explanationLanguage = ExplanationLanguage.suggested()
     @State private var stepMovesForward = true
 
     private var destination: Destination {
@@ -193,7 +193,7 @@ struct OnboardingView: View {
                     }
                 }
 
-                Label(destination.landmarkName, systemImage: "mappin.and.ellipse")
+                Label(destination.localizedLandmark, systemImage: "mappin.and.ellipse")
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(onboardingAccent)
                     .padding(.horizontal, 4)
@@ -218,7 +218,7 @@ struct OnboardingView: View {
                             HStack {
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(language.localName).font(.headline)
-                                    Text(language.name).font(.caption).foregroundStyle(Color.promptMuted)
+                                    Text(language.localizedName).font(.caption).foregroundStyle(Color.promptMuted)
                                 }
                                 Spacer()
                                 Image(systemName: language.code == languageCode ? "checkmark.circle.fill" : "circle")

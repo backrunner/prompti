@@ -89,7 +89,7 @@ struct PracticeSessionView: View {
             }
         }
         .alert("Progress was not saved", isPresented: $showPersistenceError) { } message: {
-            Text(persistenceError ?? "Try again.")
+            Text(persistenceError ?? String(localized: "Try again."))
         }
         .onChange(of: index) { _, _ in
             speech.reset()
@@ -163,7 +163,7 @@ struct PracticeSessionView: View {
                     titleVisibility: .visible
                 ) {
                     ForEach(ReportReason.allCases) { reason in
-                        Button(reason.title, role: .destructive) {
+                        Button(LocalizedStringKey(reason.title), role: .destructive) {
                             report(reason)
                         }
                     }
@@ -209,14 +209,14 @@ struct PracticeSessionView: View {
                     Text("\(index + 1) / \(session.requestedCount)")
                         .font(.subheadline.bold())
                     Spacer()
-                    Label(LocalizedStringKey(current.sceneTitle), systemImage: question.kind.symbol)
+                    Label(current.localizedSceneTitle, systemImage: question.kind.symbol)
                         .font(.subheadline)
                         .foregroundStyle(Color.promptMuted)
                 }
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Question \(index + 1) of \(session.requestedCount)")
                         .font(.headline)
-                    Label(LocalizedStringKey(current.sceneTitle), systemImage: question.kind.symbol)
+                    Label(current.localizedSceneTitle, systemImage: question.kind.symbol)
                         .font(.subheadline)
                         .foregroundStyle(Color.promptMuted)
                 }
@@ -516,7 +516,7 @@ struct PracticeSessionView: View {
                     if counts.reported > 0 {
                         InlineNotice(
                             symbol: "exclamationmark.bubble.fill",
-                            text: "\(counts.reported) reported question was removed from future practice.",
+                            text: String(localized: "\(counts.reported) reported questions were removed from future practice."),
                             tone: .warning
                         )
                     }

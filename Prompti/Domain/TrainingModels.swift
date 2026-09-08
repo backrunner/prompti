@@ -45,8 +45,12 @@ enum ExplanationLanguage: String, Codable, CaseIterable, Identifiable, Sendable 
     var title: String {
         switch self {
         case .english: "English"
-        case .simplifiedChinese: "简体中文"
+        case .simplifiedChinese: "Simplified Chinese"
         }
+    }
+
+    static func suggested(preferredLanguages: [String] = Locale.preferredLanguages) -> Self {
+        preferredLanguages.first?.hasPrefix("zh") == true ? .simplifiedChinese : .english
     }
 
     var promptName: String {

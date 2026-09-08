@@ -24,25 +24,14 @@ struct ModelConnectionView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
-            Picker("Connection", selection: $provider.kind) {
-                if appleStatus == .available {
-                    Text("Apple On-Device").tag(ProviderKind.apple)
+            Picker("Connection", selection: presetSelection) {
+                ForEach(ProviderPreset.allCases.filter { $0 != .apple || appleStatus == .available }) { preset in
+                    Text(LocalizedStringKey(preset.title)).tag(preset)
                 }
-                Text("OpenRouter · Sign in").tag(ProviderKind.openRouterOAuth)
-                Text("OpenAI Responses").tag(ProviderKind.openAIResponses)
-                Text("OpenAI Chat / Compatible").tag(ProviderKind.openAIChat)
-                Text("Anthropic Messages").tag(ProviderKind.anthropic)
             }
             .pickerStyle(.menu)
             .disabled(isBusy)
             .accessibilityIdentifier("model.provider")
-            .onChange(of: provider.kind) { _, kind in
-                provider = ProviderConfiguration(kind: kind, baseURL: kind.defaultBaseURL, model: kind.defaultModel,
-                    structuredOutputSupport: kind == .apple ? .supported : .unknown)
-                apiKey = ""
-                status = nil
-                isVerified = kind == .apple
-            }
 
             if provider.kind == .apple {
                 Label("Private and on-device", systemImage: "apple.intelligence")
@@ -56,7 +45,7 @@ struct ModelConnectionView: View {
             }
 
             if let status {
-                Label(LocalizedStringKey(status), systemImage: isVerified ? "checkmark.circle.fill" : "info.circle")
+                Label(status, systemImage: isVerified ? "checkmark.circle.fill" : "info.circle")
                     .font(.footnote)
                     .foregroundStyle(isVerified ? Color.promptSuccess : Color.promptMuted)
                     .accessibilityIdentifier("model.status")
@@ -79,13 +68,62 @@ struct ModelConnectionView: View {
         .onDisappear { connectionTask?.cancel(); authorization.cancel() }
     }
 
-    private var modelDisplayName: String {
-        switch provider.model {
-        case "openai/gpt-5-mini": "GPT 5 mini"
-        case "anthropic/claude-sonnet-4.5": "Claude Sonnet 4.5"
-        case "google/gemini-2.5-flash": "Gemini 2.5 Flash"
-        default: provider.model
+    private var recommendations: [ModelRecommendation] { ProviderPreset.models(for: provider) }
+
+    private var presetSelection: Binding<ProviderPreset> {
+        Binding(get: { ProviderPreset.matching(provider) }, set: { preset in
+            guard preset != ProviderPreset.matching(provider) else { return }
+            provider = preset.configuration
+            apiKey = ""
+            status = nil
+            isVerified = preset == .apple && appleStatus == .available
+        })
+    }
+
+    private var modelSelector: some View {
+        Menu {
+            if provider.kind == .openRouterOAuth {
+                Section("Popular fast models") {
+                    modelOptions(recommendations.filter { $0.weeklyRequests != nil })
+                }
+                Section("More fast models · usage unavailable") {
+                    modelOptions(recommendations.filter { $0.weeklyRequests == nil })
+                }
+            } else {
+                modelOptions(recommendations)
+            }
+        } label: {
+            HStack {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("Model").font(.caption).foregroundStyle(Color.promptMuted)
+                    Text(modelDisplayName).font(.subheadline.weight(.medium)).lineLimit(2)
+                }
+                Spacer()
+                Image(systemName: "chevron.up.chevron.down").font(.caption.bold())
+            }
+            .padding(14)
+            .background(Color.promptSurfaceRaised, in: .rect(cornerRadius: PromptiRadius.control))
         }
+        .foregroundStyle(Color.promptText)
+        .disabled(isBusy)
+        .accessibilityIdentifier("model.selection")
+    }
+
+    private func modelOptions(_ models: [ModelRecommendation]) -> some View {
+        ForEach(models) { model in
+            Button { provider.model = model.id } label: {
+                if let requests = model.weeklyRequests {
+                    Text("\(model.name) · \(requests.formatted(.number.notation(.compactName))) requests/week")
+                } else {
+                    Text(model.name)
+                }
+            }
+            .accessibilityIdentifier("model.option.\(model.id)")
+        }
+    }
+
+    private var modelDisplayName: String {
+        recommendations.first(where: { $0.id == provider.model })?.name ?? provider.model
     }
 
     private var oauthControls: some View {
@@ -99,25 +137,13 @@ struct ModelConnectionView: View {
                 }
             }
 
-            Menu {
-                Button("GPT 5 mini") { provider.model = "openai/gpt-5-mini" }
-                Button("Claude Sonnet 4.5") { provider.model = "anthropic/claude-sonnet-4.5" }
-                Button("Gemini 2.5 Flash") { provider.model = "google/gemini-2.5-flash" }
-            } label: {
-                HStack {
-                    VStack(alignment: .leading, spacing: 3) {
-                        Text("Model").font(.caption).foregroundStyle(Color.promptMuted)
-                        Text(modelDisplayName).font(.subheadline.weight(.medium)).lineLimit(2)
-                    }
-                    Spacer()
-                    Image(systemName: "chevron.up.chevron.down").font(.caption.bold())
-                }
-                .padding(14)
-                .background(Color.promptSurfaceRaised, in: .rect(cornerRadius: PromptiRadius.control))
+            modelSelector
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Ranked by weekly requests · \(ModelRecommendations.openRouter.asOf)")
+                Text("Models without public request counts appear separately.")
+                Link("Source: OpenRouter · CC BY 4.0", destination: URL(string: "https://openrouter.ai/rankings")!)
             }
-            .foregroundStyle(Color.promptText)
-            .disabled(isBusy)
-            .accessibilityIdentifier("model.selection")
+            .font(.caption).foregroundStyle(Color.promptMuted)
 
             Button {
                 connect(needsAuthorization: isVerified || !hasCredential)
@@ -156,8 +182,10 @@ struct ModelConnectionView: View {
         VStack(spacing: 12) {
             TextField("Base URL", text: $provider.baseURL)
                 .keyboardType(.URL).modifier(PromptiCredentialFieldModifier())
+            if !recommendations.isEmpty { modelSelector }
             TextField("Model ID", text: $provider.model)
                 .modifier(PromptiCredentialFieldModifier())
+                .accessibilityIdentifier("model.customID")
             SecureField(hasCredential ? "Replace API key" : "API key", text: $apiKey)
                 .modifier(PromptiCredentialFieldModifier())
             Button { connect(needsAuthorization: false) } label: {
@@ -199,11 +227,11 @@ struct ModelConnectionView: View {
                 try Task.checkCancellation()
                 provider.structuredOutputSupport = support
                 isVerified = true
-                status = "Connected. Your model is ready."
+                status = String(localized: "Connected. Your model is ready.")
             } catch is CancellationError {
                 return
             } catch let error as ASWebAuthenticationSessionError where error.code == .canceledLogin {
-                status = "Sign in cancelled. You can try again whenever you’re ready."
+                status = String(localized: "Sign in cancelled. You can try again whenever you’re ready.")
             } catch {
                 status = error.localizedDescription
             }

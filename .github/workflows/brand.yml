@@ -5,6 +5,7 @@ on:
     paths:
       - 'Prompti/**'
       - 'Tools/CheckBrand.py'
+      - 'Tools/CheckLocalization.py'
       - 'Tools/GenerateAppIcon.swift'
       - 'Documentation/Brand/**'
       - '.agents/13-brand-and-ui-guidelines.md'
@@ -14,6 +15,7 @@ on:
     paths:
       - 'Prompti/**'
       - 'Tools/CheckBrand.py'
+      - 'Tools/CheckLocalization.py'
       - 'Tools/GenerateAppIcon.swift'
       - 'Documentation/Brand/**'
       - '.agents/13-brand-and-ui-guidelines.md'
@@ -31,3 +33,4 @@ jobs:
         with:
           python-version: '3.12'
       - run: python3 Tools/CheckBrand.py
+      - run: python3 Tools/CheckLocalization.py

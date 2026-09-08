@@ -136,10 +136,10 @@ struct HomeView: View {
 
     private var destinationName: some View {
         VStack(alignment: .leading, spacing: 3) {
-            Text(destination.city)
+            Text(destination.localizedCity)
                 .font(PromptiTypography.hero)
                 .fontDesign(.rounded)
-            Text(destination.country)
+            Text(destination.localizedCountry)
                 .font(.subheadline.bold())
                 .foregroundStyle(Color.promptMuted)
         }
@@ -224,7 +224,7 @@ struct HomeView: View {
                             .background(Color.promptSurfaceRaised, in: .rect(cornerRadius: PromptiRadius.compact))
                         VStack(alignment: .leading, spacing: 3) {
                             Text(question.prompt).lineLimit(2).font(.subheadline.weight(.semibold))
-                            Text("\(question.destinationName) · \(question.sceneTitle)")
+                            Text("\(question.localizedDestinationName) · \(question.localizedSceneTitle)")
                                 .font(.caption)
                                 .foregroundStyle(Color.promptMuted)
                         }
@@ -297,7 +297,7 @@ struct HomeView: View {
             return
         } catch {
             modelContext.rollback()
-            inventoryMessage = "Advance preparation paused: \(error.localizedDescription)"
+            inventoryMessage = String(localized: "Advance preparation paused: \(error.localizedDescription)")
         }
     }
 

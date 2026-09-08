@@ -10,10 +10,10 @@ struct DestinationSummaryCard: View {
             PromptiSymbolBadge(symbol: destination.symbol, size: compact ? 40 : 48)
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(destination.city)
+                Text(destination.localizedCity)
                     .font(compact ? .headline : .title2.weight(.bold))
                     .fontDesign(.rounded)
-                Text(destination.country)
+                Text(destination.localizedCountry)
                     .font(.caption.weight(.bold))
                     .foregroundStyle(Color.promptMuted)
             }
@@ -42,7 +42,7 @@ struct SceneChoiceButton: View {
                     isSelected ? Color.promptOnAction.opacity(0.16) : Color.promptAccent.opacity(0.12),
                     in: RoundedRectangle(cornerRadius: PromptiRadius.compact, style: .continuous)
                 )
-            Text(LocalizedStringKey(scene.title))
+            Text(scene.localizedTitle)
                 .font(.subheadline.weight(.medium))
                 .foregroundStyle(isSelected ? Color.promptOnAction : Color.promptText)
                 .lineLimit(2, reservesSpace: true)

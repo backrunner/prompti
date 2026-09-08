@@ -1,0 +1,152 @@
+{
+  "device": "iPhone 17e",
+  "runtime": "iOS 27.0",
+  "textSize": "large (default)",
+  "date": "2026-09-08",
+  "screenshots": [
+    {
+      "file": "Dark/gemini-zh-Hans.png",
+      "test": "PromptiUITests/testLocalizedModelSelectionInChinese()",
+      "source": "XCTest attachment",
+      "timestamp": 1788810449.639
+    },
+    {
+      "file": "Dark/model-options-zh-Hans.png",
+      "test": "PromptiUITests/testLocalizedModelSelectionInChinese()",
+      "source": "XCTest attachment",
+      "timestamp": 1788810443.373
+    },
+    {
+      "file": "Dark/model-zh-Hans.png",
+      "test": "PromptiUITests/testLocalizedModelSelectionInChinese()",
+      "source": "XCTest attachment",
+      "timestamp": 1788810440.631
+    },
+    {
+      "file": "Dark/gemini-en.png",
+      "test": "PromptiUITests/testLocalizedModelSelectionInEnglish()",
+      "source": "XCTest attachment",
+      "timestamp": 1788810466.698
+    },
+    {
+      "file": "Dark/model-options-en.png",
+      "test": "PromptiUITests/testLocalizedModelSelectionInEnglish()",
+      "source": "XCTest attachment",
+      "timestamp": 1788810460.358
+    },
+    {
+      "file": "Dark/model-en.png",
+      "test": "PromptiUITests/testLocalizedModelSelectionInEnglish()",
+      "source": "XCTest attachment",
+      "timestamp": 1788810457.632
+    },
+    {
+      "file": "Light/generation-zh-Hans.png",
+      "test": "PromptiUITests/testChineseDestinationSearchAndPractice()",
+      "source": "XCTest attachment",
+      "timestamp": 1788810541.692
+    },
+    {
+      "file": "Light/destination-search-zh-Hans.png",
+      "test": "PromptiUITests/testChineseDestinationSearchAndPractice()",
+      "source": "XCTest attachment",
+      "timestamp": 1788810536.717
+    },
+    {
+      "file": "Light/home-zh-Hans.png",
+      "test": "PromptiUITests/testChineseDestinationSearchAndPractice()",
+      "source": "XCTest attachment",
+      "timestamp": 1788810531.196
+    },
+    {
+      "file": "Light/gemini-zh-Hans.png",
+      "test": "PromptiUITests/testLocalizedModelSelectionInChinese()",
+      "source": "XCTest attachment",
+      "timestamp": 1788810559.116
+    },
+    {
+      "file": "Light/model-options-zh-Hans.png",
+      "test": "PromptiUITests/testLocalizedModelSelectionInChinese()",
+      "source": "XCTest attachment",
+      "timestamp": 1788810552.8
+    },
+    {
+      "file": "Light/model-zh-Hans.png",
+      "test": "PromptiUITests/testLocalizedModelSelectionInChinese()",
+      "source": "XCTest attachment",
+      "timestamp": 1788810549.989
+    },
+    {
+      "file": "Light/gemini-en.png",
+      "test": "PromptiUITests/testLocalizedModelSelectionInEnglish()",
+      "source": "XCTest attachment",
+      "timestamp": 1788810576.67
+    },
+    {
+      "file": "Light/model-options-en.png",
+      "test": "PromptiUITests/testLocalizedModelSelectionInEnglish()",
+      "source": "XCTest attachment",
+      "timestamp": 1788810570.26
+    },
+    {
+      "file": "Light/model-en.png",
+      "test": "PromptiUITests/testLocalizedModelSelectionInEnglish()",
+      "source": "XCTest attachment",
+      "timestamp": 1788810567.503
+    },
+    {
+      "file": "Light/practice-feedback.png",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "source": "XCTest attachment",
+      "timestamp": 1788810594.133
+    },
+    {
+      "file": "Light/practice-selected.png",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "source": "XCTest attachment",
+      "timestamp": 1788810592.549
+    },
+    {
+      "file": "Light/practice-question.png",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "source": "XCTest attachment",
+      "timestamp": 1788810592.11
+    },
+    {
+      "file": "Light/generation-ready.png",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "source": "XCTest attachment",
+      "timestamp": 1788810590.061
+    },
+    {
+      "file": "Light/generation-working.png",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "source": "XCTest attachment",
+      "timestamp": 1788810586.937
+    },
+    {
+      "file": "Light/practice-setup.png",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "source": "XCTest attachment",
+      "timestamp": 1788810583.76
+    },
+    {
+      "file": "Light/progress-with-data.png",
+      "test": "PromptiUITests/testReviewAndProgressWithData()",
+      "source": "XCTest attachment",
+      "timestamp": 1788810643.519
+    },
+    {
+      "file": "Light/review-with-data.png",
+      "test": "PromptiUITests/testReviewAndProgressWithData()",
+      "source": "XCTest attachment",
+      "timestamp": 1788810630.802
+    },
+    {
+      "file": "Light/settings.png",
+      "test": "PromptiUITests/testSettingsVisualState()",
+      "source": "XCTest attachment",
+      "timestamp": 1788810655.013
+    }
+  ]
+}
