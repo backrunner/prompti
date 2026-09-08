@@ -4,6 +4,10 @@
 
 全部 UI 的实施约束见 [品牌与 UI 开发规范](../../.agents/13-brand-and-ui-guidelines.md)，逐页调整与验证见 [UI 验收记录](UI-Review.md)。App 内通过 `PromptiBrandMark` / `PromptiWordmark` 使用同源的模板 PDF，不显示完整图标边框。
 
+中文主句为 **“出发前，练好旅行常用语。”**，商店副标题为 **“按目的地练习旅行常用语”**。完整介绍、截图标题及端内用词见 [文案规范与市场文案](Copywriting.md)；本轮实测见 [中文文案验收](Chinese-Copy-Review.md)。
+
+完成页的最新简化设计、全对礼花与实际录屏见 [完成页与庆祝动效验收](Result-Celebration-Review.md)。
+
 实际 App 的默认字号浅深色画面见 [UI 截图画廊](UI-Review.html) 和 [对照图](UI-Review.png)，与下方的图标概念展示分别保存。
 
 打开 [Preview.html](Preview.html) 或 [预览图](Preview.png) 查看商店排版、六种系统外观、小尺寸和单色品牌组合。商店内容是排版示意，没有添加虚构评分、排名或评价。

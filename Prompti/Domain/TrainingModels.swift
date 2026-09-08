@@ -159,6 +159,13 @@ struct SessionResultCounts: Sendable {
     private(set) var undetermined = 0
     private(set) var reported = 0
 
+    /// Presentation eligibility only; skipped/unscored questions still do not
+    /// affect accuracy. A 100% scored subset is not an all-correct set.
+    func isPerfectSet(preparedCount: Int, requestedCount: Int) -> Bool {
+        requestedCount > 0 && preparedCount == requestedCount && correct == requestedCount
+            && incorrect == 0 && skipped == 0 && undetermined == 0 && reported == 0
+    }
+
     mutating func record(_ result: AttemptResult) {
         switch result {
         case .correct: correct += 1

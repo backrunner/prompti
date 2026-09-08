@@ -1,24 +1,30 @@
 # Prompti
 
-Prompti 是一款开源、原生 SwiftUI 旅游语言学习应用。用户选择城市、语言、场景、难度和题量后，Prompti 使用 Apple 设备端 Foundation Models 或用户自己的模型 API Key 生成完形填空、QA 选择题和口语练习。
+**出发前，练好旅行常用语。**
+
+Prompti 是一款开源的 iOS 旅行语言练习 App。选好目的地，从点餐、问路、酒店入住等场景开始，通过填空、选择和口语练习，熟悉旅行中常用的说法。每组练几道，也可以随机练一题；练过的题目随时可以复习。
+
+App 使用原生 SwiftUI 开发，由 Apple 设备端 Foundation Models 或用户连接的模型服务生成题目，支持按语言、场景、难度和题量调整练习。
 
 ## MVP 功能
 
 - 覆盖常用城市目录，并允许添加任意城市和国家；中国自定义目的地默认中文，其他自定义目的地默认英文。
 - 中文、英语、日语、韩语、俄语、德语和西班牙语训练。
 - 通用场景、城市特色场景和经过 LLM 审核的自定义场景。
-- 生存、基本、自然和流畅四档难度；3-20 题或随机一题。
+- 入门沟通、基本交流、自然交流和流畅表达四档难度；每组 3–20 题，也可以随机练一题。
 - Apple Foundation Models、OpenAI Responses、OpenAI Chat / Compatible、Anthropic Messages。
 - 结构化生成、逐题安全与质量审核、确定性校验、来源快照和有界失败恢复。
-- 1–3 空完形、QA、可编辑录音转写、口语语义反馈、可调速语音播放、跳过和题目报告。
+- 填空题（1–3 个空）、选择题和口语练习；支持编辑语音识别结果、查看口语反馈、调整朗读速度、跳过题目和反馈题目问题。
 - SwiftData 本地题库、错题复习、统计、账户独立存储与 CloudKit private database 同步。
-- 先练已审核题目并自动补齐；显示实际请求/token 用量，可清空未练库存。
+- 可先练已通过审核的题目，其余题目在练习时继续生成；显示实际请求和 token 用量，可清空待练题目。
 - API Key 仅保存于本机 Keychain，不进入 iCloud 或日志。
-- 用户明确启用后，在 App 前台进入首页时补足少量题目库存。
+- 提前准备题目默认关闭；开启后，App 会在前台进入首页时按需补充待练题目，可能产生额外模型费用。
 
 产品和工程设计文档见 [.agents/README.md](.agents/README.md)。
 
 品牌 Logo、iOS 图标外观与商店展示示意见 [品牌预览](Documentation/Brand/Preview.html)；矢量资源和生成方式见 [品牌说明](Documentation/Brand/README.md)。
+
+中文 slogan、商店介绍和端内用词见 [文案规范与市场文案](Documentation/Brand/Copywriting.md)。
 
 全 App 的品牌实施与实际模拟器截图见 [UI 验收记录](Documentation/Brand/UI-Review.md)；开发约束见 [品牌与 UI 规范](.agents/13-brand-and-ui-guidelines.md)。
 

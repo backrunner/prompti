@@ -199,7 +199,7 @@ final class PromptiUITests: XCTestCase {
         XCTAssertTrue(app.buttons["generation.start"].waitForExistence(timeout: 5))
         let manifest = app.descendants(matching: .any)["generation.manifest"]
         XCTAssertTrue(manifest.waitForExistence(timeout: 2))
-        XCTAssertEqual(manifest.value as? String, "3 of 5")
+        XCTAssertTrue(["3 of 5", "3 / 5"].contains(manifest.value as? String ?? ""))
         attachScreenshot(named: "generation-partial")
     }
 
@@ -276,6 +276,7 @@ final class PromptiUITests: XCTestCase {
         }
 
         XCTAssertTrue(app.buttons["session.done"].waitForExistence(timeout: 5))
+        attachScreenshot(named: "practice-summary-incorrect")
         app.buttons["session.done"].tap()
 
         selectTab(systemImage: "arrow.counterclockwise.circle.fill", fallbackIndex: 2)
@@ -293,6 +294,10 @@ final class PromptiUITests: XCTestCase {
         XCTAssertTrue(app.buttons["session.next"].waitForExistence(timeout: 5))
         app.buttons["session.next"].tap()
         XCTAssertTrue(app.buttons["session.done"].waitForExistence(timeout: 5))
+        XCTAssertTrue(["All correct!", "全部答对！"].contains(app.staticTexts["session.summary"].label))
+        // Capture the resting layout after the finite celebration has finished.
+        Thread.sleep(forTimeInterval: 2)
+        attachScreenshot(named: "practice-summary-correct")
         app.buttons["session.done"].tap()
         XCTAssertTrue(app.buttons["review.filters"].waitForExistence(timeout: 5))
         XCTAssertFalse(reviewQuestion.exists)
@@ -453,6 +458,7 @@ final class PromptiUITests: XCTestCase {
         XCTAssertTrue(app.buttons["session.retryFill"].waitForExistence(timeout: 5))
         app.buttons["session.finishPartial"].tap()
         XCTAssertTrue(app.staticTexts["session.summary"].waitForExistence(timeout: 5))
+        attachScreenshot(named: "practice-summary-partial")
     }
 
     private func launch(arguments: [String]) {

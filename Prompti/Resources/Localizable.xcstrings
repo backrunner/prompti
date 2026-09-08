@@ -25,7 +25,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "%lld 个筛选条件"
+            "value": "已选 %lld 个筛选条件"
           }
         }
       }
@@ -36,7 +36,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "%1$lld / %2$lld 道题已通过审核。你现在可以开始练习，也可以尝试补齐剩余题目。"
+            "value": "共 %2$lld 道题，已有 %1$lld 道通过审核。可以先开始练习，也可以继续生成剩余题目。"
           }
         }
       }
@@ -47,7 +47,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "已准备 %lld / %lld 题"
+            "value": "已准备 %1$lld 道，共 %2$lld 道"
           }
         }
       }
@@ -123,7 +123,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "开口，又多一份自信。"
+            "value": "这次先练到这里。"
           }
         }
       }
@@ -133,7 +133,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "练习一点，从容走远。"
+            "value": "每天练几句，旅行时用得上。"
           }
         }
       }
@@ -150,7 +150,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "练习一点，开口更自信。"
+            "value": "每天练几句，旅行时用得上。"
           }
         }
       }
@@ -160,7 +160,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "每天练一点，出发更从容。"
+            "value": "先从几句常用语开始。"
           }
         }
       }
@@ -237,7 +237,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "请在“模型设置”中添加 API 密钥。"
+            "value": "请在“模型设置”中填写 API 密钥。"
           }
         }
       }
@@ -248,7 +248,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "请为模型账号补充额度，或在设置中选择其他模型。"
+            "value": "模型账号额度不足。请充值，或在设置中更换模型。"
           }
         }
       }
@@ -269,7 +269,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "调整练习"
+            "value": "调整练习设置"
           }
         }
       }
@@ -280,7 +280,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "提前准备已达到今日上限，你仍可手动开始练习。"
+            "value": "今日提前准备的题量已达上限。你仍可以手动开始新练习。"
           }
         }
       }
@@ -342,7 +342,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "已答题目和学习历史将继续保留。"
+            "value": "已答过的题目和学习记录会保留。"
           }
         }
       }
@@ -353,7 +353,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "已作答题目，不含跳过"
+            "value": "已答题数，不含跳过的题目"
           }
         }
       }
@@ -386,7 +386,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "任意目的地"
+            "value": "自选目的地"
           }
         }
       }
@@ -429,7 +429,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "通过安全审核的题目会保存在这里。"
+            "value": "准备好的题目会显示在这里，点开即可练习。"
           }
         }
       }
@@ -473,7 +473,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "基础 URL"
+            "value": "API 基础地址"
           }
         }
       }
@@ -550,7 +550,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chat Completions 及兼容端点"
+            "value": "Chat Completions 及兼容接口"
           }
         }
       }
@@ -561,7 +561,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "检查答案"
+            "value": "提交答案"
           }
         }
       }
@@ -572,7 +572,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "再核对一下含义"
+            "value": "再看看意思是否准确"
           }
         }
       }
@@ -583,7 +583,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "正在评估含义"
+            "value": "正在评估回答"
           }
         }
       }
@@ -594,7 +594,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "正在检查安全与质量"
+            "value": "正在审核题目"
           }
         }
       }
@@ -627,7 +627,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "选择翻译和讲解使用的语言"
+            "value": "用哪种语言查看翻译和讲解"
           }
         }
       }
@@ -681,7 +681,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "搜索城市或国家"
+            "value": "搜索城市、国家或地区"
           }
         }
       }
@@ -703,7 +703,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "清除筛选条件，或选择更宽的复习范围。"
+            "value": "试试减少筛选条件，或扩大日期范围。"
           }
         }
       }
@@ -758,7 +758,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "对照答案"
+            "value": "对照参考答案"
           }
         }
       }
@@ -769,7 +769,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "对照你的答案"
+            "value": "对照参考答案"
           }
         }
       }
@@ -780,7 +780,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "完成一组练习后，这里会记录你的旅行表达。"
+            "value": "练过的题目会保存在这里，方便随时复习。"
           }
         }
       }
@@ -791,7 +791,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "完成一道计分题后即可查看正确率和每周趋势。"
+            "value": "完成计分题后，就能在这里查看正确率和每周练习情况。"
           }
         }
       }
@@ -802,7 +802,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "请在设置中连接模型后继续。"
+            "value": "请先在设置中连接一个模型，再继续练习。"
           }
         }
       }
@@ -813,7 +813,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "登录模型账号，或使用自己的 API 密钥。"
+            "value": "使用模型服务商账号登录，或填写 API 密钥。"
           }
         }
       }
@@ -856,7 +856,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "连接你的账号"
+            "value": "连接模型账号"
           }
         }
       }
@@ -911,7 +911,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "连接已验证，将使用 JSON 模式。"
+            "value": "连接成功，将使用 JSON 格式生成题目。"
           }
         }
       }
@@ -922,7 +922,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "连接已验证，已启用结构化输出。"
+            "value": "连接成功，将按指定的题目格式生成。"
           }
         }
       }
@@ -933,7 +933,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "语境"
+            "value": "场景信息"
           }
         }
       }
@@ -977,7 +977,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "正在生成实用题目"
+            "value": "正在生成题目"
           }
         }
       }
@@ -1010,7 +1010,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "每日提前准备上限：%lld"
+            "value": "每天最多准备 %lld 道题"
           }
         }
       }
@@ -1031,7 +1031,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "默认练习语言"
+            "value": "默认学习语言"
           }
         }
       }
@@ -1042,7 +1042,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "默认题数"
+            "value": "每组题数"
           }
         }
       }
@@ -1086,7 +1086,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "目的地特色"
+            "value": "当地特色场景"
           }
         }
       }
@@ -1163,7 +1163,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "请在“设置”中启用麦克风和语音识别以练习口语。"
+            "value": "如需录音作答，请在系统设置中允许使用麦克风和语音识别。"
           }
         }
       }
@@ -1196,7 +1196,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "请输入简短的旅行情境。"
+            "value": "请简单描述一个旅行中会遇到的场景。"
           }
         }
       }
@@ -1207,7 +1207,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "适合简单对话的日常句子"
+            "value": "用常用句子完成简单对话"
           }
         }
       }
@@ -1228,7 +1228,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "练习在此设备上生成。Prompti 仍会在展示前检查每道题。"
+            "value": "题目直接在本机生成，通过审核后才会显示。"
           }
         }
       }
@@ -1250,7 +1250,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "表达匹配"
+            "value": "表达正确"
           }
         }
       }
@@ -1261,7 +1261,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "额外模型用量"
+            "value": "提前准备可能产生额外费用"
           }
         }
       }
@@ -1281,7 +1281,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "为任何目的地快速准备实用表达。"
+            "value": "选好目的地，练习点餐、问路、入住等常用对话。"
           }
         }
       }
@@ -1292,7 +1292,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "完形填空"
+            "value": "填空题"
           }
         }
       }
@@ -1325,7 +1325,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "正在完成转写"
+            "value": "正在整理识别结果"
           }
         }
       }
@@ -1389,7 +1389,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "进步不错，快速复习后会更加顺手。"
+            "value": "有些题目还需要巩固，去复习里再练一遍吧。"
           }
         }
       }
@@ -1433,7 +1433,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "历史"
+            "value": "全部记录"
           }
         }
       }
@@ -1521,7 +1521,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "已导入 %lld 条记录，原有历史已保留。"
+            "value": "已导入 %lld 条记录，原有学习记录已保留。"
           }
         }
       }
@@ -1531,7 +1531,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "包含最近 1,000 次生成、审核、口语反馈和连接测试请求，失败与兼容重试也计入。未返回的 token 用量记为未知，费用以服务商账单为准。"
+            "value": "统计最近 1,000 次生成题目、内容审核、口语反馈和连接测试，包含失败请求及切换兼容方式后的重试。服务商未返回的 token 用量显示为未知，实际费用以服务商账单为准。"
           }
         }
       }
@@ -1542,7 +1542,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "目标题目库存：%lld"
+            "value": "保留 %lld 道待练题目"
           }
         }
       }
@@ -1575,7 +1575,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "请将情境控制在 80 个字符以内。"
+            "value": "场景描述不能超过 80 个字符。"
           }
         }
       }
@@ -1586,7 +1586,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "继续推进今天的路线"
+            "value": "今天再练几句"
           }
         }
       }
@@ -1597,7 +1597,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "密钥仅保存在 iPhone 钥匙串中，永不同步到 iCloud。"
+            "value": "API 密钥只保存在本机钥匙串中，不会同步到 iCloud。"
           }
         }
       }
@@ -1652,7 +1652,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "最近同步事件"
+            "value": "最近同步时间"
           }
         }
       }
@@ -1674,7 +1674,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "无法打开学习数据，请重试后再开始练习。"
+            "value": "学习数据暂时无法读取，请重试后再开始练习。"
           }
         }
       }
@@ -1685,7 +1685,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "学习数据已保存在本机。各 iCloud 账户使用独立存储，登录后不会自动导入未登录时的数据。密钥不会同步。"
+            "value": "学习数据保存在本机，不同 iCloud 账户的数据分开存储。登录后，未登录期间的记录需要手动导入。API 密钥不会同步。"
           }
         }
       }
@@ -1707,7 +1707,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "开启旅程"
+            "value": "开始设置"
           }
         }
       }
@@ -1718,7 +1718,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "不允许输入链接或类似指令的文本。"
+            "value": "请只描述旅行场景，不要加入链接或要求模型执行的指令。"
           }
         }
       }
@@ -1740,7 +1740,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "含义表达正确"
+            "value": "意思表达准确"
           }
         }
       }
@@ -1783,7 +1783,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "本机模型用量"
+            "value": "本机模型使用量"
           }
         }
       }
@@ -1805,7 +1805,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "基本可以理解"
+            "value": "表达接近参考答案"
           }
         }
       }
@@ -1827,7 +1827,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "更自然的表达和更接近的干扰项"
+            "value": "练习更自然的说法，区分意思相近的选项"
           }
         }
       }
@@ -1838,7 +1838,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "需要再看一次"
+            "value": "还需巩固"
           }
         }
       }
@@ -1859,7 +1859,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "下一站"
+            "value": "旅行目的地"
           }
         }
       }
@@ -1870,7 +1870,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "没有启用筛选"
+            "value": "未设置筛选条件"
           }
         }
       }
@@ -1881,7 +1881,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "暂无匹配结果"
+            "value": "没有找到目的地"
           }
         }
       }
@@ -1903,7 +1903,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "没有待复习的错题"
+            "value": "暂无待复习的错题"
           }
         }
       }
@@ -1914,7 +1914,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "还没有练习历史"
+            "value": "还没有练习记录"
           }
         }
       }
@@ -1925,7 +1925,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "没有题目通过 Prompti 的安全与质量检查。"
+            "value": "这批题目未通过安全与质量审核，请调整场景后重试。"
           }
         }
       }
@@ -1936,7 +1936,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "没有报告过的题目"
+            "value": "暂无已反馈的题目"
           }
         }
       }
@@ -1947,7 +1947,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "尚未记录响应"
+            "value": "未收到模型回复"
           }
         }
       }
@@ -1958,7 +1958,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "没有跳过的题目"
+            "value": "暂无跳过的题目"
           }
         }
       }
@@ -1969,7 +1969,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "此语言没有可用的系统语音。"
+            "value": "系统暂不支持朗读这种语言。"
           }
         }
       }
@@ -2001,7 +2001,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "此设备或语言暂不可用"
+            "value": "当前设备或所选语言暂不支持"
           }
         }
       }
@@ -2034,7 +2034,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "细腻且符合当地语境的对话"
+            "value": "练习更细致的表达和当地常用说法"
           }
         }
       }
@@ -2056,7 +2056,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "此设备"
+            "value": "本机存储"
           }
         }
       }
@@ -2066,7 +2066,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "一次连接，更多选择。"
+            "value": "一个账号，使用多种模型"
           }
         }
       }
@@ -2110,7 +2110,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "打开安全登录"
+            "value": "前往浏览器登录"
           }
         }
       }
@@ -2165,7 +2165,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "正在准备旅行语境"
+            "value": "正在准备场景信息"
           }
         }
       }
@@ -2176,7 +2176,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "选择下一站"
+            "value": "想去哪里旅行？"
           }
         }
       }
@@ -2226,7 +2226,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "练习默认值"
+            "value": "默认练习设置"
           }
         }
       }
@@ -2243,7 +2243,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "为下一次对话，练习开口。"
+            "value": "出发前，练好旅行常用语。"
           }
         }
       }
@@ -2286,7 +2286,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "练习集"
+            "value": "本组练习"
           }
         }
       }
@@ -2318,7 +2318,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "低电量模式、电量不足或网络受限时暂停提前准备。每日上限于 UTC 零点重置；失败或取消的请求也会占用额度。"
+            "value": "低电量模式、电量不足或网络受限时会暂停。每日题量上限在协调世界时（UTC）零点重置；失败或取消的请求也会占用当天题量。"
           }
         }
       }
@@ -2350,7 +2350,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "已完成当前准备好的题目"
+            "value": "已练完准备好的题目"
           }
         }
       }
@@ -2361,7 +2361,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "Prompti 正在应用打开期间准备几道通过审核的题目。"
+            "value": "正在提前准备题目，通过审核后即可练习。"
           }
         }
       }
@@ -2371,7 +2371,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "提前准备题目会消耗额外 token，并可能产生模型服务商费用。"
+            "value": "提前准备会在你尚未开始练习时调用模型，消耗额外 token，并可能产生服务商费用。"
           }
         }
       }
@@ -2382,7 +2382,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "正在准备剩余题目"
+            "value": "正在生成剩余题目"
           }
         }
       }
@@ -2399,7 +2399,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "正在准备对话情境"
+            "value": "正在准备练习"
           }
         }
       }
@@ -2409,7 +2409,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "旧版本和未登录时的学习数据将复制到当前账户，连接恢复后可同步至此 iCloud 账户。请只导入属于当前账户的数据。原有历史与本地副本均会保留。"
+            "value": "旧版本和未登录期间的学习记录会复制到当前账户，并在 iCloud 可用时同步。请确认这些记录属于当前账户。原有学习记录和本地副本都会保留。"
           }
         }
       }
@@ -2420,7 +2420,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "私密的设备端模型"
+            "value": "在本机生成练习"
           }
         }
       }
@@ -2463,7 +2463,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "Prompti 无法可靠匹配关键表达，因此本次作答未评分。"
+            "value": "暂时无法确认你的回答是否表达了所需的意思，本次不计分。可以对照参考答案后再试一次。"
           }
         }
       }
@@ -2474,7 +2474,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "Prompti 未对本次作答评分。请在更安静的环境中重试，或对照示例答案。"
+            "value": "这次语音识别结果不够可靠，作答未计分。可以换个安静的地方重录，或对照参考答案。"
           }
         }
       }
@@ -2518,7 +2518,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "题目库存"
+            "value": "待练题目管理"
           }
         }
       }
@@ -2529,7 +2529,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "题目可能有误"
+            "value": "反馈题目问题"
           }
         }
       }
@@ -2605,7 +2605,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "答错的题目会在这里等待复习，答对后移出错题集。所有作答仍保留在历史中。"
+            "value": "答错的题目会收在这里，复习答对后移出。所有作答仍可在“全部记录”中查看。"
           }
         }
       }
@@ -2616,7 +2616,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "做错的题会出现在这里，方便你从容回顾。"
+            "value": "答错的题目会收在这里，方便再练一遍。"
           }
         }
       }
@@ -2627,7 +2627,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "做错的题会保留在这里，即使之后已经掌握。"
+            "value": "这里保留答错过的题目，包括后来已经答对的题目。"
           }
         }
       }
@@ -2638,7 +2638,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "报告的题目会被隔离，并保留在这里供你查看。"
+            "value": "你反馈过问题的题目会保留在这里，之后不会再出现在练习中。"
           }
         }
       }
@@ -2649,7 +2649,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "跳过的题目会保存在这里，随时可以回来继续。"
+            "value": "跳过的题目会保留在这里，随时可以接着练。"
           }
         }
       }
@@ -2660,7 +2660,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "题目、作答记录和进度会存储在你的 iCloud 私有数据库中。密钥永不同步。"
+            "value": "题目、作答记录和学习进度会通过你的 iCloud 账户同步。API 密钥不会同步。"
           }
         }
       }
@@ -2671,7 +2671,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "选择问答"
+            "value": "选择题"
           }
         }
       }
@@ -2715,7 +2715,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "准备好前往下一站"
+            "value": "准备下一次练习"
           }
         }
       }
@@ -2743,7 +2743,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "随时可以出发"
+            "value": "随时开始练习"
           }
         }
       }
@@ -2765,7 +2765,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "最近已掌握"
+            "value": "最近答对"
           }
         }
       }
@@ -2776,7 +2776,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "推荐用于新的 OpenAI 配置"
+            "value": "首次连接 OpenAI 时推荐使用"
           }
         }
       }
@@ -2798,7 +2798,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "重新录制"
+            "value": "重新录音"
           }
         }
       }
@@ -2809,7 +2809,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "录制回答"
+            "value": "录音作答"
           }
         }
       }
@@ -2820,7 +2820,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "无法开始录音。你仍可对照示例答案。"
+            "value": "暂时无法录音，可以输入回答或查看参考答案。"
           }
         }
       }
@@ -2853,7 +2853,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "报告"
+            "value": "已反馈"
           }
         }
       }
@@ -2864,7 +2864,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "已知输入 token 数"
+            "value": "服务商返回的输入 token 数"
           }
         }
       }
@@ -2875,7 +2875,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "已知输出 token 数"
+            "value": "服务商返回的输出 token 数"
           }
         }
       }
@@ -2908,7 +2908,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "已收到响应"
+            "value": "已收到模型回复"
           }
         }
       }
@@ -2930,7 +2930,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "重新准备剩余题目"
+            "value": "重新生成剩余题目"
           }
         }
       }
@@ -2951,7 +2951,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "复习模式"
+            "value": "复习范围"
           }
         }
       }
@@ -2973,7 +2973,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "路线已完成"
+            "value": "本组练习已结束"
           }
         }
       }
@@ -2984,7 +2984,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "重新运行初始设置"
+            "value": "重新进行初始设置"
           }
         }
       }
@@ -2995,7 +2995,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "重新运行初始设置？"
+            "value": "重新进行初始设置？"
           }
         }
       }
@@ -3005,7 +3005,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "示例：%@"
+            "value": "参考答案：%@"
           }
         }
       }
@@ -3033,10 +3033,11 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "从开口，到远方。"
+            "value": "出发前，\n练好旅行常用语。"
           }
         }
-      }
+      },
+      "comment": "Chinese brand headline: use the approved travel-phrase copy in Documentation/Brand/Copywriting.md; do not translate the English slogan literally."
     },
     "Scene": {
       "extractionState": "manual",
@@ -3121,7 +3122,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "语义反馈暂不可用，本次未计分。你可以对照参考答案，或稍后重试。"
+            "value": "暂时无法评估回答，本次作答未计分。可以对照参考答案，或稍后重试。"
           }
         }
       }
@@ -3132,7 +3133,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "设置学习节奏"
+            "value": "设置练习偏好"
           }
         }
       }
@@ -3165,7 +3166,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "短句表达，并提供充分提示"
+            "value": "从简短常用语开始，配有更多提示"
           }
         }
       }
@@ -3176,7 +3177,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "已取消登录，准备好后可以再次连接。"
+            "value": "已取消登录，需要时可以重新连接。"
           }
         }
       }
@@ -3220,7 +3221,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "跳过"
+            "value": "已跳过"
           }
         }
       }
@@ -3231,7 +3232,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "跳过和举报的题目不会降低正确率。"
+            "value": "跳过或反馈有问题的题目不会计入答错，也不会降低正确率。"
           }
         }
       }
@@ -3253,7 +3254,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "跳过、举报以及转写不确定的口语回答都不会降低正确率。"
+            "value": "跳过、反馈有问题的题目，以及语音识别不确定的回答，都不会计入答错或降低正确率。"
           }
         }
       }
@@ -3274,7 +3275,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "部分题目未通过审核，可重试准备剩余题目。"
+            "value": "部分题目未通过审核，可以重试生成剩余题目。"
           }
         }
       }
@@ -3296,7 +3297,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "走到哪里，\n都能开口。"
+            "value": "出发前，\n练好旅行常用语。"
           }
         }
       }
@@ -3318,7 +3319,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "本次作答只会进行语音转写，不会保存或同步原始音频。"
+            "value": "语音识别仅用于本次作答，原始录音不会保存或同步。"
           }
         }
       }
@@ -3329,7 +3330,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "语音会转写为文字，并发送给你选择的模型以评估表达含义。原始录音不会保存或同步。"
+            "value": "回答会被识别为文字，发送给所选模型评估意思是否准确。原始录音不会保存或同步。"
           }
         }
       }
@@ -3351,7 +3352,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "转写结果不确定的口语回答会保留用于练习，但不会计分。"
+            "value": "语音识别结果不确定时，回答会保留供复习，但不计分。"
           }
         }
       }
@@ -3361,7 +3362,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "从一组练习开始，为下一次旅行做好准备。"
+            "value": "开始一组练习，熟悉旅行中常用的说法。"
           }
         }
       }
@@ -3404,7 +3405,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "开始已备好的题目 · %lld"
+            "value": "先练已准备好的 %lld 道题"
           }
         }
       }
@@ -3415,7 +3416,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "先开始已通过审核的题目，其余题目会在练习中继续准备。"
+            "value": "可以先练已通过审核的题目，剩余题目会在练习时继续生成。"
           }
         }
       }
@@ -3448,7 +3449,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "表现很棒，这些表达已经可以带进真实对话。"
+            "value": "这组题大部分都答对了，可以换个场景继续练习。"
           }
         }
       }
@@ -3470,7 +3471,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "生存沟通"
+            "value": "入门沟通"
           }
         }
       }
@@ -3536,7 +3537,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "该情境超出了 Prompti 的旅行学习范围。"
+            "value": "这个场景不适合旅行语言练习。试试点餐、问路或酒店入住等日常场景。"
           }
         }
       }
@@ -3568,7 +3569,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "模型拒绝了此次请求，请更换旅游场景后重试。"
+            "value": "模型未能处理这次请求，请换个旅行场景后重试。"
           }
         }
       }
@@ -3579,7 +3580,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "模型正忙或请求已限流，请稍后重试。"
+            "value": "模型繁忙或请求次数过多，请稍后重试。"
           }
         }
       }
@@ -3590,7 +3591,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "未找到模型或 API 端点，请检查模型设置。"
+            "value": "找不到模型或 API 接口，请检查模型 ID 和接口地址。"
           }
         }
       }
@@ -3623,7 +3624,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "模型返回了意外响应。"
+            "value": "模型返回的内容无法读取，请重试。"
           }
         }
       }
@@ -3634,7 +3635,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "模型尚未完成便停止了输出，请减少题量后重试。"
+            "value": "模型未能生成完整内容，请减少题量后重试。"
           }
         }
       }
@@ -3656,7 +3657,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "服务商拒绝了此 API 密钥。"
+            "value": "API 密钥未通过验证，请检查或更换密钥。"
           }
         }
       }
@@ -3667,7 +3668,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "转写结果不确定"
+            "value": "语音识别结果不确定"
           }
         }
       }
@@ -3678,7 +3679,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "每组练习都可以单独调整这些默认值。"
+            "value": "以后开始每组练习时，都可以单独调整。"
           }
         }
       }
@@ -3700,7 +3701,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "所选语言暂不支持此模型。"
+            "value": "当前模型不支持所选语言，请更换模型或学习语言。"
           }
         }
       }
@@ -3722,7 +3723,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "暂时无法准备这组练习"
+            "value": "这组题目生成失败"
           }
         }
       }
@@ -3733,7 +3734,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "本次旅程"
+            "value": "当前目的地的练习情况"
           }
         }
       }
@@ -3755,7 +3756,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "转写未完成，请重试或对照参考答案。"
+            "value": "语音识别未完成，可以重试或对照参考答案。"
           }
         }
       }
@@ -3776,7 +3777,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "旅行练习"
+            "value": "练习内容"
           }
         }
       }
@@ -3798,7 +3799,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "请重新录制，或将你的表达与示例答案对照。"
+            "value": "可以重新录音，或对照参考答案检查自己的表达。"
           }
         }
       }
@@ -3809,7 +3810,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "尝试再补充 %lld 道题"
+            "value": "继续生成 %lld 道题"
           }
         }
       }
@@ -3842,7 +3843,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "暂时无法打开安全登录，请重试。"
+            "value": "暂时无法打开登录页面，请重试。"
           }
         }
       }
@@ -3853,7 +3854,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "请输入有效的公开 HTTPS 端点。"
+            "value": "请输入可通过公网访问的 HTTPS 接口地址。"
           }
         }
       }
@@ -3864,7 +3865,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "请只输入一行简短内容。"
+            "value": "请用一句话描述，不要换行。"
           }
         }
       }
@@ -3875,7 +3876,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "请使用不含不可见控制字符的普通文本。"
+            "value": "文本中含有无法识别的字符，请重新输入。"
           }
         }
       }
@@ -3886,7 +3887,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "使用此目的地"
+            "value": "选定这个目的地"
           }
         }
       }
@@ -3897,7 +3898,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "正在使用已核准的目的地信息。"
+            "value": "正在整理已核实的目的地信息和所选场景。"
           }
         }
       }
@@ -3919,7 +3920,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "查看示例答案"
+            "value": "查看参考答案"
           }
         }
       }
@@ -3929,7 +3930,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "启用后，Prompti 可能会在应用处于前台时调用模型。这会消耗额外 token，并可能产生服务商费用。"
+            "value": "开启后，Prompti 会在你使用 App 时按需提前生成题目。这会消耗额外 token，并可能产生服务商费用。"
           }
         }
       }
@@ -3939,7 +3940,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "启用后，Prompti 可能会在应用打开时调用所选模型。这会消耗额外 token，并可能产生服务商费用。"
+            "value": "开启后，Prompti 会在你使用 App 时按需提前生成题目。这会消耗额外 token，并可能产生服务商费用。"
           }
         }
       }
@@ -3949,7 +3950,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "适用于任何目的地"
+            "value": "可用于任意目的地"
           }
         }
       }
@@ -3960,7 +3961,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "再看一眼"
+            "value": "再看看参考答案"
           }
         }
       }
@@ -3971,7 +3972,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "值得再试一次"
+            "value": "可以再试一次"
           }
         }
       }
@@ -3993,7 +3994,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "你完成了整条练习路线，每一道题都有了进展。"
+            "value": "本次作答没有计分结果。可以对照参考答案，再选几道题练习。"
           }
         }
       }
@@ -4004,7 +4005,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "你已完成练习。复习容易出错的部分后，再挑战一次。"
+            "value": "这组题练完了。先看看参考答案，再复习不熟悉的表达。"
           }
         }
       }
@@ -4025,7 +4026,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "目的地、语言和场景会发送给你选择的服务商。连接凭据仅保存在本机，使用模型可能消耗账号额度。"
+            "value": "目的地、学习语言和场景会发送给所选服务商，用于生成练习。登录凭据只保存在本机。使用模型可能扣除服务商账号的可用额度。"
           }
         }
       }
@@ -4036,7 +4037,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "目的地、语言和所选场景会直接发送给服务商。Prompti 不会经由代理服务器转发。"
+            "value": "目的地、学习语言和所选场景会直接发送给模型服务商，不经过 Prompti 的服务器转发。"
           }
         }
       }
@@ -4068,7 +4069,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "模型正在生成一组精简实用的题目。"
+            "value": "模型正在根据你的目的地和场景生成练习。"
           }
         }
       }
@@ -4090,7 +4091,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "下一站，新的故事"
+            "value": "继续练习"
           }
         }
       }
@@ -4100,7 +4101,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "下一次真实对话会更从容。"
+            "value": "练过的题目，可以随时到“复习”里查看。"
           }
         }
       }
@@ -4117,7 +4118,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "下一次对话，从这里开始。"
+            "value": "今天想练哪些旅行用语？"
           }
         }
       }
@@ -4128,7 +4129,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "从这里开始积累进度"
+            "value": "还没有计分记录"
           }
         }
       }
@@ -4139,7 +4140,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "你的场景"
+            "value": "自定义场景"
           }
         }
       }
@@ -4150,7 +4151,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "转写内容涵盖了示例答案中的关键表达。"
+            "value": "你的回答与参考答案一致。"
           }
         }
       }
@@ -4160,7 +4161,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "语音转写会显示在这里。"
+            "value": "识别出的文字会显示在这里，也可以直接输入回答。"
           }
         }
       }
@@ -4171,7 +4172,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "你的表达已经很接近。可以与示例转写对照后再试一次。"
+            "value": "你的用词与参考答案接近，但暂时无法确认意思是否准确，本次不计分。可以对照后再试一次。"
           }
         }
       }
@@ -4270,7 +4271,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "iCloud 私有数据库"
+            "value": "iCloud 同步"
           }
         }
       }
@@ -4303,7 +4304,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "Prompti 启动时无法使用 iCloud 存储，因此学习数据目前仅保存在此设备。密钥永不同步。"
+            "value": "启动时未能连接 iCloud，学习数据已保存在本机。API 密钥不会同步。"
           }
         }
       }
@@ -4314,7 +4315,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "iCloud 同步事件已完成"
+            "value": "iCloud 同步已完成"
           }
         }
       }
@@ -4369,7 +4370,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "未评分"
+            "value": "未计分"
           }
         }
       }
@@ -4412,7 +4413,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "连续天数"
+            "value": "连续练习天数"
           }
         }
       }
@@ -4434,18 +4435,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "下一步"
-          }
-        }
-      }
-    },
-    "中文 + English": {
-      "extractionState": "manual",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "中文 + English"
+            "value": "待开始"
           }
         }
       }
@@ -4481,7 +4471,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "已准备 %1$@ / %2$@ 道题"
+            "value": "已准备 %1$@ 道，共 %2$@ 道"
           }
         }
       }
@@ -4504,7 +4494,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "%1$@ · 每周 %2$@ 次调用"
+            "value": "%1$@ · 近 7 天 %2$@ 次调用"
           }
         }
       }
@@ -4556,7 +4546,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "已从后续练习中移除 %lld 道被报告的题目。"
+            "value": "已将 %lld 道反馈有问题的题目移出后续练习。"
           }
         }
       }
@@ -4588,7 +4578,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "已启用提前准备，可能消耗额外的模型 token。"
+            "value": "已开启提前准备题目，可能消耗额外 token 并产生服务商费用。"
           }
         }
       }
@@ -5114,7 +5104,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "已完成的作答已保存，当前未作答的题目不计入统计。"
+            "value": "已完成的作答会保留，当前未作答的题目不计入统计。"
           }
         }
       }
@@ -5619,7 +5609,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "内容与目的地无关"
+            "value": "与目的地无关"
           }
         }
       }
@@ -5860,7 +5850,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "暂无公开调用量的模型单独列出。"
+            "value": "未公开调用次数的模型单独列出。"
           }
         }
       }
@@ -5882,7 +5872,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "更多快速模型 · 暂无调用量数据"
+            "value": "更多快速模型 · 暂无调用数据"
           }
         }
       }
@@ -6094,7 +6084,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "练习暂不可用"
+            "value": "暂时无法开始练习"
           }
         }
       }
@@ -6126,7 +6116,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "Prompti 会先使用你选择的模型审核场景，再进行保存。政治劝诱、色情内容和提示词注入将被拒绝。"
+            "value": "保存前，所选模型会审核场景内容。涉及政治说服、色情内容，或试图让模型绕过规则的指令，不会通过审核。"
           }
         }
       }
@@ -6163,7 +6153,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "按每周调用量排序 · 截至 %@"
+            "value": "按近 7 天调用次数排序 · 数据截至 %@"
           }
         }
       }
@@ -6207,7 +6197,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "请返回练习页面，准备另一组题目。"
+            "value": "返回练习页面，重新生成一组题目。"
           }
         }
       }
@@ -6405,7 +6395,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "简短描述场景"
+            "value": "描述旅行场景"
           }
         }
       }
@@ -6652,7 +6642,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "语言表达不自然"
+            "value": "说法不自然"
           }
         }
       }
@@ -6662,7 +6652,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "这道题将从后续练习中移除，不计入答错。"
+            "value": "这道题之后不会再出现在练习中，也不会计入答错。"
           }
         }
       }
@@ -6673,7 +6663,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "这组练习已不可用。"
+            "value": "这组练习已无法打开，请返回后重新开始。"
           }
         }
       }
@@ -6915,7 +6905,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "你的答案，回答错误"
+            "value": "你选择的答案，回答错误"
           }
         }
       }
@@ -6926,7 +6916,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "已补充通过审核的待练题目。"
+            "value": "已补充待练题目，均已通过审核。"
           }
         }
       }
@@ -6947,7 +6937,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "例如：购买当地糕点"
+            "value": "例如：在面包店买一份点心"
           }
         }
       }
@@ -6960,6 +6950,108 @@
     },
     "· %lld": {
       "shouldTranslate": false
+    },
+    "Chinese or English explanations": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chinese or English explanations"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "中英文讲解"
+          }
+        }
+      }
+    },
+    "Unable to access the device Keychain. Please try again.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unable to access the device Keychain. Please try again."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "暂时无法访问本机钥匙串，请重试。"
+          }
+        }
+      }
+    },
+    "Check quality": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check quality"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "审核"
+          }
+        }
+      }
+    },
+    "All correct!": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All correct!"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "全部答对！"
+          }
+        }
+      }
+    },
+    "That's it for now": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "That's it for now"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "先练到这里"
+          }
+        }
+      }
+    },
+    "Saved": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已保存"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

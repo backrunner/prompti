@@ -145,11 +145,11 @@ struct OnboardingView: View {
                     ViewThatFits(in: .horizontal) {
                         HStack(spacing: 10) {
                             LandingFeature(symbol: "mappin.and.ellipse", title: "Any destination", tint: .promptAccent)
-                            LandingFeature(symbol: "character.bubble.fill", title: "中文 + English", tint: .promptAccent)
+                            LandingFeature(symbol: "character.bubble.fill", title: "Chinese or English explanations", tint: .promptAccent)
                         }
                         VStack(spacing: 10) {
                             LandingFeature(symbol: "mappin.and.ellipse", title: "Any destination", tint: .promptAccent)
-                            LandingFeature(symbol: "character.bubble.fill", title: "中文 + English", tint: .promptAccent)
+                            LandingFeature(symbol: "character.bubble.fill", title: "Chinese or English explanations", tint: .promptAccent)
                         }
                     }
                     .offset(y: landingVisible ? 0 : 10)

@@ -72,7 +72,7 @@ enum SecureStoreError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .unhandled(let status): "Keychain error \(status)"
+        case .unhandled: String(localized: "Unable to access the device Keychain. Please try again.")
         }
     }
 }
