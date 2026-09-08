@@ -8,6 +8,8 @@
 
 完成页的最新简化设计、全对礼花与实际录屏见 [完成页与庆祝动效验收](Result-Celebration-Review.md)。
 
+全部 65 个目的地的原创 SVG、语言筛选和全 App 滚动渐隐见 [目的地界面验收](Destination-UI-Review.md)；[图稿画廊](DestinationArtwork/Gallery.html) 可逐项检查当地地标与代表物。
+
 实际 App 的默认字号浅深色画面见 [UI 截图画廊](UI-Review.html) 和 [对照图](UI-Review.png)，与下方的图标概念展示分别保存。
 
 打开 [Preview.html](Preview.html) 或 [预览图](Preview.png) 查看商店排版、六种系统外观、小尺寸和单色品牌组合。商店内容是排版示意，没有添加虚构评分、排名或评价。

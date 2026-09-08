@@ -36,7 +36,7 @@ struct PracticeSetupView: View {
     var body: some View {
         ZStack {
             PromptiBackground()
-            ScrollView {
+            PromptiScrollView {
                 LazyVStack(alignment: .leading, spacing: 0) {
                     destinationSection
                     Divider()
@@ -159,7 +159,7 @@ struct PracticeSetupView: View {
     }
 
     private var destinationSymbol: some View {
-        PromptiSymbolBadge(symbol: destination.symbol, size: 52)
+        DestinationArtwork(destination: destination, size: 52)
     }
 
     private var languagePicker: some View {
@@ -232,7 +232,7 @@ struct PracticeSetupView: View {
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(Color.promptMuted)
 
-            LazyVGrid(columns: sceneColumns, spacing: 10) {
+            PromptiFlowLayout(spacing: 10) {
                 ForEach(scenes) { scene in
                     let isSelected = selectedSceneIDs.contains(scene.id)
                     Button {
@@ -365,14 +365,6 @@ struct PracticeSetupView: View {
         }
     }
 
-    private var sceneColumns: [GridItem] {
-        if dynamicTypeSize.isAccessibilitySize {
-            [GridItem(.flexible())]
-        } else {
-            [GridItem(.adaptive(minimum: 158), spacing: 10)]
-        }
-    }
-
     private var selectedSceneSummary: String {
         String(
             format: String(localized: "Selected scenes: %@"),
@@ -472,6 +464,7 @@ private struct CustomSceneView: View {
                     Section { InlineNotice(symbol: "exclamationmark.triangle", text: errorMessage, tone: .error) }
                 }
             }
+            .promptiScrollEdges()
             .scrollContentBackground(.hidden)
             .background(PromptiBackground())
             .navigationTitle("Custom scene")

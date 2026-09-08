@@ -7,7 +7,7 @@ struct DestinationSummaryCard: View {
 
     var body: some View {
         HStack(spacing: 14) {
-            PromptiSymbolBadge(symbol: destination.symbol, size: compact ? 40 : 48)
+            DestinationArtwork(destination: destination, size: compact ? 40 : 48)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(destination.localizedCity)
@@ -33,7 +33,7 @@ struct SceneChoiceButton: View {
     let isSelected: Bool
 
     var body: some View {
-        HStack(spacing: 11) {
+        HStack(alignment: .center, spacing: PromptiSpacing.inline) {
             Image(systemName: scene.symbol)
                 .font(.system(size: 16, weight: .semibold))
                 .foregroundStyle(isSelected ? Color.promptOnAction : Color.promptAccent)
@@ -42,17 +42,27 @@ struct SceneChoiceButton: View {
                     isSelected ? Color.promptOnAction.opacity(0.16) : Color.promptAccent.opacity(0.12),
                     in: RoundedRectangle(cornerRadius: PromptiRadius.compact, style: .continuous)
                 )
-            Text(scene.localizedTitle)
-                .font(.subheadline.weight(.medium))
-                .foregroundStyle(isSelected ? Color.promptOnAction : Color.promptText)
-                .lineLimit(2, reservesSpace: true)
+            ViewThatFits(in: .horizontal) {
+                Text(scene.localizedTitle)
+                    .fixedSize(horizontal: true, vertical: false)
+                // Very long user-written scenes remain readable at the user's
+                // font size and can be read horizontally without wrapping.
+                ScrollView(.horizontal) {
+                    Text(scene.localizedTitle)
+                        .fixedSize(horizontal: true, vertical: false)
+                }
+                .scrollIndicators(.visible)
+            }
+            .font(.subheadline.weight(.medium))
+            .foregroundStyle(isSelected ? Color.promptOnAction : Color.promptText)
+            .lineLimit(1)
             Spacer(minLength: 4)
             Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundStyle(isSelected ? Color.promptOnAction : Color.promptMuted.opacity(0.6))
         }
         .padding(.horizontal, 12)
-        .frame(maxWidth: .infinity, minHeight: 58, alignment: .leading)
+        .frame(minHeight: 52, alignment: .center)
         .background(
             isSelected ? Color.promptAction : Color.promptSurface,
             in: RoundedRectangle(cornerRadius: PromptiRadius.control, style: .continuous)
@@ -72,7 +82,7 @@ struct PracticeJourneyVisual: View, Animatable {
         get { progress }
         set { progress = newValue }
     }
-    let destinationSymbol: String
+    let destination: Destination
     let isComplete: Bool
 
     var body: some View {
@@ -104,7 +114,7 @@ struct PracticeJourneyVisual: View, Animatable {
                 }
                 .frame(maxHeight: .infinity)
             }
-            PromptiSymbolBadge(symbol: isComplete ? "checkmark.bubble.fill" : destinationSymbol, size: 52)
+            DestinationArtwork(destination: destination, size: 52)
         }
         .padding(.vertical, 16)
         .accessibilityHidden(true)

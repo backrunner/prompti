@@ -15,7 +15,7 @@ struct OpenRouterCodeConnectionView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
+            PromptiScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     SectionLabel("Connect your account", subtitle: "If sign in cannot return to Prompti, use an authorization code instead.")
                     PromptiSectionSurface {

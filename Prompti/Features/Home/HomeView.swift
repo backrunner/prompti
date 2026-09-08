@@ -43,7 +43,7 @@ struct HomeView: View {
     var body: some View {
         ZStack {
             PromptiBackground()
-            ScrollView {
+            PromptiScrollView {
                 VStack(spacing: 22) {
                     header
                     tripHero
@@ -146,7 +146,7 @@ struct HomeView: View {
     }
 
     private var destinationHeroSymbol: some View {
-        PromptiSymbolBadge(symbol: destination.symbol, size: 68)
+        DestinationArtwork(destination: destination, size: 68)
     }
 
     private var quickStart: some View {

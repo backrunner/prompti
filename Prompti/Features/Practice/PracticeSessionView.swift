@@ -179,7 +179,7 @@ struct PracticeSessionView: View {
     }
 
     private var questionContent: some View {
-        ScrollView {
+        PromptiScrollView {
             VStack(spacing: 20) {
                 progressHeader
                 questionPrompt
@@ -503,7 +503,7 @@ struct PracticeSessionView: View {
 
     private var summary: some View {
         GeometryReader { proxy in
-            ScrollView {
+            PromptiScrollView {
                 VStack(spacing: PromptiSpacing.section) {
                     PromptiResultVisual(
                         value: scoredCount > 0 ? "\(accuracy)%" : "—",

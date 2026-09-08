@@ -27,6 +27,47 @@ final class PromptiUITests: XCTestCase {
         attachScreenshot(named: "destination-picker")
     }
 
+    func testDestinationFiltersAndScrollBoundaries() {
+        launch(arguments: ["-prompti-demo"])
+        app.buttons["home.destination"].tap()
+        let list = app.scrollViews["destination.list"]
+        XCTAssertTrue(list.waitForExistence(timeout: 5))
+        attachScreenshot(named: "destinations-top")
+        list.swipeUp()
+        attachScreenshot(named: "destinations-middle")
+
+        let filters = app.scrollViews["destination.filters"]
+        let russian = app.buttons["destination.filter.ru"]
+        // XCTest can fail an isHittable query for a fully offscreen element.
+        // Bring the complete chip into the viewport before asking for a hit point.
+        for _ in 0..<4 {
+            if filters.frame.contains(russian.frame) { break }
+            filters.swipeLeft()
+        }
+        XCTAssertTrue(russian.isHittable)
+        XCTAssertTrue(["Russian", "俄语"].contains(russian.label))
+        let unselectedWidth = russian.frame.width
+        attachScreenshot(named: "language-filter-unselected")
+        russian.tap()
+        XCTAssertTrue(app.buttons["destination.moscow"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["destination.moscow"].isHittable)
+        XCTAssertGreaterThan(russian.frame.width, unselectedWidth + 10)
+        attachScreenshot(named: "language-filter-selected")
+
+        list.swipeUp(velocity: .fast)
+        XCTAssertTrue(app.buttons["destination.dubai"].isHittable)
+        attachScreenshot(named: "destinations-bottom")
+
+        let search = app.searchFields.firstMatch
+        search.tap()
+        // Allow the live search layout to settle between key events.
+        for character in "Moscow" { search.typeText(String(character)) }
+        search.typeText("\n")
+        XCTAssertEqual(search.value as? String, "Moscow")
+        XCTAssertTrue(app.buttons["destination.moscow"].waitForExistence(timeout: 5))
+        attachScreenshot(named: "destinations-short")
+    }
+
     func testSettingsVisualState() {
         launch(arguments: ["-prompti-demo"])
 

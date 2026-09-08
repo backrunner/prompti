@@ -236,13 +236,19 @@ struct PromptiSectionSurface<Content: View>: View {
 struct PromptiFlowLayout: Layout {
     var spacing: CGFloat = 8
 
+    private func size(of subview: LayoutSubview, availableWidth: CGFloat) -> CGSize {
+        let ideal = subview.sizeThatFits(.unspecified)
+        guard availableWidth > 0, ideal.width > availableWidth else { return ideal }
+        return subview.sizeThatFits(ProposedViewSize(width: availableWidth, height: nil))
+    }
+
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
         let width = proposal.width ?? 0
         var x: CGFloat = 0
         var y: CGFloat = 0
         var rowHeight: CGFloat = 0
         for subview in subviews {
-            let size = subview.sizeThatFits(.unspecified)
+            let size = size(of: subview, availableWidth: width)
             if x > 0, x + size.width > width {
                 x = 0
                 y += rowHeight + spacing
@@ -259,7 +265,7 @@ struct PromptiFlowLayout: Layout {
         var y = bounds.minY
         var rowHeight: CGFloat = 0
         for subview in subviews {
-            let size = subview.sizeThatFits(.unspecified)
+            let size = size(of: subview, availableWidth: bounds.width)
             if x > bounds.minX, x + size.width > bounds.maxX {
                 x = bounds.minX
                 y += rowHeight + spacing

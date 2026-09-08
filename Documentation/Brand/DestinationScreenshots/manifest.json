@@ -1,0 +1,229 @@
+{
+  "date": "2026-09-08",
+  "device": "iPhone 17e simulator",
+  "system": "iOS 27.0",
+  "contentSize": "large (default)",
+  "source": "Actual XCTest screenshot attachments; Demo fixtures",
+  "screenshots": [
+    {
+      "file": "zh-Hans/light/destination-picker.png",
+      "test": "PromptiUITests/testDestinationPickerVisualState()",
+      "timestamp": 1788877818.738
+    },
+    {
+      "file": "zh-Hans/light/home.png",
+      "test": "PromptiUITests/testHomeVisualState()",
+      "timestamp": 1788877835.989
+    },
+    {
+      "file": "zh-Hans/dark/practice-feedback.png",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "timestamp": 1788881103.53
+    },
+    {
+      "file": "zh-Hans/dark/practice-selected.png",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "timestamp": 1788881101.971
+    },
+    {
+      "file": "zh-Hans/dark/practice-question.png",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "timestamp": 1788881101.493
+    },
+    {
+      "file": "zh-Hans/dark/generation-ready.png",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "timestamp": 1788881099.49
+    },
+    {
+      "file": "zh-Hans/dark/generation-working.png",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "timestamp": 1788881096.353
+    },
+    {
+      "file": "zh-Hans/dark/practice-setup.png",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "timestamp": 1788881093.101
+    },
+    {
+      "file": "zh-Hans/dark/progress-with-data.png",
+      "test": "PromptiUITests/testReviewAndProgressWithData()",
+      "timestamp": 1788881153.039
+    },
+    {
+      "file": "zh-Hans/dark/practice-summary-correct.png",
+      "test": "PromptiUITests/testReviewAndProgressWithData()",
+      "timestamp": 1788881146.371
+    },
+    {
+      "file": "zh-Hans/dark/review-with-data.png",
+      "test": "PromptiUITests/testReviewAndProgressWithData()",
+      "timestamp": 1788881139.218
+    },
+    {
+      "file": "zh-Hans/dark/practice-summary-incorrect.png",
+      "test": "PromptiUITests/testReviewAndProgressWithData()",
+      "timestamp": 1788881134.795
+    },
+    {
+      "file": "zh-Hans/dark/settings.png",
+      "test": "PromptiUITests/testSettingsVisualState()",
+      "timestamp": 1788881161.34
+    },
+    {
+      "file": "en/light/home.png",
+      "test": "PromptiUITests/testHomeVisualState()",
+      "timestamp": 1788881217.387
+    },
+    {
+      "file": "en/light/destinations-short.png",
+      "test": "PromptiUITests/testDestinationFiltersAndScrollBoundaries()",
+      "timestamp": 1788881446.587
+    },
+    {
+      "file": "en/light/destinations-bottom.png",
+      "test": "PromptiUITests/testDestinationFiltersAndScrollBoundaries()",
+      "timestamp": 1788881441.4
+    },
+    {
+      "file": "en/light/language-filter-selected.png",
+      "test": "PromptiUITests/testDestinationFiltersAndScrollBoundaries()",
+      "timestamp": 1788881440.182
+    },
+    {
+      "file": "en/light/language-filter-unselected.png",
+      "test": "PromptiUITests/testDestinationFiltersAndScrollBoundaries()",
+      "timestamp": 1788881438.399
+    },
+    {
+      "file": "en/light/destinations-middle.png",
+      "test": "PromptiUITests/testDestinationFiltersAndScrollBoundaries()",
+      "timestamp": 1788881436.611
+    },
+    {
+      "file": "en/light/destinations-top.png",
+      "test": "PromptiUITests/testDestinationFiltersAndScrollBoundaries()",
+      "timestamp": 1788881433.806
+    },
+    {
+      "file": "en/light/practice-feedback.png",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "timestamp": 1788881463.189
+    },
+    {
+      "file": "en/light/practice-selected.png",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "timestamp": 1788881461.654
+    },
+    {
+      "file": "en/light/practice-question.png",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "timestamp": 1788881461.223
+    },
+    {
+      "file": "en/light/generation-ready.png",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "timestamp": 1788881459.321
+    },
+    {
+      "file": "en/light/generation-working.png",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "timestamp": 1788881456.16
+    },
+    {
+      "file": "en/light/practice-setup.png",
+      "test": "PromptiUITests/testPracticeVisualStates()",
+      "timestamp": 1788881452.945
+    },
+    {
+      "file": "zh-Hans/light/destinations-short.png",
+      "test": "PromptiUITests/testDestinationFiltersAndScrollBoundaries()",
+      "timestamp": 1788881499.445
+    },
+    {
+      "file": "zh-Hans/light/destinations-bottom.png",
+      "test": "PromptiUITests/testDestinationFiltersAndScrollBoundaries()",
+      "timestamp": 1788881494.176
+    },
+    {
+      "file": "zh-Hans/light/language-filter-selected.png",
+      "test": "PromptiUITests/testDestinationFiltersAndScrollBoundaries()",
+      "timestamp": 1788881492.954
+    },
+    {
+      "file": "zh-Hans/light/language-filter-unselected.png",
+      "test": "PromptiUITests/testDestinationFiltersAndScrollBoundaries()",
+      "timestamp": 1788881491.178
+    },
+    {
+      "file": "zh-Hans/light/destinations-middle.png",
+      "test": "PromptiUITests/testDestinationFiltersAndScrollBoundaries()",
+      "timestamp": 1788881490.745
+    },
+    {
+      "file": "zh-Hans/light/destinations-top.png",
+      "test": "PromptiUITests/testDestinationFiltersAndScrollBoundaries()",
+      "timestamp": 1788881487.907
+    },
+    {
+      "file": "zh-Hans/dark/destinations-short.png",
+      "test": "PromptiUITests/testDestinationFiltersAndScrollBoundaries()",
+      "timestamp": 1788881540.844
+    },
+    {
+      "file": "zh-Hans/dark/destinations-bottom.png",
+      "test": "PromptiUITests/testDestinationFiltersAndScrollBoundaries()",
+      "timestamp": 1788881535.58
+    },
+    {
+      "file": "zh-Hans/dark/language-filter-selected.png",
+      "test": "PromptiUITests/testDestinationFiltersAndScrollBoundaries()",
+      "timestamp": 1788881534.36
+    },
+    {
+      "file": "zh-Hans/dark/language-filter-unselected.png",
+      "test": "PromptiUITests/testDestinationFiltersAndScrollBoundaries()",
+      "timestamp": 1788881532.588
+    },
+    {
+      "file": "zh-Hans/dark/destinations-middle.png",
+      "test": "PromptiUITests/testDestinationFiltersAndScrollBoundaries()",
+      "timestamp": 1788881532.178
+    },
+    {
+      "file": "zh-Hans/dark/destinations-top.png",
+      "test": "PromptiUITests/testDestinationFiltersAndScrollBoundaries()",
+      "timestamp": 1788881529.361
+    },
+    {
+      "file": "en/dark/destinations-short.png",
+      "test": "PromptiUITests/testDestinationFiltersAndScrollBoundaries()",
+      "timestamp": 1788881601.543
+    },
+    {
+      "file": "en/dark/destinations-bottom.png",
+      "test": "PromptiUITests/testDestinationFiltersAndScrollBoundaries()",
+      "timestamp": 1788881596.394
+    },
+    {
+      "file": "en/dark/language-filter-selected.png",
+      "test": "PromptiUITests/testDestinationFiltersAndScrollBoundaries()",
+      "timestamp": 1788881595.157
+    },
+    {
+      "file": "en/dark/language-filter-unselected.png",
+      "test": "PromptiUITests/testDestinationFiltersAndScrollBoundaries()",
+      "timestamp": 1788881593.409
+    },
+    {
+      "file": "en/dark/destinations-middle.png",
+      "test": "PromptiUITests/testDestinationFiltersAndScrollBoundaries()",
+      "timestamp": 1788881591.626
+    },
+    {
+      "file": "en/dark/destinations-top.png",
+      "test": "PromptiUITests/testDestinationFiltersAndScrollBoundaries()",
+      "timestamp": 1788881588.817
+    }
+  ]
+}
