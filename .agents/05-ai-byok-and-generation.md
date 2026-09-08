@@ -165,6 +165,7 @@ Adapter 不把所有非 2xx 都映射成“网络错误”。UI 根据错误提�
 
 - 新增 `openRouterOAuth`，通过 OpenRouter 官方 PKCE 流程连接账号；同一授权可切换 OpenRouter 上的 GPT、Claude、Gemini 模型 ID。它不是这些厂商订阅账号的直接登录。
 - 原生入口使用 `ASWebAuthenticationSession` 和 `prompti://oauth/openrouter` 回调。每次生成独立 verifier/state；只接受对应 state、唯一 code 和精确回调路径。S256 按 RFC 7636，换码请求不跟随重定向。
+- 登录入口显式使用 `https://openrouter.ai/sign-in?redirect_url=<完整的 /auth 授权 URL>`。2026-09-08 实测未登录时直接访问 `/auth` 会 307 跳到 `/sign-up`；原生回调与手动授权码入口均先进入登录页，再继续原有授权。`redirect_url` 用 URLComponents 编码，保留 PKCE、key label 和嵌套 callback/state；手动流程仍不发送 callback_url。该参数也用于 OpenRouter 官方文档的登录导航。
 - 另提供官方无回调授权码流程：浏览器授权后复制一次性 code 返回 App，使用保留在内存中的 verifier 换取 key。有效期由服务商控制（官方文档为 10 分钟）。
 - 连接后发送最小能力探测；模型切换使测试结果失效。余额不足、取消和认证失效有独立恢复文案。所有选定模型仍经过既有内容审核和本地校验。
 - OAuth 端点固定为 `https://openrouter.ai/api/v1/chat/completions`，不能编辑为其他服务。授权凭据不能发送到更改后的主机。
