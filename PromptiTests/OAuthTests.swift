@@ -22,6 +22,28 @@ struct OAuthTests {
         #expect(try !request.authorizationURL(manual: true).absoluteString.contains("callback_url"))
     }
 
+    @Test("Both browser flows enter sign-in and preserve the complete PKCE redirect", arguments: [false, true])
+    func signInEntry(manual: Bool) throws {
+        let authorization = OpenRouterAuthorization()
+        let url = try authorization.signInURL(manual: manual)
+        let components = try #require(URLComponents(url: url, resolvingAgainstBaseURL: false))
+        #expect(components.scheme == "https")
+        #expect(components.host == "openrouter.ai")
+        #expect(components.path == "/sign-in")
+        let items = try #require(components.queryItems)
+        #expect(items.count == 1)
+        #expect(items.first?.name == "redirect_url")
+        let redirect = try #require(items.first?.value)
+        #expect(redirect == (try authorization.authorizationURL(manual: manual)).absoluteString)
+        #expect(!url.absoluteString.contains(authorization.verifier))
+
+        let redirectItems = try #require(URLComponents(string: redirect)?.queryItems)
+        let callback = redirectItems.first(where: { $0.name == "callback_url" })?.value
+        #expect(callback == (manual ? nil : "prompti://oauth/openrouter?state=\(authorization.state)"))
+        #expect(redirectItems.first(where: { $0.name == "code_challenge" })?.value == authorization.challenge)
+        #expect(redirectItems.first(where: { $0.name == "code_challenge_method" })?.value == "S256")
+    }
+
     @Test("Callbacks must match the active state and exact redirect")
     func callbacks() throws {
         let request = OpenRouterAuthorization(state: "expected")

@@ -10,7 +10,7 @@ final class OpenRouterOAuthSession: NSObject, ASWebAuthenticationPresentationCon
 
     func connect() async throws -> String {
         let transaction = OpenRouterAuthorization()
-        let url = try transaction.authorizationURL()
+        let url = try transaction.signInURL()
 
         let callback: URL = try await withCheckedThrowingContinuation { continuation in
             let authSession = ASWebAuthenticationSession(url: url, callbackURLScheme: "prompti") { [weak self] callbackURL, error in
@@ -75,6 +75,17 @@ struct OpenRouterAuthorization: Sendable {
         if !manual {
             components.queryItems?.append(URLQueryItem(name: "callback_url", value: "prompti://oauth/openrouter?state=\(state)"))
         }
+        guard let url = components.url else { throw OAuthError.invalidAuthorizationURL }
+        return url
+    }
+
+    /// OpenRouter redirects signed-out /auth visitors to sign-up. Enter through
+    /// sign-in explicitly, then resume the complete PKCE authorization URL.
+    func signInURL(manual: Bool = false) throws -> URL {
+        var components = URLComponents(string: "https://openrouter.ai/sign-in")!
+        components.queryItems = [
+            URLQueryItem(name: "redirect_url", value: try authorizationURL(manual: manual).absoluteString)
+        ]
         guard let url = components.url else { throw OAuthError.invalidAuthorizationURL }
         return url
     }

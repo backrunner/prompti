@@ -28,7 +28,7 @@ struct OpenRouterCodeConnectionView: View {
                                 code = ""
                                 errorMessage = nil
                                 do {
-                                    let url = try authorization.authorizationURL(manual: true)
+                                    let url = try authorization.signInURL(manual: true)
                                     openURL(url) { accepted in didOpenSignIn = accepted }
                                 } catch { errorMessage = error.localizedDescription }
                             }
