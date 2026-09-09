@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "type": "prediction",
+  "data": {
+    "method": "POST",
+    "path": "/models/openai/gpt-image-2.5-flare/predictions",
+    "headers": {
+      "Prefer": "wait=60"
+    },
+    "body": {
+      "input": {
+        "prompt": "Use case: logo-brand. Asset: a single refined travel landmark outline icon for Prompti, a warm, calm native iOS language-learning app.\nSubject: Tokyo Tower in Tokyo, Japan. Accurate recognizable proportions: slender antenna, two observation decks, graceful tapered lattice legs and an open arch between the feet. Distinguish it from the Eiffel Tower.\nStyle: polished architectural line icon, careful geometric construction, smooth round caps and joins, understated friendly precision. Front elevation. One landmark only, centered, occupying 80 percent of a square canvas, with generous clear margins. Black ink outlines only on a perfectly plain white background. All enclosed areas remain white. Primary outlines about 18 pixels and secondary structural lines about 12 pixels at 1024px. Selected meaningful details, about 20-35 clear structural strokes, balanced open negative space. It must still read at 40-64px; do not fill small areas with dense lattice or many windows.\nNo words, letters, numerals, labels, logo, border, badge, circle, scenery, skyline, clouds, stars, people, airplane, map pin, shadows, gradients, color fills, texture, sketch marks, hatching or 3D render. This is the finished standalone icon artwork, not a mockup or contact sheet.",
+        "quality": "medium",
+        "aspect_ratio": "1:1",
+        "background": "opaque",
+        "output_format": "png",
+        "number_of_images": 1
+      }
+    }
+  },
+  "meta": {
+    "cliVersion": "0.1.1",
+    "authSource": "config",
+    "profile": "quaengine-demo",
+    "apiVersion": "v1"
+  }
+}
