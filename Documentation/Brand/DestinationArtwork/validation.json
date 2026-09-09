@@ -1,27 +1,170 @@
 {
   "date": "2026-09-10",
   "model": "openai/gpt-image-2.5-flare",
-  "generated": { "pilot_low": 1, "pilot_medium": 1, "final_medium": 65 },
+  "generated": {
+    "pilot_low": 1,
+    "pilot_medium": 1,
+    "final_medium": 65
+  },
   "assets_published": 65,
   "source_and_artifact_hashes": "passed",
-  "vector_sheet_review": { "count": 65, "files": ["Review/sheet-1.png", "Review/sheet-2.png", "Review/sheet-3.png", "Review/sheet-4.png"] },
-  "browser_gallery": { "count": 65, "search": "passed", "comparison_toggle": "passed", "light_dark_tint": "passed" },
+  "vector_sheet_review": {
+    "count": 65,
+    "files": [
+      "Review/sheet-1.png",
+      "Review/sheet-2.png",
+      "Review/sheet-3.png",
+      "Review/sheet-4.png"
+    ]
+  },
+  "browser_gallery": {
+    "count": 65,
+    "search": "passed",
+    "comparison_toggle": "passed",
+    "light_dark_tint": "passed"
+  },
   "brand_check": "passed",
-  "localization_check": { "status": "passed", "catalog_entries": 629, "dynamic_labels": 185, "compiler_extracted_uses": 297 },
+  "localization_check": {
+    "status": "passed",
+    "catalog_entries": 629,
+    "dynamic_labels": 185,
+    "compiler_extracted_uses": 297
+  },
   "diff_check": "passed",
-  "build_for_testing": { "status": "passed", "xcode": "27.0 beta (27A5228h)", "derived_data": "/tmp/prompti-city-artwork-build" },
-  "runtime_environment": { "device": "iPhone 17e simulator", "name": "Prompti Brand Final", "udid": "8A488D26-61E3-4C65-9975-FC0EF51CA6CF", "os": "iOS 27.0", "content_size": "large (system default)" },
+  "build_for_testing": {
+    "status": "passed",
+    "xcode": "27.0 beta (27A5228h)",
+    "derived_data": "/tmp/prompti-city-artwork-build"
+  },
+  "runtime_environment": {
+    "device": "iPhone 17e simulator",
+    "name": "Prompti Brand Final",
+    "udid": "8A488D26-61E3-4C65-9975-FC0EF51CA6CF",
+    "os": "iOS 27.0",
+    "content_size": "large (system default)"
+  },
   "tests": {
+    "status": "passed",
+    "unit_tests": 74,
+    "unit_suites": 11,
+    "unit_executions_including_parameters": 107,
+    "ui_test_runs": 10,
+    "failed_tests": 0,
+    "attempts": [
+      {
+        "locale": "zh-Hans_CN",
+        "appearance": "light",
+        "unit_tests": 74,
+        "ui_tests": 5,
+        "result": "passed",
+        "bundle": "/Volumes/BRData/CodexBuilds/Prompti-Debug-6-20260910/light.xcresult"
+      },
+      {
+        "locale": "en_US",
+        "appearance": "dark",
+        "ui_tests": 5,
+        "result": "passed",
+        "bundle": "/Volumes/BRData/CodexBuilds/Prompti-Debug-6-20260910/dark.xcresult"
+      }
+    ]
+  },
+  "actual_app_screenshots": [
+    "Screenshots/Light/destination-picker.png",
+    "Screenshots/Light/destinations-bottom.png",
+    "Screenshots/Light/destinations-middle.png",
+    "Screenshots/Light/destinations-short.png",
+    "Screenshots/Light/destinations-top.png",
+    "Screenshots/Light/gemini-zh-Hans.png",
+    "Screenshots/Light/generation-ready.png",
+    "Screenshots/Light/generation-working.png",
+    "Screenshots/Light/home.png",
+    "Screenshots/Light/language-filter-selected.png",
+    "Screenshots/Light/language-filter-unselected.png",
+    "Screenshots/Light/model-compatible-zh-Hans.png",
+    "Screenshots/Light/model-custom-zh-Hans.png",
+    "Screenshots/Light/model-options-zh-Hans.png",
+    "Screenshots/Light/model-zh-Hans.png",
+    "Screenshots/Light/practice-feedback.png",
+    "Screenshots/Light/practice-question.png",
+    "Screenshots/Light/practice-selected.png",
+    "Screenshots/Light/practice-setup.png",
+    "Screenshots/Dark/destination-picker.png",
+    "Screenshots/Dark/destinations-bottom.png",
+    "Screenshots/Dark/destinations-middle.png",
+    "Screenshots/Dark/destinations-short.png",
+    "Screenshots/Dark/destinations-top.png",
+    "Screenshots/Dark/gemini-en.png",
+    "Screenshots/Dark/generation-ready.png",
+    "Screenshots/Dark/generation-working.png",
+    "Screenshots/Dark/home.png",
+    "Screenshots/Dark/language-filter-selected.png",
+    "Screenshots/Dark/language-filter-unselected.png",
+    "Screenshots/Dark/model-compatible-en.png",
+    "Screenshots/Dark/model-custom-en.png",
+    "Screenshots/Dark/model-en.png",
+    "Screenshots/Dark/model-options-en.png",
+    "Screenshots/Dark/practice-feedback.png",
+    "Screenshots/Dark/practice-question.png",
+    "Screenshots/Dark/practice-selected.png",
+    "Screenshots/Dark/practice-setup.png"
+  ],
+  "pending": [],
+  "earlier_runtime_attempt": {
     "status": "incomplete",
     "completed_test_count": 0,
-    "selected": ["PromptiTests/DestinationPresentationTests", "PromptiUITests/PromptiUITests/testHomeVisualState", "PromptiUITests/PromptiUITests/testDestinationPickerVisualState", "PromptiUITests/PromptiUITests/testDestinationFiltersAndScrollBoundaries"],
+    "selected": [
+      "PromptiTests/DestinationPresentationTests",
+      "PromptiUITests/PromptiUITests/testHomeVisualState",
+      "PromptiUITests/PromptiUITests/testDestinationPickerVisualState",
+      "PromptiUITests/PromptiUITests/testDestinationFiltersAndScrollBoundaries"
+    ],
     "attempts": [
-      { "locale": "zh-Hans_CN", "appearance": "light", "result": "interrupted before test execution; test service startup stalled", "bundle": "/tmp/prompti-city-light-zh.xcresult" },
-      { "locale": "zh-Hans_CN", "appearance": "light", "result": "interrupted before test execution after simulator reboot; startup stalled again", "bundle": "/tmp/prompti-city-light-zh-retry.xcresult" }
+      {
+        "locale": "zh-Hans_CN",
+        "appearance": "light",
+        "result": "interrupted before test execution; test service startup stalled",
+        "bundle": "/tmp/prompti-city-light-zh.xcresult"
+      },
+      {
+        "locale": "zh-Hans_CN",
+        "appearance": "light",
+        "result": "interrupted before test execution after simulator reboot; startup stalled again",
+        "bundle": "/tmp/prompti-city-light-zh-retry.xcresult"
+      }
     ],
     "direct_app_launch": "timed out after 50 seconds",
     "host_load_observation": "CPU 0% idle, about 15GB memory used, load average about 280"
   },
-  "actual_app_screenshots": [],
-  "pending": ["Run selected existing tests", "Default-size iPhone App inspection in light and dark mode with Chinese and English", "Capture actual App screenshots"]
+  "app_version": "0.1.0",
+  "app_build": "6",
+  "source_commit": "7cc5394c71c29523d6232c4f4e59f6a6b13c7f27",
+  "visual_review": {
+    "status": "passed",
+    "matrix": [
+      "zh-Hans / light",
+      "en / dark"
+    ],
+    "pages": [
+      "home",
+      "destination list: top, middle, bottom, filtered and search",
+      "practice setup",
+      "generation working and ready",
+      "answer feedback",
+      "model setup and manual model"
+    ],
+    "findings": "Icons remain clear at actual badge size; transparent backgrounds and semantic tint are correct; no clipping, alignment or text overlap issues found."
+  },
+  "device_installation": {
+    "device": "iPhone 17",
+    "status": "installed",
+    "verified_version": "0.1.0",
+    "verified_build": "6",
+    "automatic_launch": "blocked by device lock",
+    "data_preserved": true
+  },
+  "limitations": [
+    "Physical-device visual review was not performed; phone was locked",
+    "Only Chinese/light and English/dark combinations were inspected",
+    "No iPad, earlier iOS, manual VoiceOver or live provider account validation"
+  ]
 }
