@@ -1,0 +1,68 @@
+[
+  {
+    "configurationName": "Test Scheme Action",
+    "deviceId": "8A488D26-61E3-4C65-9975-FC0EF51CA6CF",
+    "deviceName": "Prompti Brand Final",
+    "exportedFileName": "C49594A4-79A4-40E8-98BE-A3D3C3C9D702.png",
+    "isAssociatedWithFailure": false,
+    "suggestedHumanReadableName": "model-code-zh-Hans_0_509C779C-974E-4D7A-82E2-89226C003AE5.png",
+    "timestamp": 1788965537.167,
+    "file": "model-code-zh-Hans.png",
+    "testIdentifier": "PromptiUITests/testLocalizedModelSelectionInChinese()"
+  },
+  {
+    "configurationName": "Test Scheme Action",
+    "deviceId": "8A488D26-61E3-4C65-9975-FC0EF51CA6CF",
+    "deviceName": "Prompti Brand Final",
+    "exportedFileName": "014DA676-27C5-4815-9BD7-626F73C3871A.png",
+    "isAssociatedWithFailure": false,
+    "suggestedHumanReadableName": "model-options-zh-Hans_0_8DAC13D9-322D-419F-9C14-D5BE84D68EAA.png",
+    "timestamp": 1788965533.625,
+    "file": "model-options-zh-Hans.png",
+    "testIdentifier": "PromptiUITests/testLocalizedModelSelectionInChinese()"
+  },
+  {
+    "configurationName": "Test Scheme Action",
+    "deviceId": "8A488D26-61E3-4C65-9975-FC0EF51CA6CF",
+    "deviceName": "Prompti Brand Final",
+    "exportedFileName": "074EC3DB-BA01-48E3-892B-8C4221832665.png",
+    "isAssociatedWithFailure": false,
+    "suggestedHumanReadableName": "model-zh-Hans_0_BC07E612-50D3-4E67-8CE4-D4FAD4DBC874.png",
+    "timestamp": 1788965530.811,
+    "file": "model-zh-Hans.png",
+    "testIdentifier": "PromptiUITests/testLocalizedModelSelectionInChinese()"
+  },
+  {
+    "configurationName": "Test Scheme Action",
+    "deviceId": "8A488D26-61E3-4C65-9975-FC0EF51CA6CF",
+    "deviceName": "Prompti Brand Final",
+    "exportedFileName": "B83A9A13-4E90-46C9-A65C-7DEEFFB3FC51.png",
+    "isAssociatedWithFailure": false,
+    "suggestedHumanReadableName": "model-code-en_0_903761B9-A0DA-4A66-A37F-1A86C45C347E.png",
+    "timestamp": 1788965558.62,
+    "file": "model-code-en.png",
+    "testIdentifier": "PromptiUITests/testLocalizedModelSelectionInEnglish()"
+  },
+  {
+    "configurationName": "Test Scheme Action",
+    "deviceId": "8A488D26-61E3-4C65-9975-FC0EF51CA6CF",
+    "deviceName": "Prompti Brand Final",
+    "exportedFileName": "7D0BDAB9-38D5-4C1A-80CB-9E71DE1B5A8F.png",
+    "isAssociatedWithFailure": false,
+    "suggestedHumanReadableName": "model-options-en_0_62C10162-701A-4C61-A5A1-90F2EE5520C9.png",
+    "timestamp": 1788965554.315,
+    "file": "model-options-en.png",
+    "testIdentifier": "PromptiUITests/testLocalizedModelSelectionInEnglish()"
+  },
+  {
+    "configurationName": "Test Scheme Action",
+    "deviceId": "8A488D26-61E3-4C65-9975-FC0EF51CA6CF",
+    "deviceName": "Prompti Brand Final",
+    "exportedFileName": "782E3E8E-ABB9-4D5A-AD68-DFBE7CB598B9.png",
+    "isAssociatedWithFailure": false,
+    "suggestedHumanReadableName": "model-en_0_DA3E5077-E65E-4228-98AA-0909B7C9D4EB.png",
+    "timestamp": 1788965551.513,
+    "file": "model-en.png",
+    "testIdentifier": "PromptiUITests/testLocalizedModelSelectionInEnglish()"
+  }
+]

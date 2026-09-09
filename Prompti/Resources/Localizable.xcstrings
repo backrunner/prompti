@@ -80,26 +80,6 @@
         }
       }
     },
-    "1. Sign in securely in your browser.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "1. 在浏览器中安全登录。"
-          }
-        }
-      }
-    },
-    "2. Return here and paste the code.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "2. 返回此处并粘贴授权码。"
-          }
-        }
-      }
-    },
     "A flight route arriving at a city": {
       "extractionState": "manual",
       "localizations": {
@@ -413,16 +393,6 @@
         }
       }
     },
-    "Approve Prompti, then copy the authorization code shown by OpenRouter.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "授权 Prompti 后，复制 OpenRouter 显示的授权码。"
-          }
-        }
-      }
-    },
     "Approved questions will wait here.": {
       "extractionState": "manual",
       "localizations": {
@@ -441,17 +411,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "景点"
-          }
-        }
-      }
-    },
-    "Authorization code": {
-      "extractionState": "manual",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "授权码"
           }
         }
       }
@@ -803,60 +762,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "请先在设置中连接一个模型，再继续练习。"
-          }
-        }
-      }
-    },
-    "Connect an account, or use your own API key.": {
-      "extractionState": "manual",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "使用模型服务商账号登录，或填写 API 密钥。"
-          }
-        }
-      }
-    },
-    "Connect and verify": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "连接并验证"
-          }
-        }
-      }
-    },
-    "Connect using an authorization code": {
-      "extractionState": "manual",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "使用授权码连接"
-          }
-        }
-      }
-    },
-    "Connect with OpenRouter": {
-      "extractionState": "manual",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "通过 OpenRouter 连接"
-          }
-        }
-      }
-    },
-    "Connect your account": {
-      "extractionState": "manual",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "连接模型账号"
           }
         }
       }
@@ -1471,17 +1376,6 @@
         }
       }
     },
-    "If sign in cannot return to Prompti, use an authorization code instead.": {
-      "extractionState": "manual",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "如果登录后无法自动返回 Prompti，可以使用授权码完成连接。"
-          }
-        }
-      }
-    },
     "Import local data": {
       "extractionState": "manual",
       "localizations": {
@@ -1719,17 +1613,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "请只描述旅行场景，不要加入链接或要求模型执行的指令。"
-          }
-        }
-      }
-    },
-    "Manage OpenRouter account": {
-      "extractionState": "manual",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "管理 OpenRouter 账号"
           }
         }
       }
@@ -2104,17 +1987,6 @@
         }
       }
     },
-    "Open secure sign in": {
-      "extractionState": "manual",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "前往浏览器登录"
-          }
-        }
-      }
-    },
     "OpenAI Chat / Compatible": {
       "extractionState": "manual",
       "localizations": {
@@ -2133,28 +2005,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "OpenAI Responses"
-          }
-        }
-      }
-    },
-    "OpenRouter could not finish connecting this device. Try signing in again.": {
-      "extractionState": "manual",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "OpenRouter 未能完成连接，请重新登录。"
-          }
-        }
-      }
-    },
-    "OpenRouter · Sign in": {
-      "extractionState": "manual",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "OpenRouter · 账号授权"
           }
         }
       }
@@ -2781,17 +2631,6 @@
         }
       }
     },
-    "Reconnect OpenRouter": {
-      "extractionState": "manual",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "重新连接 OpenRouter"
-          }
-        }
-      }
-    },
     "Record again": {
       "extractionState": "manual",
       "localizations": {
@@ -3171,39 +3010,6 @@
         }
       }
     },
-    "Sign in cancelled. You can try again whenever you’re ready.": {
-      "extractionState": "manual",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已取消登录，需要时可以重新连接。"
-          }
-        }
-      }
-    },
-    "Sign in to another account": {
-      "extractionState": "manual",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "换一个账号登录"
-          }
-        }
-      }
-    },
-    "Sign in was cancelled or not approved.": {
-      "extractionState": "manual",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "登录已取消或未获授权，请重试。"
-          }
-        }
-      }
-    },
     "Skip question": {
       "extractionState": "manual",
       "localizations": {
@@ -3542,16 +3348,6 @@
         }
       }
     },
-    "The code expires after 10 minutes. Keep this page open while you sign in.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "授权码有效期为 10 分钟，登录时请保留此页面。"
-          }
-        }
-      }
-    },
     "The generated batch did not pass safety review.": {
       "extractionState": "manual",
       "localizations": {
@@ -3837,17 +3633,6 @@
         }
       }
     },
-    "Unable to open secure sign in. Try again.": {
-      "extractionState": "manual",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "暂时无法打开登录页面，请重试。"
-          }
-        }
-      }
-    },
     "Use a valid public HTTPS endpoint.": {
       "extractionState": "manual",
       "localizations": {
@@ -4021,6 +3806,22 @@
         }
       }
     },
+    "Your provider processes exercise data and may charge for usage.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your provider processes exercise data and may charge for usage."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "练习数据由所选服务商处理，使用可能产生费用。"
+          }
+        }
+      }
+    },
     "Your destination, language and scenes go to your selected provider. Credentials stay on this device. Model usage may use account credits.": {
       "localizations": {
         "zh-Hans": {
@@ -4048,17 +3849,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "学习记录会保留。你需要重新选择目的地、语言和模型。"
-          }
-        }
-      }
-    },
-    "Your model connection has expired or was revoked. Reconnect in Settings.": {
-      "extractionState": "manual",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "模型连接已失效或被撤销，请在设置中重新连接。"
           }
         }
       }
@@ -7049,6 +6839,70 @@
           "stringUnit": {
             "state": "translated",
             "value": "已保存"
+          }
+        }
+      }
+    },
+    "Enter model ID": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter model ID"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "输入模型 ID"
+          }
+        }
+      }
+    },
+    "Custom model": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Custom model"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "自定义模型"
+          }
+        }
+      }
+    },
+    "Get an OpenRouter API key": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Get an OpenRouter API key"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "获取 OpenRouter API Key"
+          }
+        }
+      }
+    },
+    "Your API key is invalid or has been revoked. Update it in Settings.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your API key is invalid or has been revoked. Update it in Settings."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API Key 无效或已被撤销，请在设置中更新。"
           }
         }
       }

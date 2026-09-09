@@ -136,7 +136,7 @@ struct RemoteAIClient: QuestionProvider {
             fallbackBody = primaryUsesStructuredOutputs
                 ? try responsesBody(system: system, user: user, schemaName: schemaName, schema: schema, usesStructuredOutputs: false)
                 : nil
-        case .openAIChat, .openRouterOAuth:
+        case .openAIChat, .openRouter:
             request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
             primaryUsesStructuredOutputs = configuration.structuredOutputSupport != .unsupported
             primaryBody = try chatBody(
@@ -257,7 +257,7 @@ struct RemoteAIClient: QuestionProvider {
     }
 
     func endpointURL() throws -> URL {
-        guard configuration.kind != .openRouterOAuth || configuration.baseURL == ProviderKind.openRouterOAuth.defaultBaseURL,
+        guard configuration.kind != .openRouter || configuration.baseURL == ProviderKind.openRouter.defaultBaseURL,
               var base = URL(string: configuration.baseURL.trimmingCharacters(in: .whitespacesAndNewlines)),
               base.scheme?.lowercased() == "https",
               let host = base.host?.lowercased(),
@@ -271,7 +271,7 @@ struct RemoteAIClient: QuestionProvider {
         let route: String
         switch configuration.kind {
         case .openAIResponses: route = "responses"
-        case .openAIChat, .openRouterOAuth: route = "chat/completions"
+        case .openAIChat, .openRouter: route = "chat/completions"
         case .anthropic: route = "messages"
         case .apple: throw GenerationError.unsupportedProvider
         }
@@ -391,7 +391,7 @@ struct RemoteAIClient: QuestionProvider {
                     return text
                 }
             }
-        case .openAIChat, .openRouterOAuth:
+        case .openAIChat, .openRouter:
             if let choices = object["choices"] as? [[String: Any]] {
                 if choices.first?["finish_reason"] as? String == "length" { throw GenerationError.truncatedOutput }
                 if choices.first?["finish_reason"] as? String == "content_filter" { throw GenerationError.refused }

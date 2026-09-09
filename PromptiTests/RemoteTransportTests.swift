@@ -18,6 +18,29 @@ private actor FixtureTransport {
 
 @Suite("Remote transport regressions")
 struct RemoteTransportTests {
+    @Test("OpenRouter uses the entered API key and chosen model without an authorization exchange", arguments: [200, 401])
+    func openRouterAPIKey(_ status: Int) async throws {
+        let fixture = FixtureTransport(statuses: [status], payload: try response(for: .openRouter))
+        var selected = ProviderPreset.openRouter.configuration
+        selected.model = "example/custom-model"
+        let client = RemoteAIClient(configuration: selected, apiKey: "fixture-only", transport: { try await fixture.send($0) })
+        if status == 200 {
+            #expect(try await client.probe() == .supported)
+        } else {
+            do {
+                _ = try await client.probe()
+                Issue.record("An invalid API key must fail the connection test")
+            } catch GenerationError.invalidCredential { }
+        }
+        let requests = await fixture.requests
+        #expect(requests.count == 1)
+        let request = try #require(requests.first)
+        #expect(request.url?.absoluteString == "https://openrouter.ai/api/v1/chat/completions")
+        #expect(request.value(forHTTPHeaderField: "Authorization") == "Bearer fixture-only")
+        let body = try #require(JSONSerialization.jsonObject(with: request.httpBody!) as? [String: Any])
+        #expect(body["model"] as? String == "example/custom-model")
+    }
+
     @Test("Schema fallback sends an explicit JSON schema and keeps store disabled", arguments: [ProviderKind.openAIChat, .openAIResponses])
     func fallback(_ kind: ProviderKind) async throws {
         let fixture = FixtureTransport(statuses: [400, 200], payload: try response(for: kind))

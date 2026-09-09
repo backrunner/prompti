@@ -161,18 +161,16 @@ Adapter 不把所有非 2xx 都映射成“网络错误”。UI 根据错误提�
 
 实现时以 SDK/官方协议的当前版本和 contract tests 为准，不把本文中的端点形态当作永久不变的协议。
 
-## 2026-09-06：OpenRouter 账号授权
+## 2026-09-09：API Key 快捷配置（取代账号 OAuth）
 
-- 新增 `openRouterOAuth`，通过 OpenRouter 官方 PKCE 流程连接账号；同一授权可切换 OpenRouter 上的 GPT、Claude、Gemini 模型 ID。它不是这些厂商订阅账号的直接登录。
-- 原生入口使用 `ASWebAuthenticationSession` 和 `prompti://oauth/openrouter` 回调。每次生成独立 verifier/state；只接受对应 state、唯一 code 和精确回调路径。S256 按 RFC 7636，换码请求不跟随重定向。
-- 登录入口显式使用 `https://openrouter.ai/sign-in?redirect_url=<完整的 /auth 授权 URL>`。2026-09-08 实测未登录时直接访问 `/auth` 会 307 跳到 `/sign-up`；原生回调与手动授权码入口均先进入登录页，再继续原有授权。`redirect_url` 用 URLComponents 编码，保留 PKCE、key label 和嵌套 callback/state；手动流程仍不发送 callback_url。该参数也用于 OpenRouter 官方文档的登录导航。
-- 另提供官方无回调授权码流程：浏览器授权后复制一次性 code 返回 App，使用保留在内存中的 verifier 换取 key。有效期由服务商控制（官方文档为 10 分钟）。
-- 连接后发送最小能力探测；模型切换使测试结果失效。余额不足、取消和认证失效有独立恢复文案。所有选定模型仍经过既有内容审核和本地校验。
-- OAuth 端点固定为 `https://openrouter.ai/api/v1/chat/completions`，不能编辑为其他服务。授权凭据不能发送到更改后的主机。
-- Keychain 按协议、scheme/host/port 和 endpoint path 隔离；旧单密钥只迁移到原先保存的配置。新凭据在设置 Done 或引导完成时落盘，失败时保留旧配置。模型 ID 不参与凭据 scope，支持同一账号内切换模型。
-- 本地“断开”删除当前配置对应的密钥；远程撤销需在服务商账号操作。没有引入 Prompti 后端、client secret 或密钥同步。
-- 官方依据：https://openrouter.ai/docs/guides/overview/auth/oauth
-- 自动化覆盖 PKCE 向量、回调/state 错误、换码请求、隔离边界和 Chat 响应解析；真实账号授权与额度检查需要使用测试账号做设备端联调。
+- 按用户决定移除全部 OpenRouter OAuth / PKCE、授权码页面、浏览器登录和 App scheme 回调注册。FlowDown 当前公开源码的云模型使用端点 + Bearer 凭据，没有发现 OAuth 实现；证据及旧尝试历史见 [连接方式复核](../Documentation/OpenRouter-Integration-Options.md)。
+- 引导和设置共用 API Key 配置：选择服务商，填入 API Key，从只显示名称的菜单选择模型，或选择“输入模型 ID”。常用服务商预填地址；自定义兼容接口保留地址和模型 ID 输入。展开选项保留详细说明，OpenRouter 另提供 keys 页面及推荐数据来源链接。
+- OpenRouter 运行时类型更名为 `openRouter`，仅保留 `openRouterOAuth` 作为历史持久化 raw value，保证已保存配置、使用记录及 Keychain scope 不变。这不是仍启用 OAuth；项目不再包含浏览器会话或换码端点。
+- OpenRouter 固定使用 `https://openrouter.ai/api/v1/chat/completions` 与用户 API Key 的 Bearer header；固定预设不能修改为其他主机。其他服务商继续使用现有 Responses / Chat / Messages 协议。
+- API Key、端点或模型改变会使连接验证失效。填好后测试连接，完成最小能力探测再保存；缺少 key 或模型时不能测试，未经验证不能完成引导。认证失败提示更新 API Key，余额不足和模型不可用沿用既有恢复行为。
+- Keychain 继续按协议、scheme/host/port 和 endpoint path 隔离，模型 ID 不参与 scope；密钥仅保存在本机。输入 key 去除首尾空白后探测，在设置 Done 或引导完成时才落盘，失败保留旧配置。原来已连接的 OpenRouter key 仍可使用，无需重新授权或强制清除。
+- 本地“断开”删除当前配置密钥；远程撤销在服务商账号进行。没有引入服务端、client secret、密钥同步或学习数据迁移；内容审核、练习统计不变。
+- 回归覆盖历史配置解码和 scope、预设地址、用户输入 key/model 的实际请求构造及认证错误，以及中英文选模/手填/空字段限制。完整验证记录见 [API Key 配置验收](../Documentation/API-Key-Setup.md)。真实服务商账号、额度和付费模型调用不由离线测试证明。
 
 ## 2026-09-06：协议复核修正
 
@@ -191,7 +189,8 @@ Adapter 不把所有非 2xx 都映射成“网络错误”。UI 根据错误提�
 
 - 引导和设置共用 `ModelConnectionView` / `ModelRecommendations`。默认推荐快速、低成本的文本模型：OpenAI GPT-5.6 Luna、Gemini 3.8 Flash / 3.5 Flash-Lite、DeepSeek V4 Flash、Claude Haiku 4.5；OpenRouter 另含 GLM、Qwen 等快速模型。未将旗舰、图像、音频、医学或金融专用模型作为默认练习模型。
 - `ProviderPreset` 是连接快捷方式，继续使用既有 Responses / Chat / Messages 协议与凭据隔离。Gemini 使用官方 OpenAI 兼容的完整 `v1beta/openai/chat/completions` 端点；完整端点不再追加 `/v1`。不引入新的持久化 Provider 类型。
-- `OpenRouterRecommendations.json` 是带日期、来源和许可的近 7 天请求次数快照。只在已核实的快速模型候选中按 `weeklyRequests` 降序排列，未知调用量单列；并不宣称是所有模型的全量请求排行榜。OpenRouter 网站可见榜单主要按 token 排名，不能直接把其名次当成调用次数排名。
+- `OpenRouterRecommendations.json` 是带日期、来源和许可的近 7 天请求次数快照。只在已核实的快速模型候选中按 `weeklyRequests` 降序排列，未知调用量排在末尾；并不宣称是所有模型的全量请求排行榜。OpenRouter 网站可见榜单主要按 token 排名，不能直接把其名次当成调用次数排名。按 2026-09-09 的界面约定，下拉只显示模型名，不展示调用次数或按用量分组；排序与快照元数据保留。
+- 连接区域默认保留服务商、模型、连接按钮和一句数据处理/费用提示。移除营销标语和排名说明，将完整凭据/隐私说明及 OpenRouter CC BY 4.0 来源链接收进“更多连接选项”。连接状态与错误仍就地显示。
 - `Tools/UpdateModelRecommendations.py` 从 `/api/v1/models` 核对模型 ID、文本输出与 canonical slug，并读取公开排名页 `rankings/models/view=week` 数据中的 `count`。页面内嵌数据不是稳定 API，格式变化、缺少请求数或全部匹配失败时停止且保留原快照；绝不以 token 数代替请求数。App 运行时只读取内置资源，不抓网页，不在 landing 请求用户凭据或产生模型调用。
 - 每次发布前刷新快照，复核候选型号。新增版本不能仅凭名称自动收入；核对官方型号、用途、结构化输出后维护名单。已存模型、手填 ID 和连接验证保持原行为，选择不同模型后必须重新验证。
 - 数据来源：Source: OpenRouter (openrouter.ai/rankings), as of 2026-09-06. Licensed under CC BY 4.0. 当前快照读取的是公开流量，缺少请求数不代表零调用。
