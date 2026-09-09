@@ -28,7 +28,7 @@ App 使用原生 SwiftUI 开发，由 Apple 设备端 Foundation Models 或用�
 
 全 App 的品牌实施与实际模拟器截图见 [UI 验收记录](Documentation/Brand/UI-Review.md)；开发约束见 [品牌与 UI 规范](.agents/13-brand-and-ui-guidelines.md)。
 
-引导与设置内置当前快速模型，并提供 OpenAI、Gemini、DeepSeek、Anthropic 和 OpenRouter 连接预设。OpenRouter 候选按有来源的近 7 天请求次数快照排序，显示数据日期；未知调用量单独列出，已有模型与手填 ID 保留。维护时运行 `python3 Tools/UpdateModelRecommendations.py`，发布前复核型号与数据日期。详细口径见 [模型规范](.agents/05-ai-byok-and-generation.md)。
+引导与设置内置当前快速模型，并提供 OpenAI、Gemini、DeepSeek、Anthropic 和 OpenRouter 连接预设。OpenRouter 候选按有来源的近 7 天请求次数快照排序，下拉只显示模型名；来源链接收在“更多连接选项”，已有模型与手填 ID 保留。维护时运行 `python3 Tools/UpdateModelRecommendations.py`，发布前复核型号与快照日期。详细口径见 [模型规范](.agents/05-ai-byok-and-generation.md)。
 
 界面支持英文和简体中文，包含目的地 / 地标 / 场景、动态提示和系统权限文案；支持用中文或英文搜索内置目的地。运行 `python3 Tools/CheckLocalization.py` 检查翻译和占位符，实际界面与验证范围见 [模型与本地化验收](Documentation/Model-and-Localization-Review.md)。
 
@@ -99,10 +99,12 @@ Debug 构建可添加 `-prompti-demo` 启动参数绕过真实模型并使用安
 
 Apache License 2.0，见 [LICENSE](LICENSE)。
 
-### Model sign-in and interface refresh
+### Quick model setup
 
-OpenRouter sign-in now supports PKCE authorization and multiple model choices through one account. A code-based sign-in fallback is available under **More connection options**. OpenAI Responses, compatible Chat APIs, Anthropic API keys and eligible Apple on-device models remain available. Provider usage can require account credits; a provider subscription is not automatically an API credit balance.
+Choose a provider, enter your API key, then select a recommended model or enter a model ID. OpenRouter, OpenAI, Gemini, DeepSeek and Anthropic have prefilled endpoints; custom compatible services can use their own URL. Test the connection before saving. OpenRouter OAuth and authorization-code sign-in have been removed. Eligible Apple on-device models remain available without an API key.
+
+Provider usage can require account credits; a provider subscription is not automatically an API credit balance. See [API key setup and validation](Documentation/API-Key-Setup.md).
 
 Credentials are isolated by provider endpoint in the device Keychain. New connections are verified before saving. Disconnecting removes the local credential; revoke remote access from the provider account.
 
-The interface now uses the same P conversation mark as the app icon, emerald actions and warm neutral reading surfaces. Welcome, generation and completion visuals share the conversation theme. Native Liquid Glass stays in navigation and compact floating controls, with opaque fallbacks. Today starts a default practice set directly; advanced preferences stay in the Practice tab. See [.agents/13-brand-and-ui-guidelines.md](.agents/13-brand-and-ui-guidelines.md) for the brand contract and [.agents/05-ai-byok-and-generation.md](.agents/05-ai-byok-and-generation.md) for authorization behavior.
+The interface now uses the same P conversation mark as the app icon, emerald actions and warm neutral reading surfaces. Welcome, generation and completion visuals share the conversation theme. Native Liquid Glass stays in navigation and compact floating controls, with opaque fallbacks. Today starts a default practice set directly; advanced preferences stay in the Practice tab. See [.agents/13-brand-and-ui-guidelines.md](.agents/13-brand-and-ui-guidelines.md) for the brand contract and [.agents/05-ai-byok-and-generation.md](.agents/05-ai-byok-and-generation.md) for model connection behavior.

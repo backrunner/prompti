@@ -31,7 +31,7 @@ enum GenerationError: LocalizedError, Sendable {
         case .insufficientCredit: String(localized: "Add credits to your model account, or choose another model in Settings.")
         case .missingAPIKey: String(localized: "Connect a model in Settings to continue.")
         case .invalidEndpoint: String(localized: "Use a valid public HTTPS endpoint.")
-        case .invalidCredential: String(localized: "Your model connection has expired or was revoked. Reconnect in Settings.")
+        case .invalidCredential: String(localized: "Your API key is invalid or has been revoked. Update it in Settings.")
         case .rateLimited: String(localized: "The model is busy or rate-limited. Try again shortly.")
         case .providerUnavailable: String(localized: "The model provider is temporarily unavailable.")
         case .modelUnavailable: String(localized: "This model is not available for the selected language.")

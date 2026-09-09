@@ -52,7 +52,7 @@ enum ProviderPreset: String, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .apple: "Apple On-Device"
-        case .openRouter: "OpenRouter · Sign in"
+        case .openRouter: "OpenRouter"
         case .openAI: "OpenAI"
         case .gemini: "Google Gemini"
         case .deepSeek: "DeepSeek"
@@ -64,7 +64,7 @@ enum ProviderPreset: String, CaseIterable, Identifiable {
     var kind: ProviderKind {
         switch self {
         case .apple: .apple
-        case .openRouter: .openRouterOAuth
+        case .openRouter: .openRouter
         case .openAI: .openAIResponses
         case .anthropic: .anthropic
         case .gemini, .deepSeek, .compatible: .openAIChat
@@ -92,14 +92,17 @@ enum ProviderPreset: String, CaseIterable, Identifiable {
     }
 
     var configuration: ProviderConfiguration {
-        ProviderConfiguration(kind: kind, baseURL: baseURL, model: models.first?.id ?? kind.defaultModel,
+        if self == .compatible {
+            return ProviderConfiguration(kind: kind, baseURL: "", model: "")
+        }
+        return ProviderConfiguration(kind: kind, baseURL: baseURL, model: models.first?.id ?? kind.defaultModel,
             structuredOutputSupport: self == .apple ? .supported : .unknown)
     }
 
     static func matching(_ configuration: ProviderConfiguration) -> Self {
         switch configuration.kind {
         case .apple: return .apple
-        case .openRouterOAuth: return .openRouter
+        case .openRouter: return .openRouter
         case .openAIResponses: return .openAI
         case .anthropic: return .anthropic
         case .openAIChat:

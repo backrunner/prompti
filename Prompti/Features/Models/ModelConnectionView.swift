@@ -1,4 +1,3 @@
-import AuthenticationServices
 import SwiftUI
 
 /// Shared by setup and settings. A connection is only ready after this exact
@@ -13,13 +12,25 @@ struct ModelConnectionView: View {
     @Environment(AppDependencies.self) private var dependencies
     @State private var status: String?
     @State private var connectionTask: Task<Void, Never>?
-    @State private var authorization = OpenRouterOAuthSession()
-    @State private var showCodeConnection = false
     @State private var showAdvanced = false
+    @State private var isEnteringModel = false
 
     private var appleStatus: AppleModelStatus { AppleModelCapability.status(for: languageCode) }
     private var hasCredential: Bool {
-        !apiKey.isEmpty || dependencies.secureStore.readAPIKey(for: provider) != nil
+        apiKey.isEmpty
+            ? dependencies.secureStore.readAPIKey(for: provider) != nil
+            : !apiKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+    private var recommendations: [ModelRecommendation] { ProviderPreset.models(for: provider) }
+    private var needsEndpointField: Bool {
+        ProviderPreset.matching(provider) == .compatible || recommendations.isEmpty
+    }
+    private var needsModelField: Bool {
+        isEnteringModel || !recommendations.contains { $0.id == provider.model }
+    }
+    private var canConnect: Bool {
+        hasCredential && !provider.model.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            && !provider.baseURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
     var body: some View {
@@ -38,8 +49,6 @@ struct ModelConnectionView: View {
                     .font(.headline)
                 Text("Exercises are generated on this device. Prompti still checks every question before showing it.")
                     .font(.footnote).foregroundStyle(Color.promptMuted)
-            } else if provider.kind == .openRouterOAuth {
-                oauthControls
             } else {
                 apiKeyControls
             }
@@ -52,23 +61,15 @@ struct ModelConnectionView: View {
             }
 
             if provider.kind != .apple {
-                Text("Your destination, language and scenes go to your selected provider. Credentials stay on this device. Model usage may use account credits.")
+                Text("Your provider processes exercise data and may charge for usage.")
                     .font(.footnote).foregroundStyle(Color.promptMuted)
             }
         }
         .onChange(of: provider.model) { _, _ in invalidate() }
         .onChange(of: provider.baseURL) { _, _ in apiKey = ""; invalidate() }
         .onChange(of: apiKey) { _, _ in invalidate() }
-        .sheet(isPresented: $showCodeConnection) {
-            OpenRouterCodeConnectionView { key in
-                apiKey = key
-                connect(needsAuthorization: false)
-            }
-        }
-        .onDisappear { connectionTask?.cancel(); authorization.cancel() }
+        .onDisappear { connectionTask?.cancel() }
     }
-
-    private var recommendations: [ModelRecommendation] { ProviderPreset.models(for: provider) }
 
     private var presetSelection: Binding<ProviderPreset> {
         Binding(get: { ProviderPreset.matching(provider) }, set: { preset in
@@ -76,22 +77,28 @@ struct ModelConnectionView: View {
             provider = preset.configuration
             apiKey = ""
             status = nil
+            isEnteringModel = false
+            showAdvanced = false
             isVerified = preset == .apple && appleStatus == .available
         })
     }
 
     private var modelSelector: some View {
         Menu {
-            if provider.kind == .openRouterOAuth {
-                Section("Popular fast models") {
-                    modelOptions(recommendations.filter { $0.weeklyRequests != nil })
+            ForEach(recommendations) { model in
+                Button {
+                    isEnteringModel = false
+                    provider.model = model.id
+                } label: {
+                    Text(model.name)
                 }
-                Section("More fast models · usage unavailable") {
-                    modelOptions(recommendations.filter { $0.weeklyRequests == nil })
-                }
-            } else {
-                modelOptions(recommendations)
+                .accessibilityIdentifier("model.option.\(model.id)")
             }
+            Button("Enter model ID") {
+                isEnteringModel = true
+                provider.model = ""
+            }
+            .accessibilityIdentifier("model.enterID")
         } label: {
             HStack {
                 VStack(alignment: .leading, spacing: 3) {
@@ -105,98 +112,57 @@ struct ModelConnectionView: View {
             .background(Color.promptSurfaceRaised, in: .rect(cornerRadius: PromptiRadius.control))
         }
         .foregroundStyle(Color.promptText)
-        .disabled(isBusy)
         .accessibilityIdentifier("model.selection")
     }
 
-    private func modelOptions(_ models: [ModelRecommendation]) -> some View {
-        ForEach(models) { model in
-            Button { provider.model = model.id } label: {
-                if let requests = model.weeklyRequests {
-                    Text("\(model.name) · \(requests.formatted(.number.notation(.compactName))) requests/week")
-                } else {
-                    Text(model.name)
-                }
-            }
-            .accessibilityIdentifier("model.option.\(model.id)")
-        }
-    }
-
     private var modelDisplayName: String {
-        recommendations.first(where: { $0.id == provider.model })?.name ?? provider.model
+        if provider.model.isEmpty { return String(localized: "Custom model") }
+        return recommendations.first(where: { $0.id == provider.model })?.name ?? provider.model
     }
 
-    private var oauthControls: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            HStack(spacing: 12) {
-                PromptiSymbolBadge(symbol: "point.3.connected.trianglepath.dotted")
-                VStack(alignment: .leading, spacing: 3) {
-                    Text("One account. More possibilities.").font(.headline)
-                    Text("GPT, Claude, Gemini and more")
-                        .font(.subheadline).foregroundStyle(Color.promptMuted)
-                }
-            }
-
-            modelSelector
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Ranked by weekly requests · \(ModelRecommendations.openRouter.asOf)")
-                Text("Models without public request counts appear separately.")
-                Link("Source: OpenRouter · CC BY 4.0", destination: URL(string: "https://openrouter.ai/rankings")!)
-            }
-            .font(.caption).foregroundStyle(Color.promptMuted)
-
-            Button {
-                connect(needsAuthorization: isVerified || !hasCredential)
-            } label: {
-                HStack(spacing: 8) {
-                    if isBusy { ProgressView().tint(.promptOnAction) }
-                    Label(isVerified ? "Reconnect OpenRouter" : (hasCredential ? "Verify model" : "Connect with OpenRouter"),
-                          systemImage: isVerified ? "checkmark.shield.fill" : "arrow.up.right.square")
-                }
-            }
-            .buttonStyle(PrimaryActionButtonStyle())
-            .disabled(isBusy || provider.model.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-            .accessibilityIdentifier("model.connect")
-
-            DisclosureGroup("More connection options", isExpanded: $showAdvanced) {
-                VStack(spacing: 12) {
-                    TextField("Model ID", text: $provider.model)
-                        .modifier(PromptiCredentialFieldModifier())
-                    SecureField("API key", text: $apiKey)
-                        .modifier(PromptiCredentialFieldModifier())
-                    Button("Connect using an authorization code") { showCodeConnection = true }
-                        .buttonStyle(SecondaryActionButtonStyle())
-                    Link("Manage OpenRouter account", destination: URL(string: "https://openrouter.ai/settings/credits")!)
-                        .font(.footnote)
-                    Button("Sign in to another account") { connect(needsAuthorization: true) }
-                        .buttonStyle(SecondaryActionButtonStyle())
-                }
-                .textInputAutocapitalization(.never).autocorrectionDisabled()
-                .padding(.top, 12).disabled(isBusy)
-            }
-            .font(.subheadline)
-        }
+    private var endpointField: some View {
+        TextField("Base URL", text: $provider.baseURL)
+            .keyboardType(.URL).modifier(PromptiCredentialFieldModifier())
+            .accessibilityIdentifier("model.endpoint")
     }
 
     private var apiKeyControls: some View {
-        VStack(spacing: 12) {
-            TextField("Base URL", text: $provider.baseURL)
-                .keyboardType(.URL).modifier(PromptiCredentialFieldModifier())
-            if !recommendations.isEmpty { modelSelector }
-            TextField("Model ID", text: $provider.model)
-                .modifier(PromptiCredentialFieldModifier())
-                .accessibilityIdentifier("model.customID")
+        VStack(alignment: .leading, spacing: 12) {
+            if needsEndpointField { endpointField }
             SecureField(hasCredential ? "Replace API key" : "API key", text: $apiKey)
                 .modifier(PromptiCredentialFieldModifier())
-            Button { connect(needsAuthorization: false) } label: {
+                .accessibilityIdentifier("model.apiKey")
+            if !recommendations.isEmpty { modelSelector }
+            if needsModelField {
+                TextField("Model ID", text: $provider.model)
+                    .modifier(PromptiCredentialFieldModifier())
+                    .accessibilityIdentifier("model.customID")
+            }
+            Button { connect() } label: {
                 HStack {
-                    if isBusy { ProgressView() }
+                    if isBusy { ProgressView().tint(.promptOnAction) }
                     Label(isVerified ? "Connection verified" : "Test connection",
                           systemImage: isVerified ? "checkmark.circle.fill" : "bolt.horizontal.circle")
                 }
             }
-            .buttonStyle(SecondaryActionButtonStyle())
-            .disabled(!hasCredential || provider.model.isEmpty)
+            .buttonStyle(PrimaryActionButtonStyle())
+            .disabled(!canConnect)
+            .accessibilityIdentifier("model.connect")
+
+            DisclosureGroup("More connection options", isExpanded: $showAdvanced) {
+                VStack(alignment: .leading, spacing: 12) {
+                    if !needsEndpointField && provider.kind != .openRouter { endpointField }
+                    if provider.kind == .openRouter {
+                        Link("Get an OpenRouter API key", destination: URL(string: "https://openrouter.ai/keys")!)
+                        Link("Source: OpenRouter · CC BY 4.0", destination: URL(string: "https://openrouter.ai/rankings")!)
+                    }
+                    Text("Your destination, language and scenes go to your selected provider. Credentials stay on this device. Model usage may use account credits.")
+                }
+                .font(.footnote).foregroundStyle(Color.promptMuted)
+                .padding(.top, 12)
+            }
+            .font(.subheadline)
+            .accessibilityIdentifier("model.advanced")
         }
         .textInputAutocapitalization(.never).autocorrectionDisabled()
         .disabled(isBusy)
@@ -209,19 +175,17 @@ struct ModelConnectionView: View {
         status = nil
     }
 
-    private func connect(needsAuthorization: Bool) {
-        guard !isBusy else { return }
+    private func connect() {
+        guard !isBusy, canConnect else { return }
         isBusy = true
         isVerified = false
         status = nil
         connectionTask = Task { @MainActor in
             defer { isBusy = false }
             do {
-                var candidate = apiKey.isEmpty ? dependencies.secureStore.readAPIKey(for: provider) : apiKey
-                if needsAuthorization { candidate = try await authorization.connect() }
-                try Task.checkCancellation()
-                // Keep a newly authorized key in the draft so credit/model failures can
-                // be retried without authorizing another key. Save only on Done/Start.
+                let candidate = apiKey.isEmpty ? dependencies.secureStore.readAPIKey(for: provider)
+                    : apiKey.trimmingCharacters(in: .whitespacesAndNewlines)
+                // Keep the tested key in the draft. Save only on Done/Start.
                 if let candidate { apiKey = candidate }
                 let support = try await dependencies.generation.probe(configuration: provider, apiKey: candidate)
                 try Task.checkCancellation()
@@ -230,8 +194,6 @@ struct ModelConnectionView: View {
                 status = String(localized: "Connected. Your model is ready.")
             } catch is CancellationError {
                 return
-            } catch let error as ASWebAuthenticationSessionError where error.code == .canceledLogin {
-                status = String(localized: "Sign in cancelled. You can try again whenever you’re ready.")
             } catch {
                 status = error.localizedDescription
             }

@@ -2,6 +2,46 @@
 
 本页记录模型预设与本地化覆盖的实现。后续中文文案修订及最新界面截图见 [中文文案验收](Brand/Chinese-Copy-Review.md)。
 
+## 当前版本：build 5 API Key 快捷配置
+
+已按用户决定移除 OAuth 和授权码入口，预设服务商只需 API Key 与模型；模型支持菜单选择或手动输入。当前实现、实际截图和验证范围见 [API Key 配置验收](API-Key-Setup.md)。以下 build 4 及更早截图保留为历史，不代表最新产品入口。
+
+## 2026-09-09：build 4 授权码入口
+
+“使用授权码连接”直接显示在 OpenRouter 主按钮下方。模型下拉继续只显示名称，详细连接说明保留在展开项。授权码页直接打开官方 `/auth`，再次打开浏览器保留当前事务；新增重新打开按钮的英文/简体中文翻译。
+
+Xcode 27 beta，iPhone 17e 模拟器，iOS 27.0，默认字号。19 项相关单元测试通过；中英文模型选择、授权码页初始状态及关闭、原生授权取消/重试的 3 项 UI 测试在浅深色各通过一次。实际检查两种语言、两种外观的连接页及授权码页，入口、字段、操作和说明完整可见，无裁切。品牌检查、本地化检查（647 个条目、316 处编译提取使用）、模拟器与 iPhone Debug 签名构建通过。
+
+以下均为 build 4 实际 App 的 XCTest 附件；保留上一轮截图作为历史。元数据：[浅色](ModelConnectionScreenshots/Build4/Light/manifest.json) / [深色](ModelConnectionScreenshots/Build4/Dark/manifest.json)。
+
+| 实际页面 | 浅色 | 深色 |
+| --- | --- | --- |
+| 中文连接 | [查看](ModelConnectionScreenshots/Build4/Light/model-zh-Hans.png) | [查看](ModelConnectionScreenshots/Build4/Dark/model-zh-Hans.png) |
+| 中文授权码 | [查看](ModelConnectionScreenshots/Build4/Light/model-code-zh-Hans.png) | [查看](ModelConnectionScreenshots/Build4/Dark/model-code-zh-Hans.png) |
+| 中文模型菜单 | [查看](ModelConnectionScreenshots/Build4/Light/model-options-zh-Hans.png) | [查看](ModelConnectionScreenshots/Build4/Dark/model-options-zh-Hans.png) |
+| 英文连接 | [查看](ModelConnectionScreenshots/Build4/Light/model-en.png) | [查看](ModelConnectionScreenshots/Build4/Dark/model-en.png) |
+| 英文授权码 | [查看](ModelConnectionScreenshots/Build4/Light/model-code-en.png) | [查看](ModelConnectionScreenshots/Build4/Dark/model-code-en.png) |
+| 英文模型菜单 | [查看](ModelConnectionScreenshots/Build4/Light/model-options-en.png) | [查看](ModelConnectionScreenshots/Build4/Dark/model-options-en.png) |
+
+授权页本身、登录后返回、真实 code 换取及模型验证不在这些 UI 测试的通过范围；未执行真实账号授权、收费调用或非常规超大字号验收。build 4 已覆盖安装到用户 iPhone 17，设备锁屏阻止自动启动；详见 [接法复核与验证边界](OpenRouter-Integration-Options.md)。
+
+## 2026-09-09：连接区域精简
+
+模型下拉现在只显示名称，删除调用次数和按用量分组的标题。连接区域移除宣传标语、排名解释和日期段落，保留服务商/模型选择、连接按钮、更多连接选项及一句数据处理/费用提示；完整说明和来源链接位于展开内容。推荐排序与连接验证语义不变。
+
+Xcode 27 beta、iOS 27.0、iPhone 17e 模拟器，默认字号。中英文连接页面、纯名称菜单、选择模型后保持未验证状态，以及取消登录再重试，在浅色/深色各 3 项 UI 测试通过；19 项相关单元测试通过。模拟器与通用 iPhone Debug 构建、品牌检查、本地化检查（646 个目录条目、315 处编译器提取使用）通过。
+
+以下为本轮实际 App 截图，均来自 XCTest 附件，未使用真实账号或付费模型。元数据见 [浅色清单](ModelConnectionScreenshots/Light/manifest.json) / [深色清单](ModelConnectionScreenshots/Dark/manifest.json)。OpenRouter 登录返回地址的修改与尚未完成的真实账号验收见 [OAuth 记录](OpenRouter-Sign-In-Fix.md)。
+
+| 实际页面 | 浅色 | 深色 |
+| --- | --- | --- |
+| 中文连接 | [查看](ModelConnectionScreenshots/Light/model-zh-Hans.png) | [查看](ModelConnectionScreenshots/Dark/model-zh-Hans.png) |
+| 中文模型菜单 | [查看](ModelConnectionScreenshots/Light/model-options-zh-Hans.png) | [查看](ModelConnectionScreenshots/Dark/model-options-zh-Hans.png) |
+| 英文连接 | [查看](ModelConnectionScreenshots/Light/model-en.png) | [查看](ModelConnectionScreenshots/Dark/model-en.png) |
+| 英文模型菜单 | [查看](ModelConnectionScreenshots/Light/model-options-en.png) | [查看](ModelConnectionScreenshots/Dark/model-options-en.png) |
+
+## 2026-09-08：此前验收
+
 日期：2026-09-08。iPhone 17e 模拟器，iOS 27.0，默认字号，浅色 / 深色。全部截图来自实际 App 的 XCTest 附件，练习数据为 Demo fixtures。原图、测试方法和时间见 [截图清单](ModelLocalizationScreenshots/manifest.json)。
 
 ## 模型选择

@@ -22,11 +22,12 @@ struct ModelAndLocalizationTests {
         #expect(catalog.models.count >= 6)
         #expect(Set(catalog.models.map(\.id)).count == catalog.models.count)
         #expect(try #require(catalog.models.first).weeklyRequests != nil)
-        #expect(ProviderKind.openRouterOAuth.defaultModel == catalog.models.first?.id)
+        #expect(ProviderKind.openRouter.defaultModel == catalog.models.first?.id)
     }
 
     @Test("New shortcuts use existing adapters, with exact compatible endpoint routing", arguments: [
         (ProviderPreset.gemini, "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"),
+        (.openRouter, "https://openrouter.ai/api/v1/chat/completions"),
         (.deepSeek, "https://api.deepseek.com/v1/chat/completions"),
         (.openAI, "https://api.openai.com/v1/responses"),
         (.anthropic, "https://api.anthropic.com/v1/messages")
@@ -40,6 +41,9 @@ struct ModelAndLocalizationTests {
 
     @Test("Custom gateways keep their model and do not get unrelated vendor suggestions")
     func customModelPreserved() throws {
+        let custom = ProviderPreset.compatible.configuration
+        #expect(custom.baseURL.isEmpty)
+        #expect(custom.model.isEmpty)
         let saved = Data(#"{"kind":"openAIChat","baseURL":"https://gateway.example.com/v1","model":"my-existing-model","structuredOutputSupport":"supported"}"#.utf8)
         let configuration = try JSONDecoder().decode(ProviderConfiguration.self, from: saved)
         #expect(ProviderPreset.matching(configuration) == .compatible)

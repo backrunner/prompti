@@ -367,7 +367,13 @@ final class PromptiUITests: XCTestCase {
         for _ in 0..<3 { next.tap() }
         XCTAssertTrue(app.buttons["model.connect"].waitForExistence(timeout: 5))
         XCTAssertFalse(next.isEnabled)
+        XCTAssertFalse(app.buttons["model.connect"].isEnabled)
+        let key = app.secureTextFields["model.apiKey"]
+        XCTAssertTrue(key.exists)
+        key.tap()
+        key.typeText("fixture-key-not-sent")
         XCTAssertTrue(app.buttons["model.connect"].isEnabled)
+        XCTAssertFalse(next.isEnabled)
     }
 
     func testWelcomeWithDefaultLayout() {
@@ -402,18 +408,48 @@ final class PromptiUITests: XCTestCase {
         // UIKit menus expose their localized title rather than the SwiftUI identifier.
         let gemini = app.buttons["Gemini 3.8 Flash"]
         XCTAssertTrue(gemini.waitForExistence(timeout: 3))
-        XCTAssertTrue(app.staticTexts[language == "en" ? "Popular fast models" : "热门快速模型"].exists)
+        XCTAssertTrue(app.buttons["DeepSeek V4 Flash 0731"].exists)
         attachScreenshot(named: "model-options-\(language)")
         gemini.tap()
         XCTAssertTrue(selection.label.contains("Gemini 3.8 Flash"))
         XCTAssertFalse(next.isEnabled)
-        app.buttons["model.provider"].tap()
-        app.buttons["Google Gemini"].tap()
+        XCTAssertFalse(app.buttons["model.connectWithCode"].exists)
+        XCTAssertFalse(app.textFields["model.endpoint"].exists)
+        let key = app.secureTextFields["model.apiKey"]
+        XCTAssertTrue(key.exists)
+        XCTAssertFalse(app.buttons["model.connect"].isEnabled)
+        key.tap()
+        key.typeText("fixture-key-not-sent")
+        XCTAssertTrue(app.buttons["model.connect"].isEnabled)
+        XCTAssertFalse(next.isEnabled)
+
+        selection.tap()
+        app.buttons[language == "en" ? "Enter model ID" : "输入模型 ID"].tap()
         let modelID = app.textFields["model.customID"]
         XCTAssertTrue(modelID.waitForExistence(timeout: 3))
-        XCTAssertEqual(modelID.value as? String, "gemini-3.8-flash")
+        XCTAssertFalse(app.buttons["model.connect"].isEnabled)
+        modelID.tap()
+        modelID.typeText("my-custom-model\n")
+        XCTAssertEqual(modelID.value as? String, "my-custom-model")
+        XCTAssertTrue(app.buttons["model.connect"].isEnabled)
+        XCTAssertFalse(next.isEnabled)
+        attachScreenshot(named: "model-custom-\(language)")
+
+        app.buttons["model.provider"].tap()
+        app.buttons["Google Gemini"].tap()
+        XCTAssertTrue(selection.label.contains("Gemini 3.8 Flash"))
+        XCTAssertFalse(app.textFields["model.endpoint"].exists)
+        XCTAssertFalse(app.textFields["model.customID"].exists)
+        XCTAssertFalse(app.buttons["model.connect"].isEnabled)
         XCTAssertFalse(next.isEnabled)
         attachScreenshot(named: "gemini-\(language)")
+
+        app.buttons["model.provider"].tap()
+        app.buttons[language == "en" ? "OpenAI Chat / Compatible" : "OpenAI Chat / 兼容服务"].tap()
+        XCTAssertTrue(app.textFields["model.endpoint"].waitForExistence(timeout: 3))
+        XCTAssertTrue(app.textFields["model.customID"].exists)
+        XCTAssertFalse(app.buttons["model.connect"].isEnabled)
+        attachScreenshot(named: "model-compatible-\(language)")
     }
 
     func testChineseDestinationSearchAndPractice() {

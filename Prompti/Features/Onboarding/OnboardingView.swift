@@ -25,7 +25,7 @@ struct OnboardingView: View {
     @State private var step: OnboardingStep = .welcome
     @State private var destinationID = "tokyo"
     @State private var languageCode = "ja"
-    @State private var provider = ProviderConfiguration(kind: .openRouterOAuth, baseURL: ProviderKind.openRouterOAuth.defaultBaseURL, model: ProviderKind.openRouterOAuth.defaultModel)
+    @State private var provider = ProviderConfiguration(kind: .openRouter, baseURL: ProviderKind.openRouter.defaultBaseURL, model: ProviderKind.openRouter.defaultModel)
     @State private var apiKey = ""
     @State private var isTesting = false
     @State private var errorMessage: String?
@@ -94,7 +94,7 @@ struct OnboardingView: View {
             if appleStatus == .available {
                 provider = ProviderConfiguration(kind: .apple, baseURL: "", model: "system", structuredOutputSupport: .supported)
             } else if provider.kind == .apple {
-                provider = ProviderConfiguration(kind: .openRouterOAuth, baseURL: ProviderKind.openRouterOAuth.defaultBaseURL, model: ProviderKind.openRouterOAuth.defaultModel)
+                provider = ProviderConfiguration(kind: .openRouter, baseURL: ProviderKind.openRouter.defaultBaseURL, model: ProviderKind.openRouter.defaultModel)
             }
         }
 
@@ -246,7 +246,7 @@ struct OnboardingView: View {
     private var modelPicker: some View {
         PromptiScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                SectionLabel("Choose your AI", subtitle: "Connect an account, or use your own API key.")
+                SectionLabel("Choose your AI")
                 PromptiSectionSurface {
                     ModelConnectionView(provider: $provider, apiKey: $apiKey,
                         isBusy: $isTesting, isVerified: $testSucceeded, languageCode: languageCode)

@@ -2,7 +2,8 @@ import Foundation
 
 enum ProviderKind: String, Codable, CaseIterable, Identifiable, Sendable {
     case apple
-    case openRouterOAuth
+    // Keep the stored identifier so existing settings and Keychain scopes survive.
+    case openRouter = "openRouterOAuth"
     case openAIResponses
     case openAIChat
     case anthropic
@@ -12,7 +13,7 @@ enum ProviderKind: String, Codable, CaseIterable, Identifiable, Sendable {
     var title: String {
         switch self {
         case .apple: "Apple On-Device"
-        case .openRouterOAuth: "OpenRouter · Sign in"
+        case .openRouter: "OpenRouter"
         case .openAIResponses: "OpenAI Responses"
         case .openAIChat: "OpenAI Chat / Compatible"
         case .anthropic: "Anthropic Messages"
@@ -22,7 +23,7 @@ enum ProviderKind: String, Codable, CaseIterable, Identifiable, Sendable {
     var defaultBaseURL: String {
         switch self {
         case .apple: ""
-        case .openRouterOAuth: "https://openrouter.ai/api"
+        case .openRouter: "https://openrouter.ai/api"
         case .openAIResponses, .openAIChat: "https://api.openai.com"
         case .anthropic: "https://api.anthropic.com"
         }
@@ -31,7 +32,7 @@ enum ProviderKind: String, Codable, CaseIterable, Identifiable, Sendable {
     var defaultModel: String {
         switch self {
         case .apple: "system"
-        case .openRouterOAuth: ModelRecommendations.openRouter.models.first?.id ?? "openai/gpt-5.6-luna"
+        case .openRouter: ModelRecommendations.openRouter.models.first?.id ?? "openai/gpt-5.6-luna"
         case .openAIResponses: "gpt-5.6-luna"
         case .openAIChat: "gpt-5.6-luna"
         case .anthropic: "claude-haiku-4-5-20251001"

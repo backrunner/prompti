@@ -1,0 +1,46 @@
+[
+  {
+    "configurationName": "Test Scheme Action",
+    "deviceId": "8A488D26-61E3-4C65-9975-FC0EF51CA6CF",
+    "deviceName": "Prompti Brand Final",
+    "exportedFileName": "9ED1D6DB-C926-417D-B59D-EF61759AA868.png",
+    "isAssociatedWithFailure": false,
+    "suggestedHumanReadableName": "model-options-zh-Hans_0_57881173-E0AC-4933-8908-52C5CE88E221.png",
+    "timestamp": 1788950474.006,
+    "file": "model-options-zh-Hans.png",
+    "testIdentifier": "PromptiUITests/testLocalizedModelSelectionInChinese()"
+  },
+  {
+    "configurationName": "Test Scheme Action",
+    "deviceId": "8A488D26-61E3-4C65-9975-FC0EF51CA6CF",
+    "deviceName": "Prompti Brand Final",
+    "exportedFileName": "1A6C4C8B-C19D-4261-8E1C-62D3AA638CCB.png",
+    "isAssociatedWithFailure": false,
+    "suggestedHumanReadableName": "model-zh-Hans_0_38630EEC-2326-43FF-827C-7FCD2E38DD6E.png",
+    "timestamp": 1788950471.181,
+    "file": "model-zh-Hans.png",
+    "testIdentifier": "PromptiUITests/testLocalizedModelSelectionInChinese()"
+  },
+  {
+    "configurationName": "Test Scheme Action",
+    "deviceId": "8A488D26-61E3-4C65-9975-FC0EF51CA6CF",
+    "deviceName": "Prompti Brand Final",
+    "exportedFileName": "0E109A98-1B92-48FC-87F6-C92BD5A90F64.png",
+    "isAssociatedWithFailure": false,
+    "suggestedHumanReadableName": "model-options-en_0_AAD6B3B2-49BC-4F25-A0CC-4D54E32EAD75.png",
+    "timestamp": 1788950491.049,
+    "file": "model-options-en.png",
+    "testIdentifier": "PromptiUITests/testLocalizedModelSelectionInEnglish()"
+  },
+  {
+    "configurationName": "Test Scheme Action",
+    "deviceId": "8A488D26-61E3-4C65-9975-FC0EF51CA6CF",
+    "deviceName": "Prompti Brand Final",
+    "exportedFileName": "71D44521-8343-4DE7-BD55-093277A52D1E.png",
+    "isAssociatedWithFailure": false,
+    "suggestedHumanReadableName": "model-en_0_CD7AB40C-6AA4-42FD-A1CD-1DD6F9B25BC2.png",
+    "timestamp": 1788950488.369,
+    "file": "model-en.png",
+    "testIdentifier": "PromptiUITests/testLocalizedModelSelectionInEnglish()"
+  }
+]
