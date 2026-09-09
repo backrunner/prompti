@@ -35,7 +35,7 @@ python3 Tools/CheckBrand.py
 
 ## 实测记录
 
-环境：Xcode 27.0 beta（27A5228h）、iPhone 17e 模拟器（Prompti Brand Final）、iOS 27.0，系统默认字号 `large`。本轮检查仅针对图标资源，不扩大到工作区已有的模型接入修改。
+环境：Xcode 27.0 beta（27A5228h）、iPhone 17e 模拟器（Prompti Brand Final）、iOS 27.0，系统默认字号 `large`。最终验收使用 0.1.0（build 6）、提交 `7cc5394`，包含城市图标和此前的 API Key 接入调整。
 
 - 65 幅矢量图已按四张审阅页逐张检查，额外查看了首批九城的旧版 / 新版和 40px 缩略图；地标轮廓、留白和主要结构可辨。
 - 浏览器中确认画廊包含全部 65 个城市，搜索、新旧切换和浅深色切换正常；实际计算色值分别为 `#08765D` / `#A3F2CE`，图形不额外描边。画廊是资源预览，不等于 App 实测。
@@ -44,6 +44,25 @@ python3 Tools/CheckBrand.py
 - `python3 Tools/CheckLocalization.py --stringsdata /tmp/prompti-city-artwork-build` 通过：629 个目录条目、185 个动态标签、297 处编译器提取结果。
 - `git diff --check` 通过。
 
-**未完成：现有测试执行与实际 App 的浅深色截图。** 已选择 `DestinationPresentationTests` 的资源覆盖 / 滚动边界两项测试，以及首页、目的地列表和筛选三项现有 UI 测试。中文浅色首次运行停在测试服务启动；重启该模拟器后重跑仍未开始用例，均主动中断，不能记为通过。随后直接 `simctl launch` 也在 50 秒后超时。本机采样显示 CPU 无空闲、15GB 内存已用、系统平均负载约 280；本轮没有获得新版实际 App 截图，英文深色运行也未完成。
+此前两次测试停在模拟器服务启动阶段，重启后仍阻塞，直接启动也在 50 秒后超时；当时本机 CPU 无空闲、平均负载约 280。这些尝试保留为历史记录，未计入通过结果。机器负载恢复后，build 6 已完成以下复测：
 
-测试服务恢复后，应补跑上述测试并检查默认字号的中文 / 英文、浅色 / 深色界面，再补入实际截图。既有无障碍实现保持不变；本轮也未进行真机、iPad、旧系统或人工 VoiceOver 验收，不把非常规超大字号列为门槛。机器可读记录见 [validation.json](validation.json)。
+- 74 个单元测试、11 个 suite 全部通过，包含全部 65 个编译后城市资源、滚动边界、Provider 凭据兼容与原有领域回归。
+- 中文浅色、英文深色各通过 5 项现有 UI 测试：目的地筛选 / 滚动 / 搜索、列表、首页、练习生成与答案反馈，以及对应语言的 API Key 选模 / 手填。合计 10 次 UI 测试执行，均无失败。
+- 已目视检查两种配置下的首页、列表顶部 / 中间 / 底部 / 精确搜索、练习配置、生成中 / 准备完成、答案反馈和模型配置。细线在实际徽标尺寸下可辨；图标背景透明、着色正确，没有白底、裁切、错位或文字遮挡。顶部 / 底部的淡出是现有滚动提示，短列表没有残余遮罩。未因本次复核修改运行时代码。
+- Debug 签名包已覆盖安装到用户 iPhone 17，设备查询确认 build 6；手机锁屏阻止自动启动，不能将安装成功记为真机视觉验收。包与安装记录见 [Debug 6](../../Debug-Build-6.md)。
+
+保存了 38 张实际 XCTest 截图；下面仅缩放拼排原图，没有重绘界面。完整来源见 [浅色截图清单](Screenshots/Light/manifest.json) / [深色截图清单](Screenshots/Dark/manifest.json)。图标的 65 幅完整形状另由上面的矢量画廊覆盖，本次 App 截图只展示列表滚动时可见的城市。
+
+![实际 App：中文浅色与英文深色](Screenshots/Overview.png)
+
+| 实际页面 | 中文浅色 | 英文深色 |
+| --- | --- | --- |
+| 首页 | [查看](Screenshots/Light/home.png) | [查看](Screenshots/Dark/home.png) |
+| 目的地列表 | [查看](Screenshots/Light/destination-picker.png) | [查看](Screenshots/Dark/destination-picker.png) |
+| 筛选与底部 | [查看](Screenshots/Light/destinations-bottom.png) | [查看](Screenshots/Dark/destinations-bottom.png) |
+| 练习配置 | [查看](Screenshots/Light/practice-setup.png) | [查看](Screenshots/Dark/practice-setup.png) |
+| 生成完成 | [查看](Screenshots/Light/generation-ready.png) | [查看](Screenshots/Dark/generation-ready.png) |
+| 答案反馈 | [查看](Screenshots/Light/practice-feedback.png) | [查看](Screenshots/Dark/practice-feedback.png) |
+| 模型配置 | [查看](Screenshots/Light/model-zh-Hans.png) | [查看](Screenshots/Dark/model-en.png) |
+
+本次复测矩阵为中文浅色与英文深色，并非四种语言 / 外观组合全部重跑。既有无障碍实现保持不变；未进行真机视觉、iPad、旧系统或人工 VoiceOver 验收，不把非常规超大字号列为门槛。机器可读记录见 [validation.json](validation.json)。
