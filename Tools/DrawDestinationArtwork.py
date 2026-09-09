@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Original, individually drawn 64-unit destination SVGs. No external artwork.
+"""Publish reviewed 64-unit destination SVGs without making model calls.
 
-This file is the editable source; run it to regenerate the vector asset catalog,
-manifest and review gallery. Each drawing names a recognisable local subject.
+The initial geometric drawings below remain the baseline. Reviewed AI-generated
+contours in Tools/DestinationArtwork replace them, with full source provenance.
+Run this file to synchronize the asset catalog, manifest and review gallery.
 """
 from pathlib import Path
 import html
@@ -222,7 +223,18 @@ art('honolulu','Diamond Head and surfboard','钻石头山与冲浪板',
     p('M48 49Q38 21 48 7Q61 18 56 47Q53 54 48 49ZM48 7L52 49M17 37L27 30L35 34'))
 
 
+SOURCE = ROOT / 'Tools/DestinationArtwork'
+PROVENANCE = json.loads((SOURCE / 'manifest.json').read_text()) if (SOURCE / 'manifest.json').exists() else None
+if PROVENANCE:
+    assert {entry['id'] for entry in PROVENANCE['destinations']} == set(ART)
+    for entry in PROVENANCE['destinations']:
+        svg = (ROOT / entry['source']).read_text()
+        shapes = svg.split('</title>', 1)[1].rsplit('</svg>', 1)[0]
+        ART[entry['id']] = (entry['subject'], entry['subject_zh'], shapes)
+
+
 def main():
+    assert PROVENANCE, 'Prepare all reviewed sources with Tools/PrepareDestinationArtwork.py first.'
     source = (ROOT/'Prompti/Domain/DestinationModels.swift').read_text()
     ids = set(re.findall(r'id: "([\w-]+)", city:', source))
     ids.update(re.findall(r'\.init\("([\w-]+)", "[^"]+", "[^"]+", -?\d', source))
@@ -233,19 +245,29 @@ def main():
     manifest=[]
     for key,(en,zh,shapes) in ART.items():
         folder=output/f'Destination-{key}.imageset'; folder.mkdir(exist_ok=True)
-        svg=f'<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><title>{html.escape(en)}</title><g fill="none" stroke="#000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">{shapes}</g></svg>\n'
+        svg=(SOURCE / f'{key}.svg').read_text()
         (folder/f'{key}.svg').write_text(svg)
         (folder/'Contents.json').write_text(json.dumps({'images':[{'filename':f'{key}.svg','idiom':'universal'}],'info':{'author':'xcode','version':1},'properties':{'preserves-vector-representation':True,'template-rendering-intent':'template'}},indent=2)+'\n')
-        manifest.append({'id':key,'subject':en,'subject_zh':zh,'asset':str((folder/f'{key}.svg').relative_to(ROOT))})
+        provenance = next(entry for entry in PROVENANCE['destinations'] if entry['id'] == key)
+        manifest.append({**provenance,'asset':str((folder/f'{key}.svg').relative_to(ROOT))})
     docs=ROOT/'Documentation/Brand/DestinationArtwork';docs.mkdir(exist_ok=True)
-    (docs/'manifest.json').write_text(json.dumps({'source':'Tools/DrawDestinationArtwork.py','license':'Original Prompti artwork; repository license','viewBox':'0 0 64 64','count':len(ART),'destinations':manifest},ensure_ascii=False,indent=2)+'\n')
+    (docs/'manifest.json').write_text(json.dumps({'source':'Tools/DestinationArtwork/manifest.json','publisher':'Tools/DrawDestinationArtwork.py','provenance':PROVENANCE['provenance'],'viewBox':'0 0 64 64','count':len(ART),'destinations':manifest},ensure_ascii=False,indent=2)+'\n')
     cells=[]
     for entry in manifest:
         key=entry['id'];svg=(ROOT/entry['asset']).read_text()
-        cells.append(f'<article><div class="art">{svg}</div><b>{html.escape(key)}</b><span>{html.escape(entry["subject_zh"])}</span><small>{html.escape(entry["subject"])}</small></article>')
+        before=(ROOT/f'output/imagegen/destinations/before/{key}.svg').read_text()
+        cells.append(f'<article data-search="{html.escape(key + " " + entry["subject"] + " " + entry["subject_zh"])}"><b>{html.escape(key)}</b><span>{html.escape(entry["subject_zh"])}</span><div class="pair"><div class="old"><div class="art">{before}</div><small>旧版</small></div><div><div class="art new">{svg}</div><small>新版 · medium</small></div></div><div class="sizes"><div>{svg}<small>40px</small></div><div>{svg}<small>64px</small></div></div><small>{html.escape(entry["subject"])}</small></article>')
     (docs/'Gallery.html').write_text('''<!doctype html><html lang="zh-Hans"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Prompti · 目的地 SVG 图稿</title><style>
-:root{color-scheme:light dark}*{box-sizing:border-box}body{margin:0;padding:40px;background:#f5f6f0;color:#173d33;font:15px -apple-system,BlinkMacSystemFont,sans-serif}h1{font-size:26px;margin:0 0 8px}p{color:#52675b;margin:0 0 28px}main{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:16px}article{text-align:center;background:#fff;border:1px solid #d8e3d8;border-radius:20px;padding:18px 8px}.art{width:80px;height:80px;display:grid;place-items:center;margin:0 auto 12px;background:#eaf0e6;border-radius:14px}.art svg{width:64px;height:64px}.art g{stroke:#08765d}.art [fill="#000"]{fill:#08765d}b,span,small{display:block}b{font-size:12px;margin-bottom:6px}small{font-size:11px;color:#52675b;margin-top:4px}@media(prefers-color-scheme:dark){body{background:#101c18;color:#edf4eb}p,small{color:#b2c5b7}article{background:#1a2a24;border-color:#324d3e}.art{background:#263b32}.art g{stroke:#a3f2ce}.art [fill="#000"]{fill:#a3f2ce}}@media(max-width:700px){main{grid-template-columns:repeat(3,1fr)}body{padding:20px}}
-</style><h1>65 个目的地，65 幅独立 SVG</h1><p>原始矢量图稿审阅页 · 不是 App 截图。每幅图保留当地地标或代表物的轮廓，浅深色由语义色着色。</p><main>'''+''.join(cells)+'</main></html>\n')
-    print(f'Generated {len(ART)} original vector assets and the review gallery.')
+:root{color-scheme:light;--canvas:#f5f6f0;--surface:#fff;--raised:#eaf0e6;--text:#173d33;--muted:#52675b;--ink:#08765d;--border:#d8e3d8}
+:root[data-theme=dark]{color-scheme:dark;--canvas:#101c18;--surface:#1a2a24;--raised:#263b32;--text:#edf4eb;--muted:#b2c5b7;--ink:#a3f2ce;--border:#324d3e}
+*{box-sizing:border-box}body{margin:0;padding:32px;background:var(--canvas);color:var(--text);font:15px -apple-system,BlinkMacSystemFont,sans-serif}h1{font-size:28px;margin:0 0 12px}p{color:var(--muted);line-height:1.6}nav{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:24px 0}button,input{font:inherit;padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text)}button{cursor:pointer}main{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}article{text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:20px}article[hidden]{display:none}.pair{display:flex;justify-content:center;gap:16px;margin-top:18px}.art{width:100px;height:100px;display:grid;place-items:center;background:var(--raised);border-radius:14px}.art svg{width:88px;height:88px}.old g{stroke:var(--ink)}[fill="#000"]{fill:var(--ink)}b,span,small{display:block}b{font-size:15px;margin-bottom:6px}span{font-size:13px}small{font-size:11px;color:var(--muted);margin-top:8px}.sizes{display:flex;align-items:center;justify-content:center;gap:24px;min-height:110px}.sizes svg{width:40px;height:40px}.sizes>div:nth-child(2) svg{width:64px;height:64px}body.hide-old .old{display:none}body.hide-old .art{width:160px;height:160px}body.hide-old .art svg{width:144px;height:144px}@media(max-width:600px){body{padding:20px}main{grid-template-columns:1fr}}
+</style><h1>65 个城市，更精细的线框图标</h1><p>gpt-image-2.5-flare · medium · 清理并矢量化的单色图稿。使用 Prompti 的翡翠绿 / 薄荷绿语义色。此页是资源审阅，非实际 App 截图；生成过程与实际验收见 <a href="README.md">README</a>。</p><nav><button id="theme" type="button" aria-pressed="false">深色预览</button><button id="compare" type="button" aria-pressed="true">隐藏旧版对照</button><input id="search" type="search" aria-label="搜索城市或地标" placeholder="搜索城市 ID 或地标名称"><span id="count">65 / 65</span></nav><main>'''+''.join(cells)+'''</main><script>
+const theme=document.querySelector('#theme'),compare=document.querySelector('#compare');
+function setTheme(dark){document.documentElement.dataset.theme=dark?'dark':'light';theme.setAttribute('aria-pressed',String(dark));theme.textContent=dark?'浅色预览':'深色预览'}
+setTheme(matchMedia('(prefers-color-scheme:dark)').matches);theme.onclick=()=>setTheme(document.documentElement.dataset.theme!=='dark');
+compare.onclick=()=>{const hidden=document.body.classList.toggle('hide-old');compare.setAttribute('aria-pressed',String(!hidden));compare.textContent=hidden?'显示旧版对照':'隐藏旧版对照'};
+document.querySelector('#search').oninput=e=>{let count=0;document.querySelectorAll('article').forEach(card=>{card.hidden=!card.dataset.search.toLowerCase().includes(e.target.value.toLowerCase());if(!card.hidden)count++});document.querySelector('#count').textContent=`${count} / 65`};
+</script></html>\n''')
+    print(f'Published {len(ART)} vector templates and the comparison gallery.')
 
 if __name__=='__main__': main()

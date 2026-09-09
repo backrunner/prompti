@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Original landmark SVGs are compiled as vector templates by the asset catalog.
+/// Reviewed landmark SVGs are compiled as vector templates by the asset catalog.
 /// Custom destinations use a neutral locator rather than an invented landmark.
 struct DestinationArtwork: View {
     let destination: Destination

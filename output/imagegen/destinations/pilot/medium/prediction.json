@@ -1,0 +1,56 @@
+{
+  "ok": true,
+  "type": "prediction",
+  "data": {
+    "id": "hjtrfaf9w1rmr0d0gver7e287r",
+    "model": "openai/gpt-image-2.5-flare",
+    "version": "hidden",
+    "input": {
+      "aspect_ratio": "1:1",
+      "background": "opaque",
+      "number_of_images": 1,
+      "output_format": "png",
+      "prompt": "Use case: logo-brand. Asset: a single refined travel landmark outline icon for Prompti, a warm, calm native iOS language-learning app.\nSubject: Tokyo Tower in Tokyo, Japan. Accurate recognizable proportions: slender antenna, two observation decks, graceful tapered lattice legs and an open arch between the feet. Distinguish it from the Eiffel Tower.\nStyle: polished architectural line icon, careful geometric construction, smooth round caps and joins, understated friendly precision. Front elevation. One landmark only, centered, occupying 80 percent of a square canvas, with generous clear margins. Black ink outlines only on a perfectly plain white background. All enclosed areas remain white. Primary outlines about 18 pixels and secondary structural lines about 12 pixels at 1024px. Selected meaningful details, about 20-35 clear structural strokes, balanced open negative space. It must still read at 40-64px; do not fill small areas with dense lattice or many windows.\nNo words, letters, numerals, labels, logo, border, badge, circle, scenery, skyline, clouds, stars, people, airplane, map pin, shadows, gradients, color fills, texture, sketch marks, hatching or 3D render. This is the finished standalone icon artwork, not a mockup or contact sheet.",
+      "quality": "medium"
+    },
+    "logs": "Model: gpt-image-2.5-flare\nGenerating image...\nNo sid included.\nGenerated image in 28.0sec\nGenerated 1 images\nInput text token count: 268\nInput image token count: 0\nOutput token count: 439\n",
+    "output": [
+      "https://replicate.delivery/xezq/JxrmfFScnfvpMUFOrOJWPW4kGnm9Ue04ymKl3W7tpJLyUmXuA/tmpgtx6qqnh.png"
+    ],
+    "data_removed": false,
+    "error": null,
+    "source": "api",
+    "status": "succeeded",
+    "created_at": "2026-09-09T15:51:25.408Z",
+    "started_at": "2026-09-09T15:51:25.434393395Z",
+    "completed_at": "2026-09-09T15:51:53.598553385Z",
+    "urls": {
+      "cancel": "https://api.replicate.com/v1/predictions/hjtrfaf9w1rmr0d0gver7e287r/cancel",
+      "get": "https://api.replicate.com/v1/predictions/hjtrfaf9w1rmr0d0gver7e287r",
+      "stream": "https://stream.replicate.com/v1/files/jbxs-xh4upabwxdl25qvqxhrv6itgatslzyh2hphqtxaupnui2vbsndhq",
+      "web": "https://replicate.com/p/hjtrfaf9w1rmr0d0gver7e287r"
+    },
+    "metrics": {
+      "image_output_count": 1,
+      "model_variant": "medium",
+      "predict_time": 28.16415999,
+      "resolution_target": "1:1",
+      "total_time": 28.190553385
+    }
+  },
+  "artifacts": [
+    {
+      "path": "/Volumes/BRData/projects/prompti/output/imagegen/destinations/pilot/medium/hjtrfaf9w1rmr0d0gver7e287r-output-0-0.png",
+      "bytes": 802534,
+      "sourceUrl": "https://replicate.delivery/xezq/JxrmfFScnfvpMUFOrOJWPW4kGnm9Ue04ymKl3W7tpJLyUmXuA/tmpgtx6qqnh.png",
+      "outputPath": "output.0",
+      "contentType": "image/png"
+    }
+  ],
+  "meta": {
+    "cliVersion": "0.1.1",
+    "authSource": "config",
+    "profile": "quaengine-demo",
+    "apiVersion": "v1"
+  }
+}

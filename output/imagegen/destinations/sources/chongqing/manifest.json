@@ -1,0 +1,27 @@
+{
+  "predictionId": "zc1gyy7hp1rmy0d0gvgbv0c22r",
+  "output": [
+    "https://replicate.delivery/xezq/Y1pMjpVk9mZfJ6PyALS0ptLOolyo8fZzam05uIGPfCEjamXuA/tmpzvm7upun.png"
+  ],
+  "artifacts": [
+    {
+      "path": "/Volumes/BRData/projects/prompti/output/imagegen/destinations/sources/chongqing/zc1gyy7hp1rmy0d0gvgbv0c22r-output-0-0.png",
+      "bytes": 961841,
+      "sourceUrl": "https://replicate.delivery/xezq/Y1pMjpVk9mZfJ6PyALS0ptLOolyo8fZzam05uIGPfCEjamXuA/tmpzvm7upun.png",
+      "outputPath": "output.0",
+      "contentType": "image/png"
+    }
+  ],
+  "createdAt": "2026-09-09T15:55:00.945Z",
+  "model": "openai/gpt-image-2.5-flare",
+  "version": "hidden",
+  "input": {
+    "aspect_ratio": "1:1",
+    "background": "opaque",
+    "number_of_images": 1,
+    "output_format": "png",
+    "prompt": "Use case: logo-brand. Asset: a single refined travel landmark outline icon for Prompti, a warm, calm native iOS language-learning app.\nSubject: Hongya Cave stilt houses, Chongqing. Depict the actual distinctive local landmark or representative object with recognizable, accurate proportions.\nStyle: polished architectural line icon, careful geometric construction, smooth round caps and joins, understated friendly precision. Mostly front elevation; use a slight three-quarter view only when essential to recognize the subject. One subject only, centered, occupying 80 percent of a square canvas, with generous clear margins. Pure black outlines on a perfectly plain white background. All enclosed areas remain white. Consistent confident primary contours about 24 pixels and secondary structural lines about 18 pixels at 1024px. Include selected meaningful local details, about 20-35 clear structural strokes, with balanced open negative space. It must read at 40-64px. Simplify repeating windows and lattice into a few well-spaced marks, never dense hatching.\nNo words, letters, numerals, labels, logo, border, badge, enclosing circle, extra scenery, skyline, clouds, stars, people, airplane, map pin, shadows, gradients, color fills, texture, sketch marks or 3D render. This is finished standalone outline icon artwork, not a mockup or contact sheet.",
+    "quality": "medium"
+  },
+  "type": "prediction"
+}

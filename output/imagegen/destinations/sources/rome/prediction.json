@@ -1,0 +1,56 @@
+{
+  "ok": true,
+  "type": "prediction",
+  "data": {
+    "id": "n9wd02a355rmr0d0gvjan1a4dr",
+    "model": "openai/gpt-image-2.5-flare",
+    "version": "hidden",
+    "input": {
+      "aspect_ratio": "1:1",
+      "background": "opaque",
+      "number_of_images": 1,
+      "output_format": "png",
+      "prompt": "Use case: logo-brand. Asset: a single refined travel landmark outline icon for Prompti, a warm, calm native iOS language-learning app.\nSubject: Colosseum, Rome. Depict the actual distinctive local landmark or representative object with recognizable, accurate proportions.\nStyle: polished architectural line icon, careful geometric construction, smooth round caps and joins, understated friendly precision. Mostly front elevation; use a slight three-quarter view only when essential to recognize the subject. One subject only, centered, occupying 80 percent of a square canvas, with generous clear margins. Pure black outlines on a perfectly plain white background. All enclosed areas remain white. Consistent confident primary contours about 24 pixels and secondary structural lines about 18 pixels at 1024px. Include selected meaningful local details, about 20-35 clear structural strokes, with balanced open negative space. It must read at 40-64px. Simplify repeating windows and lattice into a few well-spaced marks, never dense hatching.\nNo words, letters, numerals, labels, logo, border, badge, enclosing circle, extra scenery, skyline, clouds, stars, people, airplane, map pin, shadows, gradients, color fills, texture, sketch marks or 3D render. This is finished standalone outline icon artwork, not a mockup or contact sheet.",
+      "quality": "medium"
+    },
+    "logs": "Model: gpt-image-2.5-flare\nGenerating image...\nNo sid included.\nGenerated image in 11.3sec\nGenerated 1 images\nInput text token count: 276\nInput image token count: 0\nOutput token count: 439\n",
+    "output": [
+      "https://replicate.delivery/xezq/eqsgdwGgRZ04CiPfgkNf1SnMqiBSeeJHKogpXFFmdbgHFaeyF/tmp8aqvjsf5.png"
+    ],
+    "data_removed": false,
+    "error": null,
+    "source": "api",
+    "status": "succeeded",
+    "created_at": "2026-09-09T15:58:21.481Z",
+    "started_at": "2026-09-09T15:58:21.499524935Z",
+    "completed_at": "2026-09-09T15:58:32.974349169Z",
+    "urls": {
+      "cancel": "https://api.replicate.com/v1/predictions/n9wd02a355rmr0d0gvjan1a4dr/cancel",
+      "get": "https://api.replicate.com/v1/predictions/n9wd02a355rmr0d0gvjan1a4dr",
+      "stream": "https://stream.replicate.com/v1/files/jbxs-vqseiw2i4vnxa5dfojuujnrstkxyyl5ys2b6nzd7t4gu2iiexaga",
+      "web": "https://replicate.com/p/n9wd02a355rmr0d0gvjan1a4dr"
+    },
+    "metrics": {
+      "image_output_count": 1,
+      "model_variant": "medium",
+      "predict_time": 11.474824234,
+      "resolution_target": "1:1",
+      "total_time": 11.493349169
+    }
+  },
+  "artifacts": [
+    {
+      "path": "/Volumes/BRData/projects/prompti/output/imagegen/destinations/sources/rome/n9wd02a355rmr0d0gvjan1a4dr-output-0-0.png",
+      "bytes": 852530,
+      "sourceUrl": "https://replicate.delivery/xezq/eqsgdwGgRZ04CiPfgkNf1SnMqiBSeeJHKogpXFFmdbgHFaeyF/tmp8aqvjsf5.png",
+      "outputPath": "output.0",
+      "contentType": "image/png"
+    }
+  ],
+  "meta": {
+    "cliVersion": "0.1.1",
+    "authSource": "config",
+    "profile": "quaengine-demo",
+    "apiVersion": "v1"
+  }
+}

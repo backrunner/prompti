@@ -8,7 +8,7 @@
 
 完成页的最新简化设计、全对礼花与实际录屏见 [完成页与庆祝动效验收](Result-Celebration-Review.md)。
 
-全部 65 个目的地的原创 SVG、语言筛选和全 App 滚动渐隐见 [目的地界面验收](Destination-UI-Review.md)；[图稿画廊](DestinationArtwork/Gallery.html) 可逐项检查当地地标与代表物。
+全部 65 个目的地的精细线框 SVG、生成来源和当前验收范围见 [城市线框图标](DestinationArtwork/README.md)；[图稿画廊](DestinationArtwork/Gallery.html) 可逐项对比新旧地标与浅深色。此前的几何稿、语言筛选和全 App 滚动渐隐记录保留在 [目的地界面验收](Destination-UI-Review.md)。
 
 实际 App 的默认字号浅深色画面见 [UI 截图画廊](UI-Review.html) 和 [对照图](UI-Review.png)，与下方的图标概念展示分别保存。
 
