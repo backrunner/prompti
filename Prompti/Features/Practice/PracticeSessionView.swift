@@ -239,10 +239,17 @@ struct PracticeSessionView: View {
 
     private var questionPrompt: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text(LocalizedStringKey(question.kind.title))
-                .textCase(.uppercase)
-                .font(.caption.bold())
-                .foregroundStyle(Color.promptAccent)
+            HStack(alignment: .center, spacing: 10) {
+                Text(LocalizedStringKey(question.kind.title))
+                    .textCase(.uppercase)
+                    .font(.caption.bold())
+                    .foregroundStyle(Color.promptAccent)
+                Spacer(minLength: 8)
+                if let result {
+                    resultBadge(result)
+                        .transition(.opacity.combined(with: .scale(scale: 0.9, anchor: .trailing)))
+                }
+            }
             Text(displayPrompt)
                 .font(PromptiTypography.title)
                 .fontDesign(.rounded)
@@ -252,7 +259,33 @@ struct PracticeSessionView: View {
                 .foregroundStyle(Color.promptMuted)
         }
         .padding(18)
-        .promptiSurface()
+        .promptiSurface(tint: resultCardTint)
+        .animation(reduceMotion ? nil : .easeOut(duration: 0.2), value: result)
+    }
+
+    /// Result on the question card itself; options below carry their own marks.
+    private func resultBadge(_ result: AttemptResult) -> some View {
+        let tone = feedbackTone(result)
+        return Label(feedbackTitle(result), systemImage: result == .correct ? "checkmark.seal.fill" : "lightbulb.fill")
+            .font(.caption.weight(.bold))
+            .foregroundStyle(tone.foreground)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(tone.background, in: Capsule())
+            .overlay {
+                Capsule().strokeBorder(tone.foreground.opacity(0.35), lineWidth: 0.75)
+            }
+            .accessibilityIdentifier("session.resultBadge")
+    }
+
+    private var resultCardTint: Color {
+        guard let result else { return .clear }
+        switch feedbackTone(result) {
+        case .success: return .promptSuccess.opacity(0.14)
+        case .warning: return .promptWarning.opacity(0.14)
+        case .error: return .promptError.opacity(0.14)
+        case .neutral: return .promptMuted.opacity(0.10)
+        }
     }
 
     private var displayPrompt: String {
@@ -268,7 +301,7 @@ struct PracticeSessionView: View {
                 ProgressView("Preparing the remaining questions")
             } else {
                 Text("Prepared questions completed").font(PromptiTypography.title)
-                if let error = session.fillError { Text(error).foregroundStyle(Color.promptMuted) }
+                if let message = session.fillMessage { Text(message).foregroundStyle(Color.promptMuted) }
                 Button("Retry remaining questions") { session.fill(using: dependencies.generation, context: modelContext) }
                     .buttonStyle(PrimaryActionButtonStyle())
                     .accessibilityIdentifier("session.retryFill")

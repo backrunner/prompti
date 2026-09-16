@@ -46,18 +46,18 @@ Xcode 27 beta、iOS 27.0、iPhone 17e 模拟器，默认字号。中英文连接
 
 ## 模型选择
 
-引导与设置共享快速模型目录。OpenAI 推荐 GPT-5.6 Luna，Gemini 推荐 3.8 Flash / 3.5 Flash-Lite，DeepSeek 推荐 V4 Flash，Anthropic 推荐 Haiku 4.5。Gemini 与 DeepSeek 可直接填写各自的 API key，继续使用既有 Chat 适配器。自定义模型和已保存配置不因推荐变化而被替换。
+引导与设置共享快速模型目录。OpenAI 推荐 GPT-5.6 Luna，Gemini 推荐 3.8 Flash / 3.5 Flash-Lite，DeepSeek 推荐 V4.1 Flash，Anthropic 推荐 Haiku 4.5。Gemini 与 DeepSeek 可直接填写各自的 API key，继续使用既有 Chat 适配器。自定义模型和已保存配置不因推荐变化而被替换。
 
-OpenRouter 列出 8 个已核实的快速模型。公开周请求次数可匹配的 4 个候选按调用量排序；其余 4 个在“暂无调用量数据”分组中列出。快照截至 **2026-09-06**，不是实时排名或所有模型的全量请求榜单。
+OpenRouter 列出 8 个已核实的快速模型。公开周请求次数可匹配的 4 个候选按调用量排序；其余 4 个在“暂无调用量数据”分组中列出。快照截至 **2026-09-13**，不是实时排名或所有模型的全量请求榜单。
 
 | 已核实候选 | 近 7 天请求次数 |
 | --- | ---: |
-| DeepSeek V4 Flash 0731 | 494,967,610 |
-| GPT-5.6 Luna | 418,787,054 |
-| GLM 5.3 Flash | 368,973,973 |
-| Gemini 3.7 Flash | 65,441,986 |
+| GPT-5.6 Luna | 723,701,849 |
+| GLM 5.3 Flash | 283,688,271 |
+| DeepSeek V4.1 Flash | 75,222,566 |
+| Gemini 3.8 Flash | 51,225,142 |
 
-Source: OpenRouter (https://openrouter.ai/rankings), as of 2026-09-06. Licensed under CC BY 4.0. 数字来自公开页面周数据的 `count`，按 canonical slug 关联当前模型 ID；没有将 token 排名用作请求次数排名。更新工具、来源与协议边界见 [模型规范](../.agents/05-ai-byok-and-generation.md)。
+Source: OpenRouter (https://openrouter.ai/rankings), as of 2026-09-13. Licensed under CC BY 4.0. 数字来自公开页面周数据的 `count`，按 canonical slug 关联当前模型 ID；没有将 token 排名用作请求次数排名。更新工具、来源与协议边界见 [模型规范](../.agents/05-ai-byok-and-generation.md)。
 
 | 实际页面 | 浅色 | 深色 |
 | --- | --- | --- |

@@ -318,7 +318,7 @@ struct HomeView: View {
             if ready.count == count {
                 practiceFlow.startSession(ready, origin: .quickQuestion)
             } else {
-                practiceFlow.startGeneration(request, origin: .quickQuestion)
+                practiceFlow.startGeneration(request, configuration: dependencies.settings.provider, origin: .quickQuestion)
             }
         }
     }

@@ -39,7 +39,7 @@ enum ModelRecommendations {
         .init(id: "gemini-3.8-flash", name: "Gemini 3.8 Flash"),
         .init(id: "gemini-3.5-flash-lite", name: "Gemini 3.5 Flash-Lite")
     ]
-    static let deepSeek: [ModelRecommendation] = [.init(id: "deepseek-v4-flash", name: "DeepSeek V4 Flash")]
+    static let deepSeek: [ModelRecommendation] = [.init(id: "deepseek-flash", name: "DeepSeek V4.1 Flash")]
     static let anthropic: [ModelRecommendation] = [.init(id: "claude-haiku-4-5-20251001", name: "Claude Haiku 4.5")]
 }
 

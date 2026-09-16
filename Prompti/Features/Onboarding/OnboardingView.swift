@@ -268,8 +268,7 @@ struct OnboardingView: View {
             VStack(alignment: .leading, spacing: 22) {
                 SectionLabel("Set your pace", subtitle: "These defaults can be changed for every practice set.")
 
-                VStack(alignment: .leading, spacing: 12) {
-                    SectionLabel("Difficulty", subtitle: difficulty.detail)
+                preferenceCard("Difficulty", subtitle: difficulty.detail, symbol: "gauge.with.dots.needle.67percent") {
                     if dynamicTypeSize.isAccessibilitySize {
                         VStack(spacing: 8) {
                             ForEach(TrainingDifficulty.allCases) { item in
@@ -296,23 +295,36 @@ struct OnboardingView: View {
                     }
                 }
 
-                Stepper(value: $questionCount, in: 3...20) {
-                    LabeledContent("Default set") {
-                        Text("\(questionCount) questions")
+                preferenceCard("Practice set", subtitle: "How much you practice each time and the language of hints.", symbol: "rectangle.stack.fill") {
+                    Stepper(value: $questionCount, in: 3...20) {
+                        LabeledContent("Default set") {
+                            Text("\(questionCount) questions")
+                        }
                     }
+
+                    Divider()
+
+                    LabeledContent("Explanations") {
+                        Picker("Explanations", selection: $explanationLanguage) {
+                            ForEach(ExplanationLanguage.allCases) { language in
+                                Text(LocalizedStringKey(language.title)).tag(language)
+                            }
+                        }
+                        .labelsHidden()
+                    }
+                    .accessibilityHint("Choose the language used for translations and explanations")
                 }
 
-                Picker("Explanations", selection: $explanationLanguage) {
-                    ForEach(ExplanationLanguage.allCases) { language in
-                        Text(LocalizedStringKey(language.title)).tag(language)
+                PromptiSectionSurface {
+                    VStack(alignment: .leading, spacing: 10) {
+                        Toggle(isOn: $enablePreparation) {
+                            Label("Prepare questions in advance", systemImage: "clock.arrow.circlepath")
+                                .font(.headline)
+                        }
+                        Text("When enabled, Prompti may call your selected model while the app is open. This can use extra tokens and create provider charges.")
+                            .font(.footnote)
+                            .foregroundStyle(Color.promptMuted)
                     }
-                }
-
-                VStack(alignment: .leading, spacing: 10) {
-                    Toggle("Prepare questions in advance", isOn: $enablePreparation)
-                    Text("When enabled, Prompti may call your selected model while the app is open. This can use extra tokens and create provider charges.")
-                        .font(.footnote)
-                        .foregroundStyle(Color.promptMuted)
                 }
 
                 if let errorMessage { InlineNotice(symbol: "exclamationmark.triangle", text: errorMessage, tone: .error) }
@@ -327,6 +339,26 @@ struct OnboardingView: View {
             .frame(maxWidth: .infinity)
         }
         .scrollIndicators(.hidden)
+    }
+
+    private func preferenceCard<Content: View>(
+        _ title: String,
+        subtitle: String,
+        symbol: String,
+        @ViewBuilder content: () -> Content
+    ) -> some View {
+        PromptiSectionSurface {
+            VStack(alignment: .leading, spacing: 14) {
+                VStack(alignment: .leading, spacing: 3) {
+                    Label(LocalizedStringKey(title), systemImage: symbol)
+                        .font(.headline)
+                    Text(LocalizedStringKey(subtitle))
+                        .font(.footnote)
+                        .foregroundStyle(Color.promptMuted)
+                }
+                content()
+            }
+        }
     }
 
     @ViewBuilder

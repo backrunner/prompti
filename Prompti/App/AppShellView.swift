@@ -50,8 +50,8 @@ struct AppShellView: View {
     private func practiceDestination(_ route: PracticeRoute) -> some View {
         switch route {
         case .generation(let id):
-            if let request = practiceFlow.request(for: id) {
-                GenerationView(request: request) {
+            if let session = practiceFlow.session(for: id), let request = session.request {
+                GenerationView(request: request, session: session) {
                     let origin = practiceFlow.cancel()
                     if origin == .quickQuestion {
                         selectedTab = .today

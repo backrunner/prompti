@@ -16,38 +16,32 @@ enum PracticeRoute: Hashable {
 final class PracticeFlow {
     var path: [PracticeRoute] = []
 
-    private var requests: [UUID: TrainingRequest] = [:]
     private var sessions: [UUID: PracticeSessionState] = [:]
     private(set) var origin = PracticeOrigin.setup
 
-    func startGeneration(_ request: TrainingRequest, origin: PracticeOrigin = .setup) {
+    func startGeneration(_ request: TrainingRequest, configuration: ProviderConfiguration? = nil, origin: PracticeOrigin = .setup) {
         clear()
-        let id = UUID()
         self.origin = origin
-        requests[id] = request
-        path = [.generation(id)]
+        let session = PracticeSessionState(records: [], request: request, configuration: configuration)
+        sessions[session.id] = session
+        path = [.generation(session.id)]
     }
 
     func startSession(_ records: [QuestionRecord], origin: PracticeOrigin) {
         clear()
-        let id = UUID()
         self.origin = origin
-        sessions[id] = PracticeSessionState(records: records)
-        path = [.session(id)]
+        let session = PracticeSessionState(records: records)
+        sessions[session.id] = session
+        path = [.session(session.id)]
     }
 
-    func showSession(_ records: [QuestionRecord], request: TrainingRequest? = nil, configuration: ProviderConfiguration? = nil) {
-        let id = UUID()
-        sessions[id] = PracticeSessionState(records: records, request: request, configuration: configuration)
-        path.append(.session(id))
-    }
-
-    func request(for id: UUID) -> TrainingRequest? {
-        requests[id]
-    }
-
-    func records(for id: UUID) -> [QuestionRecord]? {
-        sessions[id]?.records
+    /// Pushes the session that a generation route has been filling, so approved
+    /// questions keep arriving in the background without restarting the job.
+    /// Idempotent: repeated calls while that session is on top are ignored, so
+    /// swiping back to the generation view lets the user enter again.
+    func openSession(_ session: PracticeSessionState) {
+        guard sessions[session.id] != nil, path.last != .session(session.id) else { return }
+        path.append(.session(session.id))
     }
 
     func session(for id: UUID) -> PracticeSessionState? { sessions[id] }
@@ -68,7 +62,6 @@ final class PracticeFlow {
 
     private func clear() {
         path.removeAll()
-        requests.removeAll()
         sessions.values.forEach { $0.cancelFill() }
         sessions.removeAll()
     }

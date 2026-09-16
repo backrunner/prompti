@@ -6,7 +6,6 @@ struct PracticeSetupView: View {
     @Environment(PracticeFlow.self) private var practiceFlow
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Query(sort: \UserSceneRecord.createdAt, order: .reverse) private var userScenes: [UserSceneRecord]
-    @State private var showPreferences = false
     @State private var destinationID = "tokyo"
     @State private var languageCode = "ja"
     @State private var explanationLanguage = ExplanationLanguage.english
@@ -42,21 +41,7 @@ struct PracticeSetupView: View {
                     Divider()
                     sceneSection
                     Divider()
-                    DisclosureGroup(isExpanded: $showPreferences) {
-                        difficultySection
-                        Divider()
-                        questionTypeSection
-                        Divider()
-                        explanationLanguagePicker.padding(.vertical, 16)
-                    } label: {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Practice preferences").font(.headline)
-                            Text(LocalizedStringKey(difficulty.title)).font(.subheadline).foregroundStyle(Color.promptMuted)
-                        }
-                    }
-                    .padding(.vertical, 20)
-                    Divider()
-                    countSection
+                    preferencesSection
                     if dependencies.settings.isPreGenerationEnabled {
                         InlineNotice(symbol: "clock.arrow.circlepath", text: "Advance preparation is on and can use additional provider tokens.", tone: .warning)
                             .padding(.vertical, 20)
@@ -174,18 +159,6 @@ struct PracticeSetupView: View {
         .background(Color.promptSurface, in: .rect(cornerRadius: PromptiRadius.control))
     }
 
-    private var explanationLanguagePicker: some View {
-        Picker("Explanations", selection: $explanationLanguage) {
-            ForEach(ExplanationLanguage.allCases) { language in
-                Text(LocalizedStringKey(language.title)).tag(language)
-            }
-        }
-        .pickerStyle(.menu)
-        .frame(maxWidth: .infinity, minHeight: 48, alignment: .leading)
-        .background(Color.promptSurface, in: .rect(cornerRadius: PromptiRadius.control))
-        .accessibilityHint("Choose the language used for translations and explanations")
-    }
-
     private var sceneSection: some View {
         VStack(alignment: .leading, spacing: 18) {
             HStack(alignment: .center, spacing: 12) {
@@ -251,9 +224,66 @@ struct PracticeSetupView: View {
         }
     }
 
-    private var difficultySection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            SectionLabel("Difficulty", subtitle: difficulty.detail)
+    private var preferencesSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            SectionLabel("Practice preferences", subtitle: "Shape each generated practice set.")
+
+            PromptiSectionSurface {
+                VStack(alignment: .leading, spacing: 12) {
+                    preferenceHeading("Difficulty", subtitle: difficulty.detail, symbol: "gauge.with.dots.needle.67percent")
+                    difficultyControl
+                }
+            }
+
+            PromptiSectionSurface {
+                VStack(alignment: .leading, spacing: 12) {
+                    preferenceHeading("Question styles", subtitle: "Choose at least one exercise type.", symbol: "rectangle.on.rectangle")
+                    questionTypeGrid
+                }
+            }
+
+            PromptiSectionSurface {
+                VStack(alignment: .leading, spacing: 14) {
+                    preferenceHeading("Practice set", subtitle: "Set length and the language used for hints.", symbol: "rectangle.stack")
+
+                    Stepper(value: $questionCount, in: 3...20) {
+                        LabeledContent("Questions") {
+                            Text("\(questionCount) questions")
+                                .font(PromptiTypography.section)
+                                .fontDesign(.rounded)
+                        }
+                    }
+
+                    Divider()
+
+                    LabeledContent("Explanations") {
+                        Picker("Explanations", selection: $explanationLanguage) {
+                            ForEach(ExplanationLanguage.allCases) { language in
+                                Text(LocalizedStringKey(language.title)).tag(language)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .labelsHidden()
+                    }
+                    .accessibilityHint("Choose the language used for translations and explanations")
+                }
+            }
+        }
+        .padding(.vertical, 20)
+    }
+
+    private func preferenceHeading(_ title: String, subtitle: String, symbol: String) -> some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Label(LocalizedStringKey(title), systemImage: symbol)
+                .font(.subheadline.weight(.semibold))
+            Text(LocalizedStringKey(subtitle))
+                .font(.footnote)
+                .foregroundStyle(Color.promptMuted)
+        }
+    }
+
+    private var difficultyControl: some View {
+        Group {
             if dynamicTypeSize.isAccessibilitySize {
                 VStack(spacing: 8) {
                     ForEach(TrainingDifficulty.allCases) { item in
@@ -282,62 +312,34 @@ struct PracticeSetupView: View {
                 .pickerStyle(.segmented)
             }
         }
-        .padding(.vertical, 20)
     }
 
-    private var questionTypeSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            SectionLabel("Question styles")
-            LazyVGrid(columns: questionTypeColumns, spacing: 10) {
-                ForEach(QuestionKind.allCases) { kind in
-                    let isSelected = selectedKinds.contains(kind)
-                    Button {
-                        toggleKind(kind)
-                    } label: {
-                        Label(LocalizedStringKey(kind.title), systemImage: kind.symbol)
-                            .font(.subheadline.bold())
-                            .frame(maxWidth: .infinity, minHeight: 52)
-                            .foregroundStyle(isSelected ? Color.promptOnAction : Color.promptText)
-                            .background(
-                                isSelected ? Color.promptAction : Color.promptSurface,
-                                in: .rect(cornerRadius: PromptiRadius.control)
-                            )
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityValue(Text(isSelected ? "Selected" : "Not selected"))
+    private var questionTypeGrid: some View {
+        LazyVGrid(columns: questionTypeColumns, spacing: 10) {
+            ForEach(QuestionKind.allCases) { kind in
+                let isSelected = selectedKinds.contains(kind)
+                Button {
+                    toggleKind(kind)
+                } label: {
+                    Label(LocalizedStringKey(kind.title), systemImage: kind.symbol)
+                        .font(.subheadline.bold())
+                        .frame(maxWidth: .infinity, minHeight: 52)
+                        .foregroundStyle(isSelected ? Color.promptOnAction : Color.promptText)
+                        .background(
+                            isSelected ? Color.promptAction : Color.promptSurface,
+                            in: .rect(cornerRadius: PromptiRadius.control)
+                        )
                 }
+                .buttonStyle(.plain)
+                .accessibilityValue(Text(isSelected ? "Selected" : "Not selected"))
             }
-        }
-        .padding(.vertical, 20)
-    }
-
-    private var countSection: some View {
-        ViewThatFits(in: .horizontal) {
-            HStack {
-                Text("Questions").font(.headline)
-                Spacer()
-                questionStepper
-            }
-            VStack(alignment: .leading, spacing: 10) {
-                Text("Questions").font(.headline)
-                questionStepper
-            }
-        }
-        .padding(.vertical, 20)
-    }
-
-    private var questionStepper: some View {
-        Stepper(value: $questionCount, in: 3...20) {
-            Text("\(questionCount) questions")
-                .font(PromptiTypography.section)
-                .fontDesign(.rounded)
         }
     }
 
     private var startButtons: some View {
         VStack(spacing: 10) {
             Button {
-                practiceFlow.startGeneration(makeRequest(count: questionCount))
+                practiceFlow.startGeneration(makeRequest(count: questionCount), configuration: dependencies.settings.provider)
             } label: {
                 Label {
                     HStack(spacing: 5) {

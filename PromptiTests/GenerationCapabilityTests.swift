@@ -7,25 +7,39 @@ actor CapabilityProvider: QuestionProvider {
     enum ReviewMode: Sendable { case approve, rejectFirst, missing, duplicate, unknown }
     private(set) var requests: [TrainingRequest] = []
     private(set) var speechCalls = 0
+    private(set) var maxInFlight = 0
+    private var inFlight = 0
     var reviewMode: ReviewMode
     let delay: Duration
     let verdict: SemanticVerdict
-    let failsAfter: Int?
+    /// Fail every batch whose size is below this value. Ordinal-based failure
+    /// is meaningless once batches run concurrently, so failures key off the
+    /// request itself.
+    let failsBelowCount: Int?
+    let fixedPrompt: String?
 
     init(reviewMode: ReviewMode = .approve, delay: Duration = .zero,
-         verdict: SemanticVerdict = SemanticVerdict(result: .correct, feedback: "Your request has the same meaning."), failsAfter: Int? = nil) {
+         verdict: SemanticVerdict = SemanticVerdict(result: .correct, feedback: "Your request has the same meaning."),
+         failsBelowCount: Int? = nil, fixedPrompt: String? = nil) {
         self.reviewMode = reviewMode
         self.delay = delay
         self.verdict = verdict
-        self.failsAfter = failsAfter
+        self.failsBelowCount = failsBelowCount
+        self.fixedPrompt = fixedPrompt
     }
 
     func generate(_ request: TrainingRequest) async throws -> [GeneratedQuestion] {
         requests.append(request)
-        if let failsAfter, requests.count > failsAfter { throw GenerationError.providerUnavailable }
+        // Capture the call's ordinal before suspending; parallel batches must
+        // not read a shared count after other calls have appended.
+        let ordinal = requests.count
+        inFlight += 1
+        maxInFlight = max(maxInFlight, inFlight)
+        defer { inFlight -= 1 }
+        if let failsBelowCount, request.count < failsBelowCount { throw GenerationError.providerUnavailable }
         if delay != .zero { try await Task.sleep(for: delay) }
         return (0..<request.count).map { offset in
-            GeneratedQuestion(kind: .multipleChoice, prompt: "Where is platform \(requests.count * 10 + offset)?",
+            GeneratedQuestion(kind: .multipleChoice, prompt: fixedPrompt ?? "Where is platform \(ordinal * 10 + offset)?",
                 options: ["Over there", "Very tasty", "Three people", "Sunny"].map { QuestionOption(text: $0) },
                 correctAnswer: "Over there", translation: "Asking for directions.", explanation: "A clear, polite direction question.",
                 sceneID: request.scenes[0].id, sourceFactIDs: [])
@@ -100,10 +114,87 @@ struct GenerationCapabilityTests {
 
     @Test("A later provider failure preserves already reviewed questions")
     func partialFailure() async throws {
-        let fixture = CapabilityProvider(failsAfter: 1)
+        let fixture = CapabilityProvider(failsBelowCount: 3)
         let result = try await service(fixture).generate(Self.request(count: 5), configuration: ProviderConfiguration())
         #expect(result.count == 3)
         #expect(result.allSatisfy { $0.generation != nil })
+    }
+
+    @Test("Remote batches overlap while the on-device model stays serialized", arguments: [
+        (ProviderKind.openAIResponses, 3), (ProviderKind.apple, 1)
+    ])
+    func batchConcurrency(_ kind: ProviderKind, _ expectedPeak: Int) async throws {
+        let provider = CapabilityProvider(delay: .milliseconds(120))
+        let generated = try await service(provider).generate(Self.request(count: 9),
+            configuration: ProviderConfiguration(kind: kind, model: "fixture"))
+        #expect(generated.count == 9)
+        #expect(await provider.maxInFlight == expectedPeak)
+    }
+
+    @Test("Approved questions stream incrementally instead of arriving in one result")
+    func incrementalDelivery() async throws {
+        actor Collector {
+            private(set) var approvedEvents = 0
+            private(set) var approvedTotal = 0
+            private(set) var stages = Set<QuestionGenerationStage>()
+            func record(_ event: QuestionGenerationEvent) {
+                switch event {
+                case .stage(let stage): stages.insert(stage)
+                case .approved(let questions): approvedEvents += 1; approvedTotal += questions.count
+                }
+            }
+        }
+        let collector = Collector()
+        let provider = CapabilityProvider(delay: .milliseconds(40))
+        let result = try await service(provider).generate(Self.request(count: 9),
+            configuration: ProviderConfiguration(kind: .openAIResponses, model: "fixture")) { event in
+            await collector.record(event)
+        }
+        #expect(result.count == 9)
+        #expect(await collector.approvedEvents == 3)
+        #expect(await collector.approvedTotal == 9)
+        #expect(await collector.stages == [.generating, .reviewing])
+    }
+
+    @Test("Identical exercises across parallel batches are delivered once")
+    func deduplication() async throws {
+        let provider = CapabilityProvider(fixedPrompt: "Where is the exit?")
+        let result = try await service(provider).generate(Self.request(count: 6),
+            configuration: ProviderConfiguration(kind: .openAIResponses, model: "fixture"))
+        #expect(result.count == 1)
+        // Attempts stay bounded even though the remainder could never be filled.
+        #expect(await provider.requests.count <= 3)
+    }
+
+    @MainActor
+    @Test("Session fill persists approved questions and reports a review shortfall")
+    func sessionFill() async throws {
+        let container = ModelContainerFactory.make(inMemory: true)
+        let provider = CapabilityProvider()
+        let service = service(provider)
+        let session = PracticeSessionState(records: [], request: Self.request(count: 4),
+            configuration: ProviderConfiguration(kind: .openAIResponses, model: "fixture"))
+        session.fill(using: service, context: container.mainContext)
+        while session.isFilling { try await Task.sleep(for: .milliseconds(20)) }
+        #expect(session.records.count == 4)
+        #expect(session.fillMessage == nil)
+        #expect(session.furthestStage == .reviewing)
+        #expect(try container.mainContext.fetchCount(FetchDescriptor<QuestionRecord>()) == 4)
+    }
+
+    @MainActor
+    @Test("A rejected remainder surfaces as a retryable shortfall when questions exist")
+    func sessionShortfall() async throws {
+        let container = ModelContainerFactory.make(inMemory: true)
+        let provider = CapabilityProvider(reviewMode: .rejectFirst)
+        let service = service(provider)
+        let session = PracticeSessionState(records: [], request: Self.request(count: 5),
+            configuration: ProviderConfiguration(kind: .openAIResponses, model: "fixture"))
+        session.fill(using: service, context: container.mainContext)
+        while session.isFilling { try await Task.sleep(for: .milliseconds(20)) }
+        #expect(!session.records.isEmpty)
+        #expect(session.hasRemaining)
+        #expect(session.fillMessage == String(localized: "Some questions did not pass review. Retry to prepare the rest."))
     }
 
     @Test("Multi-gap answers require all choices and reject ambiguous or mismatched structures")

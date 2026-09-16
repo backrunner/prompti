@@ -5,6 +5,14 @@ enum QuestionGenerationStage: Sendable {
     case reviewing
 }
 
+/// Incremental pipeline signals. `.stage` may move backwards internally when a
+/// rejected batch is regenerated; callers that display progress should keep the
+/// furthest stage shown instead of regressing.
+enum QuestionGenerationEvent: Sendable {
+    case stage(QuestionGenerationStage)
+    case approved([GeneratedQuestion])
+}
+
 actor QuestionGenerationService {
     typealias ProviderFactory = @Sendable (ProviderConfiguration, UUID) throws -> any QuestionProvider
     private let secureStore: SecureStore
@@ -15,6 +23,13 @@ actor QuestionGenerationService {
         self.secureStore = secureStore
         self.usageSink = usageSink
         self.providerFactory = providerFactory
+    }
+
+    private struct BatchResult: Sendable {
+        var requested: Int
+        var batchID: UUID
+        var questions: [GeneratedQuestion]
+        var error: Error?
     }
 
     private func provider(configuration: ProviderConfiguration, jobID: UUID) throws -> any QuestionProvider {
@@ -36,6 +51,9 @@ actor QuestionGenerationService {
         return SceneReview(isAllowed: true, normalized: try ContentSafety.normalizeScene(review.normalized), reason: review.reason)
     }
 
+    /// Runs generation and per-batch review concurrently: each batch is an
+    /// independent generate -> review chain, and a bounded number of chains run
+    /// in parallel so one slow call never blocks the whole set.
     func generate(
         _ request: TrainingRequest,
         configuration: ProviderConfiguration,
@@ -43,14 +61,14 @@ actor QuestionGenerationService {
         excluding signatures: Set<String> = [],
         allowsRegeneration: Bool = true,
         deadline: ContinuousClock.Instant? = nil,
-        progress: (@Sendable (QuestionGenerationStage) async -> Void)? = nil
+        events: (@Sendable (QuestionGenerationEvent) async -> Void)? = nil
     ) async throws -> [GeneratedQuestion] {
         try Task.checkCancellation()
         guard (1...20).contains(request.count), !request.kinds.isEmpty, !request.scenes.isEmpty else {
             throw GenerationError.invalidScene(String(localized: "Choose at least one scene, one question style and 1–20 questions."))
         }
 
-        await progress?(.generating)
+        await events?(.stage(.generating))
 
         #if DEBUG
         if ProcessInfo.processInfo.arguments.contains("-prompti-demo") {
@@ -60,79 +78,131 @@ actor QuestionGenerationService {
             if ProcessInfo.processInfo.arguments.contains("-prompti-ui-generation-error") {
                 throw GenerationError.providerUnavailable
             }
-            if ProcessInfo.processInfo.arguments.contains("-prompti-ui-auto-fill"), request.count < 3 {
-                try await Task.sleep(for: .seconds(2))
-            }
             if ProcessInfo.processInfo.arguments.contains("-prompti-ui-fill-error"), request.count < 3 {
                 throw GenerationError.providerUnavailable
             }
-            await progress?(.reviewing)
+            await events?(.stage(.reviewing))
             if ProcessInfo.processInfo.arguments.contains("-prompti-ui-slow-generation") {
                 try await Task.sleep(for: .seconds(1))
             }
             let generated = DemoQuestions.make(request: request)
-            if ProcessInfo.processInfo.arguments.contains("-prompti-ui-partial-generation") {
-                return Array(generated.prefix(max(1, request.count - 2)))
+            let result = ProcessInfo.processInfo.arguments.contains("-prompti-ui-partial-generation")
+                ? Array(generated.prefix(max(1, request.count - 2)))
+                : generated
+            if ProcessInfo.processInfo.arguments.contains("-prompti-ui-auto-fill"), result.count > 3 {
+                // Deliver an early batch so the session can open while the rest
+                // keep generating in the background.
+                await events?(.approved(Array(result.prefix(3))))
+                try await Task.sleep(for: .seconds(2))
+                await events?(.approved(Array(result.dropFirst(3))))
+            } else {
+                await events?(.approved(result))
             }
-            return generated
+            return result
         }
         #endif
 
         let provider = try provider(configuration: configuration, jobID: jobID)
         let batchSize = configuration.kind == .apple ? 2 : 3
+        // Remote providers tolerate a few parallel calls; the on-device model is serialized.
+        let concurrency = configuration.kind == .apple ? 1 : 3
         let deadline = deadline ?? ContinuousClock.now.advanced(by: .seconds(180))
-        let maxBatches = (request.count + batchSize - 1) / batchSize + (allowsRegeneration ? 1 : 0)
-        var seen = signatures
-        var approved: [GeneratedQuestion] = []
-        for _ in 0..<maxBatches {
-            try Task.checkCancellation()
-            guard approved.count < request.count, ContinuousClock.now < deadline else { break }
-            var batchRequest = request
-            batchRequest.count = min(batchSize, request.count - approved.count)
-            batchRequest.previousPrompts = Array((request.previousPrompts + approved.map(\.prompt)).suffix(30))
-            let activeRequest = batchRequest
-            let batchID = UUID()
-            do {
-                await progress?(.generating)
-                let output = try await ProviderDeadline.run(until: min(deadline, .now.advanced(by: .seconds(60)))) {
-                    try await provider.generate(activeRequest)
+        let maxAttempts = (request.count + batchSize - 1) / batchSize + (allowsRegeneration ? 1 : 0)
+
+        // All mutable scheduler state lives inside the group body so nothing is
+        // sent across isolation domains while children are running.
+        let approved: [GeneratedQuestion] = try await withThrowingTaskGroup(of: BatchResult.self) { group in
+            var seen = signatures
+            var approved: [GeneratedQuestion] = []
+            var attempts = 0
+            var inFlight = 0
+            var inFlightNeed = 0
+            var firstError: Error?
+            func schedule() -> Bool {
+                guard approved.count + inFlightNeed < request.count,
+                      attempts < maxAttempts,
+                      ContinuousClock.now < deadline else { return false }
+                var batch = request
+                batch.count = min(batchSize, request.count - approved.count - inFlightNeed)
+                batch.previousPrompts = Array((request.previousPrompts + approved.map(\.prompt)).suffix(30))
+                let active = batch
+                let batchID = UUID()
+                attempts += 1
+                inFlight += 1
+                inFlightNeed += batch.count
+                group.addTask {
+                    await self.runBatch(active, batchID: batchID, provider: provider, deadline: deadline, events: events)
                 }
-                let candidates = output.prefix(batchRequest.count).filter {
-                    ContentSafety.validate($0, request: batchRequest)
-                        && $0.sourceFactIDs != nil
-                        && ($0.kind != .spoken || $0.rubric != nil)
-                        && ($0.kind != .cloze || $0.cloze != nil)
-                        && !seen.contains($0.contentSignature)
-                }
-                try Task.checkCancellation()
-                guard !candidates.isEmpty else { continue }
-                await progress?(.reviewing)
-                let decisions = try await ProviderDeadline.run(until: min(deadline, .now.advanced(by: .seconds(60)))) {
-                    try await provider.reviewQuestions(candidates, request: activeRequest)
-                }
-                try Task.checkCancellation()
-                let ids = Set(candidates.map(\.id))
-                guard Set(decisions.map(\.questionID)).count == decisions.count,
-                      decisions.allSatisfy({ ids.contains($0.questionID) }) else { throw GenerationError.malformedResponse }
-                let allowed = Set(decisions.filter(\.approved).map(\.questionID))
-                for var question in candidates where allowed.contains(question.id) && seen.insert(question.contentSignature).inserted {
-                    question.sceneID = question.sceneID ?? request.scenes.first?.id
-                    question.generation = GenerationMetadata(jobID: jobID, batchID: batchID,
-                        provider: configuration.kind.rawValue, model: configuration.model, createdAt: .now,
-                        sourceFactIDs: question.sourceFactIDs ?? [], checks: QuestionReview.checks,
-                        sourceFacts: zip(PromptBuilder.factIDs(for: request), request.destination.facts).compactMap {
-                            (question.sourceFactIDs ?? []).contains($0.0) ? GenerationSourceFact(id: $0.0, text: $0.1) : nil
-                        })
-                    approved.append(question)
-                }
-            } catch is CancellationError { throw CancellationError() }
-            catch {
-                if approved.isEmpty { throw error }
-                break // Preserve approved peers; no hidden retries for provider/account failures.
+                return true
             }
+            while inFlight < concurrency, schedule() { }
+            while let result = try await group.next() {
+                inFlight -= 1
+                inFlightNeed -= result.requested
+                try Task.checkCancellation()
+                if let error = result.error {
+                    if firstError == nil { firstError = error }
+                } else {
+                    var delivered: [GeneratedQuestion] = []
+                    for var question in result.questions where seen.insert(question.contentSignature).inserted {
+                        question.sceneID = question.sceneID ?? request.scenes.first?.id
+                        question.generation = GenerationMetadata(jobID: jobID, batchID: result.batchID,
+                            provider: configuration.kind.rawValue, model: configuration.model, createdAt: .now,
+                            sourceFactIDs: question.sourceFactIDs ?? [], checks: QuestionReview.checks,
+                            sourceFacts: zip(PromptBuilder.factIDs(for: request), request.destination.facts).compactMap {
+                                (question.sourceFactIDs ?? []).contains($0.0) ? GenerationSourceFact(id: $0.0, text: $0.1) : nil
+                            })
+                        approved.append(question)
+                        delivered.append(question)
+                    }
+                    if !delivered.isEmpty { await events?(.approved(delivered)) }
+                }
+                while inFlight < concurrency, schedule() { }
+            }
+            if approved.isEmpty, let firstError { throw firstError }
+            return approved
         }
         guard !approved.isEmpty else { throw GenerationError.noApprovedQuestions }
         return approved
+    }
+
+    /// One batch's generate -> validate -> review chain. Errors are returned so
+    /// sibling batches keep running; approved questions merge at the caller.
+    private func runBatch(
+        _ batch: TrainingRequest,
+        batchID: UUID,
+        provider: any QuestionProvider,
+        deadline: ContinuousClock.Instant,
+        events: (@Sendable (QuestionGenerationEvent) async -> Void)?
+    ) async -> BatchResult {
+        do {
+            await events?(.stage(.generating))
+            let output = try await ProviderDeadline.run(until: min(deadline, .now.advanced(by: .seconds(60)))) {
+                try await provider.generate(batch)
+            }
+            let candidates = output.prefix(batch.count).filter {
+                ContentSafety.validate($0, request: batch)
+                    && $0.sourceFactIDs != nil
+                    && ($0.kind != .spoken || $0.rubric != nil)
+                    && ($0.kind != .cloze || $0.cloze != nil)
+            }
+            try Task.checkCancellation()
+            guard !candidates.isEmpty else { return BatchResult(requested: batch.count, batchID: batchID, questions: [], error: nil) }
+            await events?(.stage(.reviewing))
+            let decisions = try await ProviderDeadline.run(until: min(deadline, .now.advanced(by: .seconds(60)))) {
+                try await provider.reviewQuestions(candidates, request: batch)
+            }
+            try Task.checkCancellation()
+            let ids = Set(candidates.map(\.id))
+            guard Set(decisions.map(\.questionID)).count == decisions.count,
+                  decisions.allSatisfy({ ids.contains($0.questionID) }) else {
+                return BatchResult(requested: batch.count, batchID: batchID, questions: [], error: GenerationError.malformedResponse)
+            }
+            let allowed = Set(decisions.filter(\.approved).map(\.questionID))
+            return BatchResult(requested: batch.count, batchID: batchID, questions: candidates.filter { allowed.contains($0.id) }, error: nil)
+        } catch {
+            return BatchResult(requested: batch.count, batchID: batchID, questions: [], error: error)
+        }
     }
 
     func evaluateSpeech(_ question: GeneratedQuestion, transcript: String, confidence: Float?, languageCode: String,
@@ -206,19 +276,19 @@ enum DemoQuestions {
         let examples = [
             GeneratedQuestion(
                 kind: .multipleChoice,
-                prompt: request.language.code == "ja" ? "切符売り場はどこですか？" : "Where is the ticket office?",
-                options: request.language.code == "ja" ? ["あちらです", "おいしいです", "三人です", "晴れです"].map { QuestionOption(text: $0) } : ["Over there", "Very tasty", "Three people", "Sunny"].map { QuestionOption(text: $0) },
-                correctAnswer: request.language.code == "ja" ? "あちらです" : "Over there",
-                translation: "Where is the ticket office?",
+                prompt: request.language.code == "ja" ? "ご案内しましょうか？" : "Can I help you find something?",
+                options: request.language.code == "ja" ? ["切符売り場はどこですか？", "三人です", "晴れです", "おいしいです"].map { QuestionOption(text: $0) } : ["Where is the ticket office?", "Three people", "It's sunny", "Very tasty"].map { QuestionOption(text: $0) },
+                correctAnswer: request.language.code == "ja" ? "切符売り場はどこですか？" : "Where is the ticket office?",
+                translation: "Station staff are offering help. Tell them what you need.",
                 explanation: "A short, polite direction question you can reuse at stations.",
                 sampleAnswer: nil
             ),
             GeneratedQuestion(
                 kind: .cloze,
-                prompt: request.language.code == "ja" ? "ICカードに ___ したいです。" : "I'd like to ___ my travel card.",
+                prompt: request.language.code == "ja" ? "すみません、ICカードに ___ したいです。" : "Excuse me, I'd like to ___ my travel card.",
                 options: request.language.code == "ja" ? ["チャージ", "予約", "交換", "案内"].map { QuestionOption(text: $0) } : ["top up", "close", "print", "lose"].map { QuestionOption(text: $0) },
                 correctAnswer: request.language.code == "ja" ? "チャージ" : "top up",
-                translation: "I'd like to top up my IC card.",
+                translation: "At a ticket machine or counter, you want to add value to your card.",
                 explanation: "Use this when adding value to a transit card.",
                 sampleAnswer: nil
             ),

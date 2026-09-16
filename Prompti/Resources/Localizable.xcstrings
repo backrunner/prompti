@@ -569,6 +569,17 @@
         }
       }
     },
+    "Choose at least one exercise type.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "至少选择一种题型。"
+          }
+        }
+      }
+    },
     "Choose at least one scene, one question style and 1–20 questions.": {
       "extractionState": "manual",
       "localizations": {
@@ -1350,6 +1361,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "酒店"
+          }
+        }
+      }
+    },
+    "How much you practice each time and the language of hints.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "每组的练习量与提示语言。"
           }
         }
       }
@@ -2966,6 +2988,17 @@
         }
       }
     },
+    "Set length and the language used for hints.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "每组题数与提示使用的语言。"
+          }
+        }
+      }
+    },
     "Set your pace": {
       "extractionState": "manual",
       "localizations": {
@@ -2973,6 +3006,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "设置练习偏好"
+          }
+        }
+      }
+    },
+    "Shape each generated practice set.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "调整每组生成练习的内容。"
           }
         }
       }
