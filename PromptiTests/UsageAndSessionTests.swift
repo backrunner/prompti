@@ -84,7 +84,7 @@ struct UsageAndSessionTests {
     @Test("Fill errors retain approved questions and leave a retryable remainder")
     func fillFailure() async throws {
         let container = ModelContainerFactory.make(inMemory: true)
-        let fixture = CapabilityProvider(failsAfter: 1)
+        let fixture = CapabilityProvider(failsBelowCount: 3)
         let service = QuestionGenerationService(secureStore: SecureStore(), providerFactory: { _, _ in fixture })
         let request = GenerationCapabilityTests.request(count: 5)
         let state = PracticeSessionState(records: [], request: request, configuration: ProviderConfiguration())

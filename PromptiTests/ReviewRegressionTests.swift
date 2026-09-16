@@ -46,6 +46,20 @@ struct ReviewRegressionTests {
         #expect(!ContentSafety.validate(question, request: request))
     }
 
+    @Test("Context notes and choices that echo the prompt are rejected")
+    func duplicatedPromptText() {
+        var question = Self.question()
+        question.translation = "お会計をお願いします。"
+        #expect(!ContentSafety.validate(question, request: Self.request()))
+        question = Self.question()
+        question.options[2].text = question.prompt
+        #expect(!ContentSafety.validate(question, request: Self.request()))
+        question = Self.question()
+        question.correctAnswer = question.prompt
+        question.options[2].text = question.prompt
+        #expect(!ContentSafety.validate(question, request: Self.request()))
+    }
+
     @Test("Difficulty adds concrete constraints and scene identifiers to prompts")
     func difficultyAndScenes() throws {
         var prompts = Set<String>()
@@ -122,9 +136,9 @@ struct ReviewRegressionTests {
         let flow = PracticeFlow()
         flow.startGeneration(Self.request())
         guard case .generation(let id) = try #require(flow.path.first) else { Issue.record("Missing generation route"); return }
-        #expect(flow.request(for: id) != nil)
+        #expect(flow.session(for: id) != nil)
         flow.finish()
-        #expect(flow.request(for: id) == nil)
+        #expect(flow.session(for: id) == nil)
         #expect(flow.path.isEmpty)
     }
 

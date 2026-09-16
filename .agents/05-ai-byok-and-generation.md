@@ -77,15 +77,17 @@ TrainingConfiguration
   -> capability + budget check
   -> destination facts + scene context
   -> prompt assembly (untrusted data fenced as data)
-  -> provider generation
+  -> provider generation          # 小批次：远端 ≤3 题/批、最多 3 批并发；Apple ≤2 题/批串行
   -> transport/schema decode
   -> deterministic validation
   -> safety classification
-  -> language/answer/destination quality checks
-  -> deduplication
-  -> explicit SwiftData save
+  -> language/answer/destination quality checks   # 每批独立审核，单题粒度通过/打回
+  -> deduplication                # 跨并发批次按 contentSignature 去重
+  -> approved 事件逐批下发 → 即时落库
   -> ready inventory
 ```
+
+每批是一条独立的 generate → review 链；批内生成与该批审核顺序执行，兄弟批次互不阻塞。单个批次失败不拖累同批其他链；首批 min(3, 目标数) 题过审即可开练，其余在后台继续补足。审核打回允许有限重生成，但外显进度只前不退（记录最远阶段）；总尝试次数 ≤ 所需批次数 + 1 次重生成，整体 180s 截止。
 
 ### 5.1 Prompt 组成
 
@@ -187,7 +189,7 @@ Adapter 不把所有非 2xx 都映射成“网络错误”。UI 根据错误提�
 
 ## 2026-09-08：快速模型与连接预设
 
-- 引导和设置共用 `ModelConnectionView` / `ModelRecommendations`。默认推荐快速、低成本的文本模型：OpenAI GPT-5.6 Luna、Gemini 3.8 Flash / 3.5 Flash-Lite、DeepSeek V4 Flash、Claude Haiku 4.5；OpenRouter 另含 GLM、Qwen 等快速模型。未将旗舰、图像、音频、医学或金融专用模型作为默认练习模型。
+- 引导和设置共用 `ModelConnectionView` / `ModelRecommendations`。默认推荐快速、低成本的文本模型：OpenAI GPT-5.6 Luna、Gemini 3.8 Flash / 3.5 Flash-Lite、DeepSeek V4.1 Flash、Claude Haiku 4.5；OpenRouter 另含 GLM、Qwen 等快速模型。未将旗舰、图像、音频、医学或金融专用模型作为默认练习模型。
 - `ProviderPreset` 是连接快捷方式，继续使用既有 Responses / Chat / Messages 协议与凭据隔离。Gemini 使用官方 OpenAI 兼容的完整 `v1beta/openai/chat/completions` 端点；完整端点不再追加 `/v1`。不引入新的持久化 Provider 类型。
 - `OpenRouterRecommendations.json` 是带日期、来源和许可的近 7 天请求次数快照。只在已核实的快速模型候选中按 `weeklyRequests` 降序排列，未知调用量排在末尾；并不宣称是所有模型的全量请求排行榜。OpenRouter 网站可见榜单主要按 token 排名，不能直接把其名次当成调用次数排名。按 2026-09-09 的界面约定，下拉只显示模型名，不展示调用次数或按用量分组；排序与快照元数据保留。
 - 连接区域默认保留服务商、模型、连接按钮和一句数据处理/费用提示。移除营销标语和排名说明，将完整凭据/隐私说明及 OpenRouter CC BY 4.0 来源链接收进“更多连接选项”。连接状态与错误仍就地显示。
@@ -195,3 +197,11 @@ Adapter 不把所有非 2xx 都映射成“网络错误”。UI 根据错误提�
 - 每次发布前刷新快照，复核候选型号。新增版本不能仅凭名称自动收入；核对官方型号、用途、结构化输出后维护名单。已存模型、手填 ID 和连接验证保持原行为，选择不同模型后必须重新验证。
 - 数据来源：Source: OpenRouter (openrouter.ai/rankings), as of 2026-09-06. Licensed under CC BY 4.0. 当前快照读取的是公开流量，缺少请求数不代表零调用。
 - 官方型号与接口依据：[OpenAI 模型目录](https://developers.openai.com/api/docs/models)、[GPT-5.6 Luna](https://developers.openai.com/api/docs/models/gpt-5.6-luna)、[Gemini 模型](https://ai.google.dev/gemini-api/docs/models)、[Gemini OpenAI compatibility](https://ai.google.dev/gemini-api/docs/openai)、[Claude 模型](https://platform.claude.com/docs/en/models/overview)、[DeepSeek 模型](https://api-docs.deepseek.com/quick_start/pricing)、[OpenRouter 数据口径](https://openrouter.ai/docs/cookbook/administration/data-api)。账号权限、额度及模型服务质量仍需真实账号验证；本轮不进行收费推理调用。
+
+## 2026-09-16：并发批次与边生成边练习
+
+- `QuestionGenerationService.generate` 把整个请求拆成小批次，用 task group 并发执行：远端 Provider 3 题/批、最多 3 批并行；Apple 端上模型 2 题/批、串行。每批独立走 生成 → 本地校验 → 逐题审核 → 通过题经 `.approved` 事件下发；批间按 `contentSignature` 去重。尝试次数有界（所需批次 + 至多一次重生成），默认 180s 截止；部分批次失败保留已过审结果，仅在整组无产出时抛出首个错误。
+- `PracticeSessionState` 持有唯一有界的补全任务：`.approved` 事件到达即落库并追加到 `records`；`furthestStage` 记录管线最远阶段，内部重生成不回退外显进度。`PracticeFlow` 在生成与练习路由间共享同一 session，`GenerationView` 在已有 min(3, count) 题过审时自动进入练习页。
+- 题目语义改为对话式：选择题 prompt 是当地人对学习者说的一句话，选项是可说的应答（唯一最佳），`translation` 改作讲解语言的上下文说明（谁在说话、在哪里、学习者要做什么），不得复述题干；cloze 是带 1–3 个空位的自然对话/话语，挖空关键用词或固定搭配；spoken prompt 为讲解语言的指令句。本地校验新增 translation≠prompt、选择题选项/答案≠prompt；审核 prompt 同步要求拒绝元题（"which sentence…"）与近义干扰项。
+- UI：生成页为"场景信息→生成→审核"三段进度条（行程图底色 + 已过审题数），练习页题干卡片直接显示对错徽标与卡片色调，选项/解析保留在下方；练习偏好页拆成难度、题型、题数+讲解语言三张卡片，讲解语言不再孤立悬浮。
+- 验证：`CheckBrand.py`、`CheckLocalization.py` 通过；PromptiTests 79 项通过（含并发峰值、增量事件、跨批去重、session 增量落库/短文案、取消）；UI 测试覆盖自动进入、后台补足、等待/重试与部分完成。未做真实 Provider 付费调用验证。

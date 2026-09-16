@@ -46,6 +46,7 @@ private enum GenerationPhase: Equatable {
         }
     }
 
+    /// Furthest pipeline index; never regresses while one fill is running.
     var stageIndex: Int {
         switch self {
         case .preparing: 0
@@ -89,16 +90,11 @@ private enum GenerationStage: Int, CaseIterable, Identifiable {
 
     var symbol: String {
         switch self {
-        case .context: "text.bubble.fill"
-        case .questions: "text.bubble.fill"
+        case .context: "map.fill"
+        case .questions: "questionmark.bubble.fill"
         case .review: "checkmark.shield.fill"
         }
     }
-}
-
-private enum GenerationOperation {
-    case initial
-    case fillRemaining(Int)
 }
 
 struct GenerationView: View {
@@ -106,20 +102,58 @@ struct GenerationView: View {
     @Environment(AppDependencies.self) private var dependencies
     @Environment(PracticeFlow.self) private var practiceFlow
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     let request: TrainingRequest
+    let session: PracticeSessionState
     let onCancel: () -> Void
 
-    @State private var providerSnapshot: ProviderConfiguration?
-    @State private var jobID = UUID()
-    @State private var phase = GenerationPhase.preparing
-    @State private var records: [QuestionRecord] = []
-    @State private var operationID = UUID()
-    @State private var operation = GenerationOperation.initial
-    @State private var shouldRunOperation = true
     @State private var showSettings = false
     @State private var routeProgress: CGFloat = 0
+    /// Auto-entry happens once; after the user returns here, re-entering is a
+    /// manual choice so swiping back never bounces them forward again.
+    @State private var autoEntered = false
+
+    private var records: [QuestionRecord] { session.records }
+    /// Enough approved questions to start while the rest keep generating.
+    private var readyThreshold: Int { min(3, request.count) }
+
+    private var autoStart: Bool {
+        #if DEBUG
+        return !ProcessInfo.processInfo.arguments.contains("-prompti-ui-manual-start")
+        #else
+        return true
+        #endif
+    }
+
+    private var phase: GenerationPhase {
+        if session.isFilling || (records.isEmpty && session.fillError == nil) {
+            switch session.furthestStage {
+            case .reviewing: return .reviewing
+            case .generating: return .connecting
+            case nil: return .preparing
+            }
+        }
+        if records.isEmpty, let fillError = session.fillError {
+            return .failed(failure(for: fillError))
+        }
+        return .ready
+    }
+
+    /// Approved-question throughput with a small floor per reached stage, so
+    /// the bar always moves forward even when a batch is sent back internally.
+    private var progressTarget: CGFloat {
+        let approved = CGFloat(records.count) / CGFloat(max(1, request.count))
+        let floor: CGFloat
+        switch phase {
+        case .preparing: floor = 0.05
+        case .connecting: floor = 0.15
+        case .reviewing: floor = 0.55
+        case .ready: floor = 1
+        case .failed: floor = 0
+        }
+        if case .failed = phase { return routeProgress }
+        return min(1, max(floor, approved))
+    }
 
     var body: some View {
         ZStack {
@@ -169,18 +203,19 @@ struct GenerationView: View {
                 .background(PromptiActionScrim())
 
         }
-        .task(id: operationID) {
-            guard shouldRunOperation else { return }
-            shouldRunOperation = false
-            await generate(operation)
+        .task {
+            session.fill(using: dependencies.generation, context: modelContext)
         }
         .sheet(isPresented: $showSettings) {
             NavigationStack { SettingsView() }
         }
-        .onAppear { updateRouteProgress(for: phase) }
-        .onChange(of: phase) { _, newPhase in
-            updateRouteProgress(for: newPhase)
+        .onAppear {
+            updateRouteProgress()
+            maybeOpenSession()
         }
+        .onChange(of: progressTarget) { _, _ in updateRouteProgress() }
+        .onChange(of: records.count) { _, _ in maybeOpenSession() }
+        .onChange(of: session.isFilling) { _, _ in maybeOpenSession() }
         .sensoryFeedback(.success, trigger: phase == .ready)
     }
 
@@ -226,55 +261,70 @@ struct GenerationView: View {
                 .foregroundStyle(Color.promptMuted)
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: 360)
+            if phase.isWorking || phase == .ready {
+                Text("\(records.count) of \(request.count) questions prepared")
+                    .font(.footnote.weight(.semibold))
+                    .monospacedDigit()
+                    .foregroundStyle(Color.promptAccent)
+                    .accessibilityIdentifier("generation.prepared")
+            }
         }
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("generation.status")
         .accessibilityValue(phase.accessibilityID)
     }
 
+    /// The three pipeline steps form one progress bar: the fill tracks prepared
+    /// questions and never shrinks when a batch is sent back for regeneration.
     private var stageStrip: some View {
-        stageStripContent
-            .frame(maxWidth: .infinity)
-            .padding(12)
-            .promptiSurface()
-        .accessibilityElement(children: .contain)
-    }
-
-    private var stageStripContent: some View {
-        ViewThatFits(in: .horizontal) {
-            HStack(spacing: 8) {
-                ForEach(GenerationStage.allCases) { stage in
-                    stageItem(stage)
-                    if stage != GenerationStage.allCases.last {
-                        Image(systemName: "chevron.right")
-                            .font(.caption2.bold())
-                            .foregroundStyle(.tertiary)
-                            .accessibilityHidden(true)
-                    }
-                }
+        let progress = min(max(routeProgress, 0), 1)
+        return HStack(spacing: 0) {
+            ForEach(GenerationStage.allCases) { stage in
+                stageItem(stage, progress: progress)
+                    .frame(maxWidth: .infinity)
             }
-            VStack(alignment: .leading, spacing: 10) {
-                ForEach(GenerationStage.allCases) { stage in
-                    stageItem(stage)
+        }
+        .padding(6)
+        .frame(maxWidth: .infinity)
+        .background {
+            ZStack(alignment: .leading) {
+                RoundedRectangle(cornerRadius: PromptiRadius.control, style: .continuous)
+                    .fill(Color.promptSurface)
+                GeometryReader { proxy in
+                    RoundedRectangle(cornerRadius: PromptiRadius.control, style: .continuous)
+                        .fill(Color.promptAction)
+                        .frame(width: proxy.size.width * progress)
                 }
             }
         }
+        .overlay {
+            RoundedRectangle(cornerRadius: PromptiRadius.control, style: .continuous)
+                .strokeBorder(Color.promptBorder.opacity(0.65), lineWidth: 0.75)
+                .allowsHitTesting(false)
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("generation.progress")
     }
 
-    private func stageItem(_ stage: GenerationStage) -> some View {
+    private func stageItem(_ stage: GenerationStage, progress: CGFloat) -> some View {
         let isComplete = phase.stageIndex > stage.rawValue
         let isActive = phase.stageIndex == stage.rawValue
+        // Once the fill passes the middle of a stage's third, its label sits on
+        // the action color and switches to the on-action ink.
+        let covered = progress >= (CGFloat(stage.rawValue) + 0.5) / CGFloat(GenerationStage.allCases.count)
         let localizedTitle = NSLocalizedString(stage.title, comment: "Generation stage title")
         let status = isComplete ? "complete" : isActive ? "in progress" : "up next"
         let localizedStatus = NSLocalizedString(status, comment: "Generation stage status")
         return HStack(spacing: 7) {
             Image(systemName: isComplete ? "checkmark.circle.fill" : stage.symbol)
-                .foregroundStyle(isComplete || isActive ? Color.promptAccent : Color.promptMuted)
+                .foregroundStyle(covered ? Color.promptOnAction : isComplete || isActive ? Color.promptAccent : Color.promptMuted)
             Text(LocalizedStringKey(stage.title))
                 .font(.caption.weight(isActive ? .bold : .semibold))
-                .foregroundStyle(isActive || isComplete ? Color.promptText : Color.promptMuted)
+                .foregroundStyle(covered ? Color.promptOnAction : isActive || isComplete ? Color.promptText : Color.promptMuted)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
         }
-        .frame(maxWidth: dynamicTypeSize.isAccessibilitySize ? .infinity : nil, alignment: .leading)
+        .frame(maxWidth: .infinity)
         .accessibilityLabel("\(localizedTitle), \(localizedStatus)")
     }
 
@@ -337,8 +387,11 @@ struct GenerationView: View {
         VStack(spacing: 10) {
             switch phase {
             case .ready:
+                if let message = session.fillMessage {
+                    InlineNotice(symbol: "exclamationmark.circle", text: message, tone: .warning)
+                }
                 Button {
-                    practiceFlow.showSession(records, request: request, configuration: providerSnapshot)
+                    openSession()
                 } label: {
                     Label {
                         HStack(spacing: 5) {
@@ -353,9 +406,9 @@ struct GenerationView: View {
                 .buttonStyle(PrimaryActionButtonStyle())
                 .accessibilityIdentifier("generation.start")
 
-                if records.count < request.count {
+                if session.hasRemaining {
                     Button("Try to add \(request.count - records.count) more", systemImage: "arrow.clockwise") {
-                        run(.fillRemaining(request.count - records.count))
+                        session.fill(using: dependencies.generation, context: modelContext)
                     }
                     .buttonStyle(SecondaryActionButtonStyle())
                     .accessibilityIdentifier("generation.fillRemaining")
@@ -363,7 +416,7 @@ struct GenerationView: View {
             case .failed(let failure):
                 if !records.isEmpty {
                     Button("Start prepared questions · \(records.count)") {
-                        practiceFlow.showSession(records, request: request, configuration: providerSnapshot)
+                        openSession()
                     }
                     .buttonStyle(PrimaryActionButtonStyle())
                     .accessibilityIdentifier("generation.startPrepared")
@@ -382,7 +435,7 @@ struct GenerationView: View {
         switch failure.recovery {
         case .retry:
             Button("Try again", systemImage: "arrow.clockwise") {
-                run(remainingOperation)
+                retryFill()
             }
             .buttonStyle(PrimaryActionButtonStyle())
             .accessibilityIdentifier("generation.recovery.retry")
@@ -393,8 +446,7 @@ struct GenerationView: View {
             .buttonStyle(PrimaryActionButtonStyle())
             .accessibilityIdentifier("generation.recovery.settings")
             Button("Try again", systemImage: "arrow.clockwise") {
-                providerSnapshot = dependencies.settings.provider
-                run(remainingOperation)
+                retryFill()
             }
                 .buttonStyle(SecondaryActionButtonStyle())
                 .accessibilityIdentifier("generation.recovery.retry")
@@ -424,75 +476,27 @@ struct GenerationView: View {
         }
     }
 
-    private func run(_ operation: GenerationOperation) {
-        self.operation = operation
-        shouldRunOperation = true
-        operationID = UUID()
+    private func retryFill() {
+        session.configuration = dependencies.settings.provider
+        session.fill(using: dependencies.generation, context: modelContext)
     }
 
-    private var remainingOperation: GenerationOperation {
-        records.isEmpty ? .initial : .fillRemaining(max(1, request.count - records.count))
+    private func openSession() {
+        autoEntered = true
+        practiceFlow.openSession(session)
     }
 
-    private func updateRouteProgress(for phase: GenerationPhase) {
-        let target: CGFloat
-        switch phase {
-        case .preparing: target = 0.14
-        case .connecting: target = 0.56
-        case .reviewing: target = 0.84
-        case .ready: target = 1
-        case .failed: return
-        }
+    private func maybeOpenSession() {
+        guard autoStart, !autoEntered else { return }
+        guard records.count >= readyThreshold || (!session.isFilling && !records.isEmpty) else { return }
+        openSession()
+    }
 
+    private func updateRouteProgress() {
+        // The journey marker only moves forward: a top-up retry after ready, or
+        // a batch sent back to generation, must not visibly regress the bar.
         withAnimation(reduceMotion ? nil : .smooth(duration: 0.7)) {
-            routeProgress = target
-        }
-    }
-
-    private func generate(_ operation: GenerationOperation) async {
-        phase = .preparing
-        do {
-            try await Task.sleep(for: .milliseconds(250))
-
-            let configuration = providerSnapshot ?? dependencies.settings.provider
-            providerSnapshot = configuration
-            var activeRequest = request
-            activeRequest.count = min(configuration.kind == .apple ? 2 : 3, request.count)
-            #if DEBUG
-            if ProcessInfo.processInfo.arguments.contains("-prompti-demo"), !ProcessInfo.processInfo.arguments.contains("-prompti-ui-auto-fill") { activeRequest.count = request.count }
-            #endif
-            if case .fillRemaining(let count) = operation {
-                activeRequest.count = count
-            }
-
-            let existing = try modelContext.fetch(FetchDescriptor<QuestionRecord>()).filter {
-                $0.destinationID == request.destination.id && $0.languageCode == request.language.code && $0.explanationLanguageCode == request.explanationLanguage.rawValue
-            }
-            activeRequest.previousPrompts = Array(existing.sorted { $0.createdAt < $1.createdAt }.suffix(30).map(\.prompt))
-            let generated = try await dependencies.generation.generate(
-                activeRequest,
-                configuration: configuration, jobID: jobID,
-                excluding: Set(existing.map { $0.question.contentSignature })
-            ) { stage in
-                await MainActor.run {
-                    phase = stage == .generating ? .connecting : .reviewing
-                }
-            }
-            try Task.checkCancellation()
-
-            let saved = try QuestionInventory.save(generated, request: activeRequest, context: modelContext)
-            guard !saved.isEmpty else { throw GenerationError.noApprovedQuestions }
-            switch operation {
-            case .initial:
-                records = saved
-            case .fillRemaining:
-                records.append(contentsOf: saved)
-            }
-            phase = .ready
-        } catch is CancellationError {
-            return
-        } catch {
-            phase = .failed(failure(for: error))
+            routeProgress = max(routeProgress, progressTarget)
         }
     }
 

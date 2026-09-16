@@ -9,10 +9,17 @@ final class PracticeSessionState {
     private(set) var records: [QuestionRecord]
     let requestedCount: Int
     let request: TrainingRequest?
-    let configuration: ProviderConfiguration?
+    /// Snapshot of the provider chosen when the set started; a retry may pick
+    /// up a repaired configuration.
+    var configuration: ProviderConfiguration?
     private(set) var isFilling = false
-    private(set) var fillError: String?
+    private(set) var fillError: Error?
+    /// Furthest pipeline stage reached by the current fill. Review rejections
+    /// may send work back to generation internally, but this never regresses so
+    /// the UI can show steady forward progress.
+    private(set) var furthestStage: QuestionGenerationStage?
     private var fillTask: Task<Void, Never>?
+    private var fillContext: ModelContext?
     private var operationID = UUID()
 
     init(records: [QuestionRecord], request: TrainingRequest? = nil, configuration: ProviderConfiguration? = nil) {
@@ -24,45 +31,70 @@ final class PracticeSessionState {
 
     var hasRemaining: Bool { records.count < requestedCount && request != nil }
 
+    /// User-facing fill problem. When some questions are ready a shortfall is a
+    /// retryable remainder, not the raw pipeline error.
+    var fillMessage: String? {
+        guard let fillError else { return nil }
+        if case GenerationError.noApprovedQuestions = fillError, !records.isEmpty {
+            return String(localized: "Some questions did not pass review. Retry to prepare the rest.")
+        }
+        return fillError.localizedDescription
+    }
+
     func fill(using generation: QuestionGenerationService, context: ModelContext) {
         guard hasRemaining, !isFilling, let request, let configuration else { return }
         let operation = UUID()
         operationID = operation
         isFilling = true
         fillError = nil
+        fillContext = context
+        // At most one bounded generation job per start/retry; its batches run
+        // concurrently inside the service. No endless retry loop.
+        let deadline = ContinuousClock.now.advanced(by: .seconds(180))
         fillTask = Task { [weak self] in
             guard let self else { return }
             defer {
-                if operationID == operation { isFilling = false; fillTask = nil }
-            }
-            // At most one bounded generation job per start/retry. No endless retry loop.
-            let batchSize = configuration.kind == .apple ? 2 : 3
-            let deadline = ContinuousClock.now.advanced(by: .seconds(180))
-            let maximumBatches = (requestedCount - records.count + batchSize - 1) / batchSize
-            do {
-                for _ in 0..<maximumBatches {
-                    try Task.checkCancellation()
-                    guard operationID == operation, hasRemaining else { return }
-                    guard ContinuousClock.now < deadline else { throw GenerationError.timedOut }
-                    var batch = request
-                    batch.count = min(configuration.kind == .apple ? 2 : 3, requestedCount - records.count)
-                    let existing = try context.fetch(FetchDescriptor<QuestionRecord>())
-                    let signatures = Set(existing.filter { $0.destinationID == request.destination.id && $0.languageCode == request.language.code && $0.explanationLanguageCode == request.explanationLanguage.rawValue }.map { $0.question.contentSignature })
-                    batch.previousPrompts = Array(existing.filter { $0.destinationID == request.destination.id && $0.languageCode == request.language.code }
-                        .sorted { $0.createdAt < $1.createdAt }.suffix(30).map(\.prompt))
-                    let generated = try await generation.generate(batch, configuration: configuration, jobID: id, excluding: signatures, deadline: deadline)
-                    try Task.checkCancellation()
-                    guard operationID == operation else { return }
-                    let saved = try QuestionInventory.save(generated, request: batch, context: context)
-                    records.append(contentsOf: saved)
-                    if saved.isEmpty { break }
+                if operationID == operation {
+                    isFilling = false
+                    fillTask = nil
+                    fillContext = nil
                 }
-                if hasRemaining { fillError = String(localized: "Some questions did not pass review. Retry to prepare the rest.") }
+            }
+            do {
+                var batch = request
+                batch.count = requestedCount - records.count
+                let existing = try context.fetch(FetchDescriptor<QuestionRecord>())
+                let signatures = Set(existing.filter { $0.destinationID == request.destination.id && $0.languageCode == request.language.code && $0.explanationLanguageCode == request.explanationLanguage.rawValue }.map { $0.question.contentSignature })
+                batch.previousPrompts = Array(existing.filter { $0.destinationID == request.destination.id && $0.languageCode == request.language.code }
+                    .sorted { $0.createdAt < $1.createdAt }.suffix(30).map(\.prompt))
+                let activeRequest = batch
+                _ = try await generation.generate(batch, configuration: configuration, jobID: id,
+                    excluding: signatures, deadline: deadline) { [weak self] event in
+                    await self?.handleGenerationEvent(event, request: activeRequest, operation: operation)
+                }
+                try Task.checkCancellation()
+                if hasRemaining {
+                    fillError = GenerationError.noApprovedQuestions
+                }
             } catch is CancellationError { }
             catch {
                 guard operationID == operation else { return }
-                fillError = error.localizedDescription
+                fillError = error
             }
+        }
+    }
+
+    private func handleGenerationEvent(_ event: QuestionGenerationEvent, request: TrainingRequest, operation: UUID) {
+        guard operationID == operation else { return }
+        switch event {
+        case .stage(let stage):
+            if stage == .reviewing { furthestStage = .reviewing }
+            else if furthestStage == nil { furthestStage = .generating }
+        case .approved(let questions):
+            guard let context = fillContext,
+                  let saved = try? QuestionInventory.save(questions, request: request, context: context) else { return }
+            let known = Set(records.map(\.id))
+            records.append(contentsOf: saved.filter { !known.contains($0.id) })
         }
     }
 
@@ -70,6 +102,7 @@ final class PracticeSessionState {
         operationID = UUID()
         fillTask?.cancel()
         fillTask = nil
+        fillContext = nil
         isFilling = false
     }
 }

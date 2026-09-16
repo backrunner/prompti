@@ -66,7 +66,9 @@ enum ContentSafety {
               !question.correctAnswer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
               question.correctAnswer.count <= 500,
               (question.sampleAnswer?.count ?? 0) <= 500,
-              request.kinds.contains(question.kind) else { return false }
+              request.kinds.contains(question.kind),
+              // The context note must add information instead of echoing the prompt.
+              normalized(question.translation) != normalized(question.prompt) else { return false }
 
         if let sources = question.sourceFactIDs {
             guard sources.count <= request.destination.facts.count,
@@ -106,6 +108,12 @@ enum ContentSafety {
                   question.options.allSatisfy({ !$0.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && $0.text.count <= 500 }),
                   Set(question.options.map { $0.text.precomposedStringWithCanonicalMapping.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() }).count == question.options.count,
                   question.options.contains(where: { $0.text == question.correctAnswer }) else { return false }
+            if question.kind == .multipleChoice {
+                // A reply choice or the answer may never restate the spoken line.
+                let prompt = normalized(question.prompt)
+                guard normalized(question.correctAnswer) != prompt,
+                      question.options.allSatisfy({ normalized($0.text) != prompt }) else { return false }
+            }
             if question.kind == .cloze, question.prompt.components(separatedBy: "___").count != 2 { return false }
         case .spoken:
             guard question.options.isEmpty,
@@ -115,6 +123,10 @@ enum ContentSafety {
         }
         return true
     }
+    private static func normalized(_ text: String) -> String {
+        text.precomposedStringWithCanonicalMapping.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+    }
+
     private static func validOptions(_ options: [String], answer: String) -> Bool {
         (3...5).contains(options.count) && options.contains(answer)
             && options.allSatisfy { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && $0.count <= 500 && isLocallySafe($0) }
