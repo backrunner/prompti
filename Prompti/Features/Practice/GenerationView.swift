@@ -414,13 +414,6 @@ struct GenerationView: View {
                     .accessibilityIdentifier("generation.fillRemaining")
                 }
             case .failed(let failure):
-                if !records.isEmpty {
-                    Button("Start prepared questions · \(records.count)") {
-                        openSession()
-                    }
-                    .buttonStyle(PrimaryActionButtonStyle())
-                    .accessibilityIdentifier("generation.startPrepared")
-                }
                 recoveryButton(for: failure)
             case .preparing, .connecting, .reviewing:
                 Button("Cancel generation", role: .cancel, action: onCancel)

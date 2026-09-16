@@ -3249,17 +3249,6 @@
         }
       }
     },
-    "Start prepared questions · %lld": {
-      "extractionState": "manual",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "先练已准备好的 %lld 道题"
-          }
-        }
-      }
-    },
     "Start with approved questions. The rest will be prepared as you practice.": {
       "extractionState": "manual",
       "localizations": {
