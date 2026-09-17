@@ -10,6 +10,7 @@ struct PracticeSetupView: View {
     @State private var languageCode = "ja"
     @State private var explanationLanguage = ExplanationLanguage.english
     @State private var difficulty = TrainingDifficulty.basic
+    @State private var generationMode = GenerationMode.efficient
     @State private var questionCount = 5
     @State private var selectedSceneIDs: Set<String> = ["dining", "transit"]
     @State private var selectedKinds: Set<QuestionKind> = [.cloze, .multipleChoice, .spoken]
@@ -28,7 +29,7 @@ struct PracticeSetupView: View {
             .map { TravelScene(id: $0.id.uuidString, title: $0.title, symbol: "square.and.pencil", context: $0.title, isLocal: true) }
     }
     private var allScenes: [TravelScene] {
-        dependencies.catalog.commonScenes + destination.localScenes + customScenes
+        dependencies.catalog.commonScenes + customScenes
     }
     private var selectedScenes: [TravelScene] { allScenes.filter { selectedSceneIDs.contains($0.id) } }
 
@@ -87,11 +88,14 @@ struct PracticeSetupView: View {
         .onChange(of: dependencies.settings.questionCount) { _, questionCount in
             self.questionCount = questionCount
         }
+        .onChange(of: dependencies.settings.generationMode) { _, generationMode in
+            self.generationMode = generationMode
+        }
         .onChange(of: destinationID) { _, _ in
             if !destination.languages.contains(where: { $0.code == languageCode }) {
                 languageCode = destination.languages[0].code
             }
-            selectedSceneIDs = Set(dependencies.catalog.commonScenes.prefix(2).map(\.id))
+            selectedSceneIDs = Set(dependencies.catalog.suggestedScenes.map(\.id))
         }
         .sensoryFeedback(.selection, trigger: difficulty)
         .sensoryFeedback(.selection, trigger: selectedSceneIDs)
@@ -141,6 +145,7 @@ struct PracticeSetupView: View {
             showDestinationPicker = true
         }
         .buttonStyle(CompactGlassButtonStyle())
+        .accessibilityIdentifier("practice.changeDestination")
     }
 
     private var destinationSymbol: some View {
@@ -168,14 +173,6 @@ struct PracticeSetupView: View {
                 }
                 .labelStyle(.iconOnly)
                 .buttonStyle(GlassIconButtonStyle())
-            }
-
-            if !destination.localScenes.isEmpty {
-                sceneGroup(
-                    "Destination picks",
-                    symbol: "mappin.and.ellipse",
-                    scenes: destination.localScenes
-                )
             }
 
             sceneGroup(
@@ -217,6 +214,7 @@ struct PracticeSetupView: View {
                         )
                     }
                     .buttonStyle(.plain)
+                    .accessibilityIdentifier("practice.scene.\(scene.id)")
                     .accessibilityLabel(Text(scene.localizedTitle))
                     .accessibilityValue(Text(isSelected ? "Selected" : "Not selected"))
                 }
@@ -266,6 +264,24 @@ struct PracticeSetupView: View {
                         .labelsHidden()
                     }
                     .accessibilityHint("Choose the language used for translations and explanations")
+                }
+            }
+
+            PromptiSectionSurface {
+                VStack(alignment: .leading, spacing: 12) {
+                    preferenceHeading("Generation budget", subtitle: generationMode.detail, symbol: "speedometer")
+                    Picker("Generation budget", selection: $generationMode) {
+                        ForEach(GenerationMode.allCases) { mode in
+                            Text(LocalizedStringKey(mode.title)).tag(mode)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .accessibilityIdentifier("practice.generationMode")
+                    Text(LocalizedStringKey(generationMode == .efficient
+                        ? "Uses fewer provider tokens."
+                        : "Requests extra candidates so review and duplicate filtering can still produce a full set."))
+                        .font(.footnote)
+                        .foregroundStyle(Color.promptMuted)
                 }
             }
         }
@@ -398,7 +414,9 @@ struct PracticeSetupView: View {
         explanationLanguage = dependencies.settings.explanationLanguage
         difficulty = dependencies.settings.difficulty
         questionCount = dependencies.settings.questionCount
+        generationMode = dependencies.settings.generationMode
         customDestination = dependencies.settings.customDestination
+        selectedSceneIDs = Set(dependencies.catalog.suggestedScenes.map(\.id))
     }
 
     private func synchronizeDestination(_ destinationID: String) {
@@ -413,6 +431,7 @@ struct PracticeSetupView: View {
         dependencies.settings.explanationLanguage = explanationLanguage
         dependencies.settings.difficulty = difficulty
         dependencies.settings.questionCount = questionCount
+        dependencies.settings.generationMode = generationMode
         dependencies.settings.customDestination = customDestination
         let language = destination.languages.first(where: { $0.code == languageCode }) ?? destination.languages[0]
         return TrainingRequest(
@@ -423,7 +442,8 @@ struct PracticeSetupView: View {
             customScene: nil,
             difficulty: difficulty,
             kinds: selectedKinds,
-            count: count
+            count: count,
+            generationMode: generationMode
         )
     }
 

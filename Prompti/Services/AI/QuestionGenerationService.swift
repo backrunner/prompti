@@ -32,6 +32,24 @@ actor QuestionGenerationService {
         var error: Error?
     }
 
+    /// One reservation table per job, shared by parallel batches before review.
+    /// Even simultaneous identical output is sent for paid review at most once.
+    private actor CandidateFilter {
+        var signatures: Set<String>
+        var ids = Set<UUID>()
+        var duplicates: QuestionDuplicateIndex
+
+        init(signatures: Set<String>, history: [GeneratedQuestion]) {
+            self.signatures = signatures
+            duplicates = QuestionDuplicateIndex(questions: history)
+        }
+
+        func reserve(_ questions: [GeneratedQuestion]) -> [GeneratedQuestion] {
+            questions.filter { ids.insert($0.id).inserted
+                && signatures.insert($0.contentSignature).inserted && duplicates.insert($0) }
+        }
+    }
+
     private func provider(configuration: ProviderConfiguration, jobID: UUID) throws -> any QuestionProvider {
         if let providerFactory { return try providerFactory(configuration, jobID) }
         if configuration.kind == .apple {
@@ -107,31 +125,64 @@ actor QuestionGenerationService {
         // Remote providers tolerate a few parallel calls; the on-device model is serialized.
         let concurrency = configuration.kind == .apple ? 1 : 3
         let deadline = deadline ?? ContinuousClock.now.advanced(by: .seconds(180))
-        let maxAttempts = (request.count + batchSize - 1) / batchSize + (allowsRegeneration ? 1 : 0)
+        // Forgiving mode deliberately asks for a small candidate cushion. The
+        // final set is still capped at the requested count, so extra approved
+        // candidates are never shown or persisted.
+        let extraCandidates = allowsRegeneration && request.generationMode == .forgiving
+            ? min(10, max(2, (request.count + 1) / 2)) : 0
+        let generationTarget = request.count + extraCandidates
+        let maxAttempts = (generationTarget + batchSize - 1) / batchSize + (allowsRegeneration ? 1 : 0)
+        let candidateBudget = generationTarget + (allowsRegeneration ? batchSize : 0)
+        let candidateFilter = CandidateFilter(signatures: signatures, history: request.previousQuestions)
+        let scenes = request.scenes.shuffled()
+        let kinds = request.kinds.sorted { $0.rawValue < $1.rawValue }
+        let goals = ["clarify an unfamiliar word", "ask for a recommendation", "state a preference",
+                     "confirm a quantity", "correct a misunderstanding", "request an alternative",
+                     "check an ingredient or included item", "ask for help with the next step",
+                     "arrange takeaway or collection", "settle payment"].shuffled()
+        let perspectives = ["an unfamiliar item or service", "a different kind of venue",
+                            "a local everyday routine", "a choice between alternatives",
+                            "a small mix-up to resolve", "a request with a practical constraint",
+                            "local courtesy in the selected situation", "a useful local expression in the learning language"].shuffled()
 
         // All mutable scheduler state lives inside the group body so nothing is
         // sent across isolation domains while children are running.
         let approved: [GeneratedQuestion] = try await withThrowingTaskGroup(of: BatchResult.self) { group in
             var seen = signatures
+            var duplicates = QuestionDuplicateIndex(questions: request.previousQuestions)
             var approved: [GeneratedQuestion] = []
+            var approvedIDs = Set<UUID>()
             var attempts = 0
             var inFlight = 0
             var inFlightNeed = 0
+            var requestedTotal = 0
             var firstError: Error?
             func schedule() -> Bool {
-                guard approved.count + inFlightNeed < request.count,
+                let initialRemaining = max(0, generationTarget - requestedTotal)
+                let target = initialRemaining > 0 ? generationTarget : request.count
+                guard approved.count < request.count, firstError == nil,
+                      requestedTotal < candidateBudget,
+                      approved.count + inFlightNeed < target,
                       attempts < maxAttempts,
                       ContinuousClock.now < deadline else { return false }
                 var batch = request
-                batch.count = min(batchSize, request.count - approved.count - inFlightNeed)
+                batch.count = min(batchSize, candidateBudget - requestedTotal, target - approved.count - inFlightNeed, initialRemaining > 0 ? initialRemaining : batchSize)
                 batch.previousPrompts = Array((request.previousPrompts + approved.map(\.prompt)).suffix(30))
+                // Disjoint settings and goals reduce collisions before any sibling finishes.
+                batch.scenes = (0..<min(batch.count, scenes.count)).map { scenes[(requestedTotal + $0) % scenes.count] }
+                batch.diversityHint = (0..<batch.count).map {
+                    goals[(requestedTotal + $0) % goals.count] + "; explore "
+                        + perspectives[(requestedTotal + $0) % perspectives.count]
+                        + " (prefer " + kinds[(requestedTotal + $0) % kinds.count].rawValue + ")"
+                }.joined(separator: "; ")
                 let active = batch
                 let batchID = UUID()
                 attempts += 1
                 inFlight += 1
                 inFlightNeed += batch.count
+                requestedTotal += batch.count
                 group.addTask {
-                    await self.runBatch(active, batchID: batchID, provider: provider, deadline: deadline, events: events)
+                    await self.runBatch(active, batchID: batchID, provider: provider, deadline: deadline, candidateFilter: candidateFilter, events: events)
                 }
                 return true
             }
@@ -144,24 +195,34 @@ actor QuestionGenerationService {
                     if firstError == nil { firstError = error }
                 } else {
                     var delivered: [GeneratedQuestion] = []
-                    for var question in result.questions where seen.insert(question.contentSignature).inserted {
+                    var remaining = max(0, request.count - approved.count)
+                    for var question in result.questions where remaining > 0 {
+                        guard approvedIDs.insert(question.id).inserted,
+                              seen.insert(question.contentSignature).inserted,
+                              duplicates.insert(question) else { continue }
                         question.sceneID = question.sceneID ?? request.scenes.first?.id
                         question.generation = GenerationMetadata(jobID: jobID, batchID: result.batchID,
                             provider: configuration.kind.rawValue, model: configuration.model, createdAt: .now,
                             sourceFactIDs: question.sourceFactIDs ?? [], checks: QuestionReview.checks,
-                            sourceFacts: zip(PromptBuilder.factIDs(for: request), request.destination.facts).compactMap {
+                            sourceFacts: zip(PromptBuilder.factIDs(for: request), PromptBuilder.facts(for: request)).compactMap {
                                 (question.sourceFactIDs ?? []).contains($0.0) ? GenerationSourceFact(id: $0.0, text: $0.1) : nil
                             })
                         approved.append(question)
                         delivered.append(question)
+                        remaining -= 1
                     }
                     if !delivered.isEmpty { await events?(.approved(delivered)) }
+                }
+                if approved.count == request.count {
+                    group.cancelAll()
+                    break
                 }
                 while inFlight < concurrency, schedule() { }
             }
             if approved.isEmpty, let firstError { throw firstError }
             return approved
         }
+        try Task.checkCancellation()
         guard !approved.isEmpty else { throw GenerationError.noApprovedQuestions }
         return approved
     }
@@ -173,6 +234,7 @@ actor QuestionGenerationService {
         batchID: UUID,
         provider: any QuestionProvider,
         deadline: ContinuousClock.Instant,
+        candidateFilter: CandidateFilter,
         events: (@Sendable (QuestionGenerationEvent) async -> Void)?
     ) async -> BatchResult {
         do {
@@ -180,13 +242,18 @@ actor QuestionGenerationService {
             let output = try await ProviderDeadline.run(until: min(deadline, .now.advanced(by: .seconds(60)))) {
                 try await provider.generate(batch)
             }
-            let candidates = output.prefix(batch.count).filter {
+            let valid = output.prefix(batch.count).filter {
                 ContentSafety.validate($0, request: batch)
                     && $0.sourceFactIDs != nil
                     && ($0.kind != .spoken || $0.rubric != nil)
                     && ($0.kind != .cloze || $0.cloze != nil)
+            }.map { question in
+                var question = question
+                question.sceneID = question.sceneID ?? batch.scenes.first?.id
+                return question
             }
             try Task.checkCancellation()
+            let candidates = await candidateFilter.reserve(valid)
             guard !candidates.isEmpty else { return BatchResult(requested: batch.count, batchID: batchID, questions: [], error: nil) }
             await events?(.stage(.reviewing))
             let decisions = try await ProviderDeadline.run(until: min(deadline, .now.advanced(by: .seconds(60)))) {

@@ -1,0 +1,56 @@
+{
+  "ok": true,
+  "type": "prediction",
+  "data": {
+    "id": "0mv8nadeknrmr0d0ntx9471gbc",
+    "model": "openai/gpt-image-2.5-flare",
+    "version": "hidden",
+    "input": {
+      "aspect_ratio": "1:1",
+      "background": "opaque",
+      "number_of_images": 1,
+      "output_format": "png",
+      "prompt": "Use case: logo-brand. Asset: ONE exceptionally simple bold outline city pictogram for a native iOS app, displayed at only 32 pixels.\nSubject: Tower Bridge, London.\nEssential silhouette: Tower Bridge: two stout matching towers with pointed caps, one high horizontal walkway, one lower deck and two simple outer suspension curves. No windows or trusses.\nDesign: a compact, iconic symbol, with the economy of a well-designed semibold UI symbol. ONE isolated subject. Front-facing or the simplest recognizable view. A few large geometric shapes, generous open counters. Rounded line caps and joins. Uniform HEAVY black strokes, 60 pixels thick on a 1024 pixel canvas, including every interior mark. Same weight everywhere, no delicate secondary lines. About 6-12 simple strokes in total; maximum THREE interior detail marks, only if needed for identity. Let the outline do the work. Interior gaps at least 70 pixels. Preserve the landmark's defining shape while radically reducing architectural detail. Centered, filling 78 percent of a square canvas, large clean margins. Pure black ink on a perfectly plain white background. White open interiors, no solid background shape.\nAvoid: thin lines, architectural illustration, realistic detail, complex facade, repeated windows, roof tiles, brickwork, lattice, hatching, perspective depth, hairlines, ornamental flourishes, multiple landmarks, landscape, scenery, ground lines, clouds, sun, stars, people, text, letters, numbers, labels, border, enclosing badge, color, shadows, gradients, texture, mockup, contact sheet. Do not add tiny marks or decorative details. The result must stay unmistakably clear as a very small app icon.",
+      "quality": "medium"
+    },
+    "logs": "Model: gpt-image-2.5-flare\nGenerating image...\nNo sid included.\nGenerated image in 15.1sec\nGenerated 1 images\nInput text token count: 349\nInput image token count: 0\nOutput token count: 439\n",
+    "output": [
+      "https://replicate.delivery/xezq/d4J3PnwfB43flkEXSZwa6tAuze6ZWGj3bM2BQt568qegvZ5cB/tmpe8s5bfuv.png"
+    ],
+    "data_removed": false,
+    "error": null,
+    "source": "api",
+    "status": "succeeded",
+    "created_at": "2026-09-17T09:37:45.117Z",
+    "started_at": "2026-09-17T09:37:45.137078695Z",
+    "completed_at": "2026-09-17T09:38:00.434256121Z",
+    "urls": {
+      "cancel": "https://api.replicate.com/v1/predictions/0mv8nadeknrmr0d0ntx9471gbc/cancel",
+      "get": "https://api.replicate.com/v1/predictions/0mv8nadeknrmr0d0ntx9471gbc",
+      "stream": "https://stream.replicate.com/v1/files/jbxs-krbwqbnkvgeqsmv5i2ybprly4dolp4axodvsuiq4bzs5kuicjfoq",
+      "web": "https://replicate.com/p/0mv8nadeknrmr0d0ntx9471gbc"
+    },
+    "metrics": {
+      "image_output_count": 1,
+      "model_variant": "medium",
+      "predict_time": 15.297177436,
+      "resolution_target": "1:1",
+      "total_time": 15.317256121
+    }
+  },
+  "artifacts": [
+    {
+      "path": "/Volumes/BRData/projects/prompti/output/imagegen/destinations/bold-v2/sources/london/0mv8nadeknrmr0d0ntx9471gbc-output-0-0.png",
+      "bytes": 675883,
+      "sourceUrl": "https://replicate.delivery/xezq/d4J3PnwfB43flkEXSZwa6tAuze6ZWGj3bM2BQt568qegvZ5cB/tmpe8s5bfuv.png",
+      "outputPath": "output.0",
+      "contentType": "image/png"
+    }
+  ],
+  "meta": {
+    "cliVersion": "0.1.1",
+    "authSource": "config",
+    "profile": "quaengine-demo",
+    "apiVersion": "v1"
+  }
+}

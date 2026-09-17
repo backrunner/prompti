@@ -106,6 +106,8 @@ struct UsageAndSessionTests {
         #expect(try QuestionInventory.save([duplicate], request: request, context: container.mainContext).isEmpty)
         var chinese = request
         chinese.explanationLanguage = .simplifiedChinese
+        #expect(try QuestionInventory.save([duplicate], request: chinese, context: container.mainContext).isEmpty)
+        duplicate.prompt = "Is this the bus stop?"
         let second = try #require(QuestionInventory.save([duplicate], request: chinese, context: container.mainContext).first)
         let questions = try container.mainContext.fetch(FetchDescriptor<QuestionRecord>())
         let available = QuestionInventory.available(questions, attempts: [], destinationID: request.destination.id,

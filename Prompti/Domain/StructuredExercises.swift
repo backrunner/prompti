@@ -7,6 +7,61 @@ enum ContentFingerprint {
     }
 }
 
+/// Rebuilt from saved questions, so relaunch, changed explanations and older
+/// content hashes cannot reintroduce an exercise. Semantic paraphrases are also
+/// checked by the existing quality review; this local gate is conservative.
+struct QuestionDuplicateIndex: Sendable {
+    private struct Entry: Sendable {
+        let prompt: String
+        let answer: String
+        let grams: Set<String>
+    }
+    private var prompts: Set<String> = []
+    private var utterances: Set<String> = []
+    private var recent: [Entry] = []
+
+    init(questions: [GeneratedQuestion] = []) {
+        prompts = Set(questions.map { Self.normalize($0.prompt) })
+        utterances = Set(questions.filter { $0.kind != .multipleChoice }.map { Self.normalize($0.correctAnswer) })
+        recent = questions.suffix(200).map { question in
+            let prompt = Self.normalize(question.prompt)
+            return Entry(prompt: prompt, answer: Self.normalize(question.correctAnswer), grams: Self.trigrams(prompt))
+        }
+    }
+
+    mutating func insert(_ question: GeneratedQuestion) -> Bool {
+        let prompt = Self.normalize(question.prompt)
+        let answer = Self.normalize(question.correctAnswer)
+        guard !prompts.contains(prompt),
+              question.kind == .multipleChoice || !utterances.contains(answer) else { return false }
+        let grams = Self.trigrams(prompt)
+        // Near matching only applies when the answer and numeric details are
+        // identical and the long prompt barely varies.
+        if prompt.count >= 24, recent.contains(where: { entry in
+            entry.answer == answer && entry.prompt.count >= 24
+                && entry.prompt.filter(\.isNumber) == prompt.filter(\.isNumber)
+                && Double(grams.intersection(entry.grams).count) / Double(max(1, grams.union(entry.grams).count)) >= 0.9
+        }) { return false }
+        prompts.insert(prompt)
+        if question.kind != .multipleChoice { utterances.insert(answer) }
+        recent.append(Entry(prompt: prompt, answer: answer, grams: grams))
+        if recent.count > 200 { recent.removeFirst() }
+        return true
+    }
+
+    private static func normalize(_ text: String) -> String {
+        text.precomposedStringWithCanonicalMapping
+            .folding(options: [.caseInsensitive, .widthInsensitive], locale: Locale(identifier: "en_US_POSIX"))
+            .filter { $0.isLetter || $0.isNumber }
+    }
+
+    private static func trigrams(_ text: String) -> Set<String> {
+        let characters = Array(text)
+        guard characters.count >= 3 else { return [text] }
+        return Set((0...(characters.count - 3)).map { String(characters[$0..<($0 + 3)]) })
+    }
+}
+
 struct ClozeBlank: Codable, Hashable, Identifiable, Sendable {
     var id: String
     var options: [String]
@@ -46,10 +101,10 @@ struct GenerationMetadata: Codable, Hashable, Sendable {
     var provider: String
     var model: String
     var createdAt: Date
-    var promptVersion = "2"
+    var promptVersion = "5"
     var schemaVersion = "2"
     var policyVersion = "2"
-    var catalogVersion = "2026-09"
+    var catalogVersion = "2026-09.3"
     var sourceFactIDs: [String]
     var checks: [String]
     var sourceFacts: [GenerationSourceFact] = []

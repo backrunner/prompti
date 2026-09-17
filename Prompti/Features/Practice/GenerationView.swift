@@ -204,7 +204,7 @@ struct GenerationView: View {
 
         }
         .task {
-            session.fill(using: dependencies.generation, context: modelContext)
+            session.fillIfNeeded(using: dependencies.generation, context: modelContext)
         }
         .sheet(isPresented: $showSettings) {
             NavigationStack { SettingsView() }
@@ -408,7 +408,7 @@ struct GenerationView: View {
 
                 if session.hasRemaining {
                     Button("Try to add \(request.count - records.count) more", systemImage: "arrow.clockwise") {
-                        session.fill(using: dependencies.generation, context: modelContext)
+                        retryFill()
                     }
                     .buttonStyle(SecondaryActionButtonStyle())
                     .accessibilityIdentifier("generation.fillRemaining")
@@ -463,7 +463,7 @@ struct GenerationView: View {
         case .ready:
             records.count == request.count
                 ? String(localized: "All questions passed review.")
-                : String(localized: "Start with approved questions. The rest will be prepared as you practice.")
+                : String(localized: "Start with approved questions, or retry to prepare the rest.")
         case .failed(let failure):
             failure.message
         }

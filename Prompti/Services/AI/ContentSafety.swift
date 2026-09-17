@@ -71,7 +71,7 @@ enum ContentSafety {
               normalized(question.translation) != normalized(question.prompt) else { return false }
 
         if let sources = question.sourceFactIDs {
-            guard sources.count <= request.destination.facts.count,
+            guard sources.count <= PromptBuilder.facts(for: request).count,
                   Set(sources).count == sources.count,
                   Set(sources).isSubset(of: Set(PromptBuilder.factIDs(for: request))) else { return false }
         }

@@ -23,6 +23,8 @@ struct Destination: Codable, Hashable, Identifiable, Sendable {
     var symbol: String
     var colorSeed: String
     var languages: [TrainingLanguage]
+    // Legacy identifiers remain available for displaying saved questions.
+    // New practice uses broad common scenes, expanded by AI from destination facts.
     var localScenes: [TravelScene]
     var facts: [String]
     var landmarkName: String = "City centre"
@@ -37,8 +39,8 @@ struct Destination: Codable, Hashable, Identifiable, Sendable {
 
 struct DestinationCatalog: Sendable {
     let commonScenes: [TravelScene] = [
-        .init(id: "dining", title: "Dining", symbol: "fork.knife", context: "ordering, dietary needs, paying"),
-        .init(id: "shopping", title: "Shopping", symbol: "bag.fill", context: "sizes, prices, payment"),
+        .init(id: "dining", title: "Dining", symbol: "fork.knife", context: "restaurants, food stalls, cafes, drinks and desserts; ordering, preferences, dietary needs, paying"),
+        .init(id: "shopping", title: "Shopping", symbol: "bag.fill", context: "shops, convenience stores and markets; choosing goods, sizes, quantities, prices, payment"),
         .init(id: "transit", title: "Transit", symbol: "tram.fill", context: "tickets, platforms, transfers"),
         .init(id: "directions", title: "Directions", symbol: "map.fill", context: "asking for and following directions"),
         .init(id: "attraction", title: "Attractions", symbol: "ticket.fill", context: "entry tickets, queues, opening information"),
@@ -64,7 +66,7 @@ struct DestinationCatalog: Sendable {
                 id: "tokyo", city: "Tokyo", country: "Japan", symbol: "building.2.fill", colorSeed: "mint",
                 languages: [japanese, english],
                 localScenes: [
-                    .init(id: "tokyo-ramen", title: "Ramen shop", symbol: "takeoutbag.and.cup.and.straw.fill", context: "ticket-machine ramen ordering", isLocal: true),
+                    .init(id: "tokyo-ramen", title: "Ramen shop", symbol: "takeoutbag.and.cup.and.straw.fill", context: "using a ticket machine and customizing a ramen order", isLocal: true),
                     .init(id: "tokyo-ic", title: "IC card", symbol: "creditcard.fill", context: "topping up and using a transit IC card", isLocal: true)
                 ],
                 facts: ["Many casual ramen shops use a ticket machine before seating.", "Transit IC cards are widely used on trains and in shops."],
@@ -123,6 +125,10 @@ struct DestinationCatalog: Sendable {
             "en": english, "zh": chinese, "ja": japanese, "ko": korean,
             "ru": russian, "de": german, "es": spanish
         ])
+    }
+
+    var suggestedScenes: [TravelScene] {
+        commonScenes.filter { ["dining", "transit"].contains($0.id) }
     }
 
     func destination(id: String) -> Destination {
@@ -250,22 +256,15 @@ struct DestinationCatalog: Sendable {
         ]
 
         return seeds.map { seed in
-            Destination(
+            return Destination(
                 id: seed.id,
                 city: seed.city,
                 country: seed.country,
                 symbol: seed.symbol,
                 colorSeed: "global",
                 languages: seed.languageCodes.compactMap { languages[$0] },
-                localScenes: [
-                    TravelScene(
-                        id: "\(seed.id)-highlights",
-                        title: seed.landmark,
-                        symbol: seed.symbol,
-                        context: "visiting and navigating around \(seed.landmark)",
-                        isLocal: true
-                    )
-                ],
+                localScenes: [TravelScene(id: "\(seed.id)-highlights", title: seed.landmark,
+                    symbol: seed.symbol, context: "visiting and navigating around \(seed.landmark)", isLocal: true)],
                 facts: ["\(seed.landmark) is a well-known visitor area in \(seed.city)."],
                 landmarkName: seed.landmark,
                 latitude: seed.latitude,

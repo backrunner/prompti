@@ -1,0 +1,56 @@
+{
+  "ok": true,
+  "type": "prediction",
+  "data": {
+    "id": "4ek783qkc9rmr0d0ntytj5pnx0",
+    "model": "openai/gpt-image-2.5-flare",
+    "version": "hidden",
+    "input": {
+      "aspect_ratio": "1:1",
+      "background": "opaque",
+      "number_of_images": 1,
+      "output_format": "png",
+      "prompt": "Use case: logo-brand. Asset: ONE exceptionally simple bold outline city pictogram for a native iOS app, displayed at only 32 pixels.\nSubject: El Rey Maya pyramid, Cancun.\nEssential silhouette: El Rey Maya ruins: ONE simple stepped Maya pyramid with three broad terraces and a small square temple at the summit. No palm, vegetation or staircase stripes.\nDesign: a compact, iconic symbol, with the economy of a well-designed semibold UI symbol. ONE isolated subject. Front-facing or the simplest recognizable view. A few large geometric shapes, generous open counters. Rounded line caps and joins. Uniform HEAVY black strokes, 60 pixels thick on a 1024 pixel canvas, including every interior mark. Same weight everywhere, no delicate secondary lines. About 6-12 simple strokes in total; maximum THREE interior detail marks, only if needed for identity. Let the outline do the work. Interior gaps at least 70 pixels. Preserve the landmark's defining shape while radically reducing architectural detail. Centered, filling 78 percent of a square canvas, large clean margins. Pure black ink on a perfectly plain white background. White open interiors, no solid background shape.\nAvoid: thin lines, architectural illustration, realistic detail, complex facade, repeated windows, roof tiles, brickwork, lattice, hatching, perspective depth, hairlines, ornamental flourishes, multiple landmarks, landscape, scenery, ground lines, clouds, sun, stars, people, text, letters, numbers, labels, border, enclosing badge, color, shadows, gradients, texture, mockup, contact sheet. Do not add tiny marks or decorative details. The result must stay unmistakably clear as a very small app icon.",
+      "quality": "medium"
+    },
+    "logs": "Model: gpt-image-2.5-flare\nGenerating image...\nNo sid included.\nGenerated image in 8.7sec\nGenerated 1 images\nInput text token count: 350\nInput image token count: 0\nOutput token count: 439\n",
+    "output": [
+      "https://replicate.delivery/xezq/tXzr16JI3j6uDplfmyeQDDP2gBwfqNF4RPs8bCxZzziReZ5cB/tmp45n8qanq.png"
+    ],
+    "data_removed": false,
+    "error": null,
+    "source": "api",
+    "status": "succeeded",
+    "created_at": "2026-09-17T09:41:19.33Z",
+    "started_at": "2026-09-17T09:41:19.34934183Z",
+    "completed_at": "2026-09-17T09:41:28.163574226Z",
+    "urls": {
+      "cancel": "https://api.replicate.com/v1/predictions/4ek783qkc9rmr0d0ntytj5pnx0/cancel",
+      "get": "https://api.replicate.com/v1/predictions/4ek783qkc9rmr0d0ntytj5pnx0",
+      "stream": "https://stream.replicate.com/v1/files/jbxs-3ki2musyvj7oih7dgwpcl55izjsthlj2k4firx66texux5b56eea",
+      "web": "https://replicate.com/p/4ek783qkc9rmr0d0ntytj5pnx0"
+    },
+    "metrics": {
+      "image_output_count": 1,
+      "model_variant": "medium",
+      "predict_time": 8.814232396,
+      "resolution_target": "1:1",
+      "total_time": 8.833574226
+    }
+  },
+  "artifacts": [
+    {
+      "path": "/Volumes/BRData/projects/prompti/output/imagegen/destinations/bold-v2/sources/cancun/4ek783qkc9rmr0d0ntytj5pnx0-output-0-0.png",
+      "bytes": 728097,
+      "sourceUrl": "https://replicate.delivery/xezq/tXzr16JI3j6uDplfmyeQDDP2gBwfqNF4RPs8bCxZzziReZ5cB/tmp45n8qanq.png",
+      "outputPath": "output.0",
+      "contentType": "image/png"
+    }
+  ],
+  "meta": {
+    "cliVersion": "0.1.1",
+    "authSource": "config",
+    "profile": "quaengine-demo",
+    "apiVersion": "v1"
+  }
+}

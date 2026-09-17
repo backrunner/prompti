@@ -2,7 +2,7 @@
 """Convert saved Replicate line-art PNGs into transparent, editable SVG paths.
 
 Requires Pillow and potrace 1.16. No network or model calls are made.
-The original PNGs and inputs stay in output/imagegen/destinations/sources.
+The original PNGs and inputs stay in output/imagegen/destinations/bold-v2/sources.
 """
 import argparse
 import hashlib
@@ -10,12 +10,13 @@ import html
 import json
 from pathlib import Path
 import re
+import runpy
 import subprocess
 import tempfile
 from PIL import Image, ImageFilter
 
 ROOT = Path(__file__).resolve().parents[1]
-RAW = ROOT / "output/imagegen/destinations/sources"
+RAW = ROOT / "output/imagegen/destinations/bold-v2/sources"
 SOURCE = ROOT / "Tools/DestinationArtwork"
 
 
@@ -52,25 +53,31 @@ def vectorize(image_path, subject):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("cities", nargs="*")
+    parser.add_argument("--raw", type=Path, default=RAW)
+    parser.add_argument("--output", type=Path, default=SOURCE)
     args = parser.parse_args()
+    args.raw = args.raw.resolve()
+    args.output = args.output.resolve()
     catalog = json.loads((ROOT / "Documentation/Brand/DestinationArtwork/manifest.json").read_text())
-    SOURCE.mkdir(exist_ok=True)
+    overrides = runpy.run_path(str(ROOT / "Tools/GenerateDestinationArtwork.py"))["SUBJECT_OVERRIDES"]
+    args.output.mkdir(parents=True, exist_ok=True)
     entries = []
     for entry in catalog["destinations"]:
         key = entry["id"]
         if args.cities and key not in args.cities:
             continue
-        prediction = json.loads((RAW / key / "prediction.json").read_text())
+        prediction = json.loads((args.raw / key / "prediction.json").read_text())
         if prediction["data"]["status"] != "succeeded":
             raise ValueError(f"Unsuccessful generation: {key}")
         # Basename makes the checked-in generation record portable across checkouts.
-        original = RAW / key / Path(prediction["artifacts"][0]["path"]).name
-        svg = vectorize(original, entry["subject"])
-        (SOURCE / f"{key}.svg").write_text(svg)
-        entries.append(dict(id=key, subject=entry["subject"], subject_zh=entry["subject_zh"],
-                            source=f"Tools/DestinationArtwork/{key}.svg",
+        original = args.raw / key / Path(prediction["artifacts"][0]["path"]).name
+        subject, subject_zh = overrides.get(key, (entry["subject"], entry["subject_zh"]))
+        svg = vectorize(original, subject)
+        (args.output / f"{key}.svg").write_text(svg)
+        entries.append(dict(id=key, subject=subject, subject_zh=subject_zh,
+                            source=str((args.output / f"{key}.svg").relative_to(ROOT)),
                             original=str(original.relative_to(ROOT)),
-                            input=str((RAW / key / "input.json").relative_to(ROOT)),
+                            input=str((args.raw / key / "input.json").relative_to(ROOT)),
                             prediction_id=prediction["data"]["id"],
                             model=prediction["data"]["model"], version=prediction["data"]["version"],
                             quality=prediction["data"]["input"]["quality"],
@@ -79,10 +86,10 @@ def main():
                             svg_sha256=hashlib.sha256(svg.encode()).hexdigest()))
         print(f"Prepared {key}")
     if not args.cities:
-        (SOURCE / "manifest.json").write_text(json.dumps(dict(
+        (args.output / "manifest.json").write_text(json.dumps(dict(
             model="openai/gpt-image-2.5-flare", generation="Tools/GenerateDestinationArtwork.py",
             preparation="Tools/PrepareDestinationArtwork.py", viewBox="0 0 64 64",
-            provenance="AI-generated line artwork; locally thresholded, normalized and traced with potrace 1.16.",
+            provenance="AI-generated bold minimal pictograms; locally thresholded, normalized and traced with potrace 1.16.",
             destinations=entries), ensure_ascii=False, indent=2) + "\n")
 
 

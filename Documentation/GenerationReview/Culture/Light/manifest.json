@@ -1,0 +1,150 @@
+[
+  {
+    "attachments": [
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "CF4852F6-F42E-4285-95E7-1ACBDA1A29C3",
+        "deviceName": "Prompti-Culture-Review",
+        "exportedFileName": "C6C862E3-D7BD-4FEB-85D6-CEBFBF2C786B.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "practice-summary-partial_0_23BB5363-94E7-450D-8105-A1B97E8138B8.png",
+        "timestamp": 1789638133.532,
+        "file": "practice-summary-partial.png"
+      }
+    ],
+    "testIdentifier": "PromptiUITests/testAutomaticFillFailureAllowsPartialCompletion()",
+    "testIdentifierURL": "test://com.apple.xcode/Prompti/PromptiUITests/PromptiUITests/testAutomaticFillFailureAllowsPartialCompletion"
+  },
+  {
+    "attachments": [
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "CF4852F6-F42E-4285-95E7-1ACBDA1A29C3",
+        "deviceName": "Prompti-Culture-Review",
+        "exportedFileName": "9FDCF7F8-A2AA-47AD-A5CF-333B75DBF7C3.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "generation-session-zh-Hans_0_C6CC72A6-F80F-4F7B-AB99-4B02861D51D0.png",
+        "timestamp": 1789638274.415,
+        "file": "generation-session-zh-Hans.png"
+      },
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "CF4852F6-F42E-4285-95E7-1ACBDA1A29C3",
+        "deviceName": "Prompti-Culture-Review",
+        "exportedFileName": "89BDE21A-6605-4721-B267-E9896161DBA3.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "generation-flexible-zh-Hans_0_782D5995-61C4-4610-B605-2B8BF29F6673.png",
+        "timestamp": 1789638270.465,
+        "file": "generation-flexible-zh-Hans.png"
+      },
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "CF4852F6-F42E-4285-95E7-1ACBDA1A29C3",
+        "deviceName": "Prompti-Culture-Review",
+        "exportedFileName": "078833A1-6368-481A-B48B-8CFD1FC03D90.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "generation-efficient-zh-Hans_0_119670E7-D1B0-4B0B-8122-0744983E5F2D.png",
+        "timestamp": 1789638267.89,
+        "file": "generation-efficient-zh-Hans.png"
+      },
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "CF4852F6-F42E-4285-95E7-1ACBDA1A29C3",
+        "deviceName": "Prompti-Culture-Review",
+        "exportedFileName": "F4D8BBD1-DBE2-42A5-B9A6-16F30AF6AB56.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "paris-scenes-zh-Hans_0_7304782D-911D-46F2-A29C-C79EE77F30D2.png",
+        "timestamp": 1789638254.634,
+        "file": "paris-scenes-zh-Hans.png"
+      },
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "CF4852F6-F42E-4285-95E7-1ACBDA1A29C3",
+        "deviceName": "Prompti-Culture-Review",
+        "exportedFileName": "0E9A9DBC-130C-4CF2-99E3-E21F50527B1A.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "singapore-scenes-zh-Hans_0_F7DF4C04-0AA3-42B7-94D7-B7CD7AC263C7.png",
+        "timestamp": 1789638237.294,
+        "file": "singapore-scenes-zh-Hans.png"
+      },
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "CF4852F6-F42E-4285-95E7-1ACBDA1A29C3",
+        "deviceName": "Prompti-Culture-Review",
+        "exportedFileName": "7A61AC4F-73B9-4CC1-9E52-1E0E56823423.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "tokyo-scenes-zh-Hans_0_12AB5288-26F1-4DE5-87AB-A9FA13A51C0E.png",
+        "timestamp": 1789638213.494,
+        "file": "tokyo-scenes-zh-Hans.png"
+      }
+    ],
+    "testIdentifier": "PromptiUITests/testGenerationModeAndBroadScenesChinese()",
+    "testIdentifierURL": "test://com.apple.xcode/Prompti/PromptiUITests/PromptiUITests/testGenerationModeAndBroadScenesChinese"
+  },
+  {
+    "attachments": [
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "CF4852F6-F42E-4285-95E7-1ACBDA1A29C3",
+        "deviceName": "Prompti-Culture-Review",
+        "exportedFileName": "E0784D84-7C08-4ABF-9054-AB72F455F9A1.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "generation-session-en_0_C63E7640-D4FC-45D6-A745-BBFA5CF8B8A0.png",
+        "timestamp": 1789638330.645,
+        "file": "generation-session-en.png"
+      },
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "CF4852F6-F42E-4285-95E7-1ACBDA1A29C3",
+        "deviceName": "Prompti-Culture-Review",
+        "exportedFileName": "92D46453-5637-42C5-AD5E-B5B2CCE518C2.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "generation-flexible-en_0_F06832A7-64E8-431A-B55F-6AA2C3BB85A1.png",
+        "timestamp": 1789638328.98,
+        "file": "generation-flexible-en.png"
+      },
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "CF4852F6-F42E-4285-95E7-1ACBDA1A29C3",
+        "deviceName": "Prompti-Culture-Review",
+        "exportedFileName": "389CA3F5-E8A4-423C-8811-7A1916C14616.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "generation-efficient-en_0_3A6127FF-6DD7-4096-9332-6340A6B14355.png",
+        "timestamp": 1789638326.895,
+        "file": "generation-efficient-en.png"
+      },
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "CF4852F6-F42E-4285-95E7-1ACBDA1A29C3",
+        "deviceName": "Prompti-Culture-Review",
+        "exportedFileName": "8092402B-CC12-40DA-ACF8-BDD5EEEC11CC.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "paris-scenes-en_0_534AB920-7CF2-4154-A7F9-A95D260E76BC.png",
+        "timestamp": 1789638322.247,
+        "file": "paris-scenes-en.png"
+      },
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "CF4852F6-F42E-4285-95E7-1ACBDA1A29C3",
+        "deviceName": "Prompti-Culture-Review",
+        "exportedFileName": "13665722-3FB3-4336-9855-02539A0FC36D.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "singapore-scenes-en_0_A4877A3D-40B3-4C6F-BEB7-F44E50DE3183.png",
+        "timestamp": 1789638313.708,
+        "file": "singapore-scenes-en.png"
+      },
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "CF4852F6-F42E-4285-95E7-1ACBDA1A29C3",
+        "deviceName": "Prompti-Culture-Review",
+        "exportedFileName": "50F8C10C-9442-402E-A932-1053890424CF.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "tokyo-scenes-en_0_4D9EAAFA-3E25-41E2-A659-AF51A7906A37.png",
+        "timestamp": 1789638301.517,
+        "file": "tokyo-scenes-en.png"
+      }
+    ],
+    "testIdentifier": "PromptiUITests/testGenerationModeAndBroadScenesEnglish()",
+    "testIdentifierURL": "test://com.apple.xcode/Prompti/PromptiUITests/PromptiUITests/testGenerationModeAndBroadScenesEnglish"
+  }
+]

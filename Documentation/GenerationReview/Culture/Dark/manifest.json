@@ -1,0 +1,27 @@
+{
+  "captureMethod": "Direct simctl launch and screenshot; manually inspected, not an automated test pass",
+  "deviceId": "CF4852F6-F42E-4285-95E7-1ACBDA1A29C3",
+  "deviceName": "Prompti-Culture-Review",
+  "modelName": "iPhone 17",
+  "osVersion": "27.0",
+  "osBuildNumber": "24A5390f",
+  "appearance": "dark",
+  "contentSize": "large",
+  "launchArguments": [
+    "-prompti-demo",
+    "-prompti-practice"
+  ],
+  "automatedTestStatus": "Interrupted during simulator app/test startup; no complete result bundle",
+  "screenshots": [
+    {
+      "file": "tokyo-scenes-en.png",
+      "language": "en",
+      "fileSavedAt": "2026-09-17T09:58:18.889004+00:00"
+    },
+    {
+      "file": "tokyo-scenes-zh-Hans.png",
+      "language": "zh-Hans",
+      "fileSavedAt": "2026-09-17T10:05:37.695364+00:00"
+    }
+  ]
+}

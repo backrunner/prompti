@@ -1,0 +1,9 @@
+2026-09-17 17:46:19.004 xcodebuild[1715:34320042] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+Writing result bundle at path:
+	/tmp/prompti-culture-ui-dark.xcresult
+
+2026-09-17 17:48:33.631 xcodebuild[1715:34320042] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-09-17 17:48:33.632 xcodebuild[1715:34320042] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-09-17 17:49:58.781 xcodebuild[1715:34320042] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-09-17 17:49:58.781 xcodebuild[1715:34320042] [MT] IDELaunchParametersSnapshot: no debugger version
+** BUILD INTERRUPTED **

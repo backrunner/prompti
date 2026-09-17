@@ -7,6 +7,7 @@ actor CapabilityProvider: QuestionProvider {
     enum ReviewMode: Sendable { case approve, rejectFirst, missing, duplicate, unknown }
     private(set) var requests: [TrainingRequest] = []
     private(set) var speechCalls = 0
+    private(set) var reviewedCounts: [Int] = []
     private(set) var maxInFlight = 0
     private var inFlight = 0
     var reviewMode: ReviewMode
@@ -17,15 +18,17 @@ actor CapabilityProvider: QuestionProvider {
     /// request itself.
     let failsBelowCount: Int?
     let fixedPrompt: String?
+    let citesAllFacts: Bool
 
     init(reviewMode: ReviewMode = .approve, delay: Duration = .zero,
          verdict: SemanticVerdict = SemanticVerdict(result: .correct, feedback: "Your request has the same meaning."),
-         failsBelowCount: Int? = nil, fixedPrompt: String? = nil) {
+         failsBelowCount: Int? = nil, fixedPrompt: String? = nil, citesAllFacts: Bool = false) {
         self.reviewMode = reviewMode
         self.delay = delay
         self.verdict = verdict
         self.failsBelowCount = failsBelowCount
         self.fixedPrompt = fixedPrompt
+        self.citesAllFacts = citesAllFacts
     }
 
     func generate(_ request: TrainingRequest) async throws -> [GeneratedQuestion] {
@@ -42,13 +45,14 @@ actor CapabilityProvider: QuestionProvider {
             GeneratedQuestion(kind: .multipleChoice, prompt: fixedPrompt ?? "Where is platform \(ordinal * 10 + offset)?",
                 options: ["Over there", "Very tasty", "Three people", "Sunny"].map { QuestionOption(text: $0) },
                 correctAnswer: "Over there", translation: "Asking for directions.", explanation: "A clear, polite direction question.",
-                sceneID: request.scenes[0].id, sourceFactIDs: [])
+                sceneID: request.scenes[0].id, sourceFactIDs: citesAllFacts ? PromptBuilder.factIDs(for: request) : [])
         }
     }
 
     func reviewScene(_ scene: String) async throws -> SceneReview { SceneReview(isAllowed: true, normalized: scene, reason: "travel") }
 
     func reviewQuestions(_ questions: [GeneratedQuestion], request: TrainingRequest) async throws -> [QuestionReview] {
+        reviewedCounts.append(questions.count)
         var decisions = questions.enumerated().map { index, question in
             QuestionReview(questionID: question.id, safe: reviewMode != .rejectFirst || index != 0,
                 language: true, scene: true, natural: true, answer: true, difficulty: true, reason: "Reviewed")
@@ -164,6 +168,241 @@ struct GenerationCapabilityTests {
         #expect(result.count == 1)
         // Attempts stay bounded even though the remainder could never be filled.
         #expect(await provider.requests.count <= 3)
+        #expect(await provider.reviewedCounts.reduce(0, +) == 1)
+    }
+
+    @Test("Forgiving generation requests a candidate cushion but returns the target size")
+    func forgivingGenerationBudget() async throws {
+        let fixture = CapabilityProvider()
+        var request = Self.request(count: 5)
+        request.generationMode = .forgiving
+        let result = try await service(fixture).generate(request,
+            configuration: ProviderConfiguration(kind: .openAIResponses, model: "fixture"))
+        #expect(result.count == 5)
+        let requested = await fixture.requests.map(\.count).reduce(0, +)
+        #expect(requested == 8) // Initial 5 + 3 cushion; no calls after completion.
+    }
+
+    @Test("Flexible candidates absorb individual rejections without a serial refill")
+    func forgivingRejections() async throws {
+        let fixture = CapabilityProvider(reviewMode: .rejectFirst)
+        var request = Self.request(count: 5)
+        request.generationMode = .forgiving
+        let result = try await service(fixture).generate(request, configuration: ProviderConfiguration())
+        #expect(result.count == 5)
+        #expect(await fixture.requests.count == 3)
+    }
+
+    @Test("Pre-generation cannot exceed its reserved count even in flexible mode")
+    func reservedBudget() async throws {
+        let fixture = CapabilityProvider(reviewMode: .rejectFirst)
+        var request = Self.request(count: 3)
+        request.generationMode = .forgiving
+        let result = try await service(fixture).generate(request, configuration: ProviderConfiguration(), allowsRegeneration: false)
+        #expect(result.count == 2)
+        #expect(await fixture.requests.map(\.count).reduce(0, +) == 3)
+    }
+
+    @Test("A known duplicate incurs no review request, and an intra-batch duplicate is reviewed once")
+    func deduplicateBeforeReview() async throws {
+        let fixture = CapabilityProvider(fixedPrompt: "Where is the exit?")
+        var request = Self.request()
+        let first = try await service(fixture).generate(request, configuration: ProviderConfiguration(), allowsRegeneration: false)
+        #expect(first.count == 1)
+        #expect(await fixture.reviewedCounts == [1])
+        request.previousQuestions = first
+        await #expect(throws: GenerationError.self) {
+            try await service(fixture).generate(request, configuration: ProviderConfiguration(), allowsRegeneration: false)
+        }
+        #expect(await fixture.reviewedCounts == [1])
+    }
+
+    @Test("Provider failures stop further scheduling while the initial parallel work finishes")
+    func noFailureRetry() async {
+        let fixture = CapabilityProvider(failsBelowCount: 4)
+        await #expect(throws: GenerationError.self) {
+            try await service(fixture).generate(Self.request(count: 20), configuration: ProviderConfiguration())
+        }
+        #expect(await fixture.requests.count == 3)
+    }
+
+    @Test("All set sizes and modes respect delivery and candidate bounds", arguments: [1, 3, 5, 8, 20], GenerationMode.allCases)
+    func deliveryBounds(_ count: Int, _ mode: GenerationMode) async throws {
+        actor Collector {
+            var total = 0
+            func receive(_ event: QuestionGenerationEvent) {
+                if case .approved(let questions) = event { total += questions.count }
+            }
+        }
+        let collector = Collector()
+        let fixture = CapabilityProvider()
+        var request = Self.request(count: count)
+        request.generationMode = mode
+        let result = try await service(fixture).generate(request, configuration: ProviderConfiguration()) {
+            await collector.receive($0)
+        }
+        #expect(result.count == count)
+        #expect(await collector.total == count)
+        let requested = await fixture.requests.map(\.count).reduce(0, +)
+        #expect(requested <= count + (mode == .forgiving ? min(10, max(2, (count + 1) / 2)) : 0))
+    }
+
+    @Test("Duplicate comparison normalizes punctuation and width, retaining distinct numeric tasks")
+    func duplicateFormatting() {
+        var question = GeneratedQuestion(kind: .multipleChoice, prompt: "Could you please confirm platform 12 for this train?",
+            options: [], correctAnswer: "Yes, please.", translation: "", explanation: "")
+        var index = QuestionDuplicateIndex(questions: [question])
+        question.prompt = "COULD you please confirm platform １２ for this train！"
+        let inserted1 = index.insert(question)
+        #expect(!inserted1)
+        question.correctAnswer = "Of course."
+        let inserted2 = index.insert(question)
+        #expect(!inserted2)
+        question.correctAnswer = "Yes, please."
+        question.prompt = "Could you please confirm platform 13 for this train?"
+        let inserted3 = index.insert(question)
+        #expect(inserted3)
+        question.prompt = "お持ち帰りですか？"
+        let inserted4 = index.insert(question)
+        #expect(inserted4)
+        question.prompt = "お持ち帰りですか。"
+        let inserted5 = index.insert(question)
+        #expect(!inserted5)
+    }
+
+    @Test("Moving a cloze gap or switching to speech cannot repeat the same complete utterance")
+    func duplicateSolvedUtterance() {
+        var question = GeneratedQuestion(kind: .cloze, prompt: "I'd like ___ coffee.", options: [],
+            correctAnswer: "I'd like iced coffee.", translation: "", explanation: "")
+        var index = QuestionDuplicateIndex(questions: [question])
+        question.prompt = "I'd like iced ___."
+        let shifted = index.insert(question)
+        #expect(!shifted)
+        question.kind = .spoken
+        question.prompt = "Order an iced coffee."
+        let spoken = index.insert(question)
+        #expect(!spoken)
+    }
+
+    @Test("Review prompts retain constraints without resending generation instructions or option UUIDs")
+    func compactReviewPrompt() throws {
+        let question = GeneratedQuestion(kind: .multipleChoice, prompt: "Hot or iced?",
+            options: [QuestionOption(text: "Iced, please.")], correctAnswer: "Iced, please.", translation: "Ordering at a cafe.", explanation: "State a temperature.")
+        let request = Self.request()
+        let prompt = try PromptBuilder.qualityReviewPrompt([question], request: request)
+        #expect(!prompt.contains("Generate exactly"))
+        #expect(!prompt.contains(question.options[0].id.uuidString))
+        #expect(prompt.contains(question.id.uuidString))
+        #expect(prompt.contains(request.difficulty.generationConstraints))
+        #expect(prompt.contains("sourceFactIDs") && prompt.contains("near duplicates"))
+        #expect(prompt.count < (try PromptBuilder.questionPrompt(request)).count)
+    }
+
+    @Test("Broad scenes carry local inspiration without turning examples into selectable topics")
+    func sceneDiversityPrompt() throws {
+        let catalog = DestinationCatalog()
+        let destination = catalog.destination(id: "singapore")
+        #expect(Set(catalog.suggestedScenes.map(\.id)) == ["dining", "transit"])
+        #expect(!catalog.commonScenes.contains { ["cafe", "desserts", "market"].contains($0.id) })
+        for city in catalog.destinations where city.country == "Japan" {
+            #expect(DestinationCultureCatalog.facts(for: city, languageCode: "ja").contains { $0.contains("sushi") && $0.contains("wagashi") })
+        }
+        #expect(DestinationCultureCatalog.cityLife["osaka"]?.contains("takoyaki") == true)
+        #expect(DestinationCultureCatalog.cityLife["kyoto"]?.contains("matcha") == true)
+        // Legacy labels still resolve when viewing old saved questions.
+        #expect(destination.localScenes.contains { $0.id == "singapore-highlights" })
+        var request = Self.request(count: 2)
+        request.destination = destination
+        request.scenes = [catalog.commonScenes[0]]
+        request.diversityHint = "Explore a different kind of venue."
+        let prompt = try PromptBuilder.questionPrompt(request)
+        #expect(prompt.contains("Bak kut teh") && prompt.contains("Durian") && prompt.contains("kopi"))
+        #expect(!prompt.contains("singapore-highlights") && !prompt.contains("singapore-bak-kut-teh"))
+        #expect(prompt.contains("independently expand") && prompt.contains("never create a new scene ID"))
+        #expect(prompt.contains("Explore a different kind of venue."))
+    }
+
+    @Test("Every destination and learning language receives bounded cultural context with traceable facts")
+    func allDestinationCultureCoverage() throws {
+        let catalog = DestinationCatalog()
+        #expect(Set(catalog.destinations.map(\.id)) == Set(DestinationCultureCatalog.cityLife.keys))
+        #expect(Set(catalog.destinations.map(\.country)) == Set(DestinationCultureCatalog.regions.keys))
+        for destination in catalog.destinations {
+            let region = try #require(DestinationCultureCatalog.region(forCountry: destination.country))
+            let city = try #require(DestinationCultureCatalog.cityLife[destination.id])
+            for language in destination.languages {
+                var request = Self.request(count: 1)
+                request.destination = destination
+                request.language = language
+                let localFacts = DestinationCultureCatalog.facts(for: destination, languageCode: language.code)
+                // City life, regional culture, situational etiquette and the chosen language.
+                #expect(localFacts.count == 4)
+                #expect(localFacts.contains(city) && localFacts.contains(region.culture) && localFacts.contains(region.etiquette))
+                #expect(localFacts.allSatisfy { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty })
+                #expect(localFacts.joined().utf8.count < 2000)
+                let prompt = try PromptBuilder.questionPrompt(request)
+                let contextLine = try #require(prompt.split(separator: "\n").first { $0.hasPrefix("{") })
+                let context = try #require(JSONSerialization.jsonObject(with: Data(contextLine.utf8)) as? [String: Any])
+                let facts = try #require(context["approvedFacts"] as? [[String: String]])
+                #expect(Set(localFacts).isSubset(of: Set(facts.compactMap { $0["text"] })))
+                #expect(facts.compactMap { $0["id"] } == PromptBuilder.factIDs(for: request))
+                #expect(Set(PromptBuilder.factIDs(for: request)).count == facts.count)
+                let review = try PromptBuilder.qualityReviewPrompt([], request: request)
+                #expect(review.contains("misplaced customs") && review.contains("standard polite reply"))
+            }
+        }
+    }
+
+    @Test("Culture keeps the chosen language and known custom regions without guessing city facts")
+    func cultureLanguageAndCustomDestinations() throws {
+        let catalog = DestinationCatalog()
+        let japan = catalog.destination(id: "osaka")
+        let japanese = DestinationCultureCatalog.facts(for: japan, languageCode: "ja")
+        let english = DestinationCultureCatalog.facts(for: japan, languageCode: "en")
+        #expect(japanese.dropLast() == english.dropLast())
+        #expect(japanese.last?.contains("です・ます") == true)
+        #expect(english.last?.contains("international English") == true)
+        #expect(english.last?.contains("です・ます") == false)
+        for country in ["France", "法国", "FR"] {
+            let custom = try #require(catalog.makeCustomDestination(city: "Lyon", country: country))
+            let facts = DestinationCultureCatalog.facts(for: custom, languageCode: "en")
+            #expect(facts.count == 3)
+            #expect(facts.contains { $0.contains("French shop") })
+            #expect(!facts.contains { $0.contains("Paris") || $0.contains("Tokyo") })
+        }
+        let unknown = try #require(catalog.makeCustomDestination(city: "Unknown place", country: "Unknown region"))
+        let fallback = DestinationCultureCatalog.facts(for: unknown, languageCode: "en")
+        #expect(fallback.count == 1 && fallback[0].contains("international English"))
+    }
+
+    @Test("Cultural fact IDs pass validation and survive generation provenance without accepting unknown IDs")
+    func culturalFactProvenance() async throws {
+        var request = Self.request(count: 1)
+        request.destination = DestinationCatalog().destination(id: "paris")
+        let fixture = CapabilityProvider(citesAllFacts: true)
+        let generated = try await service(fixture).generate(request, configuration: ProviderConfiguration(kind: .openAIResponses))
+        var question = try #require(generated.first)
+        #expect(ContentSafety.validate(question, request: request))
+        #expect((question.sourceFactIDs?.count ?? 0) > request.destination.facts.count)
+        #expect(question.generation?.sourceFacts.map(\.text) == PromptBuilder.facts(for: request))
+        #expect(question.generation?.sourceFacts.map(\.id) == question.sourceFactIDs)
+        question.sourceFactIDs = ["paris:invented"]
+        #expect(!ContentSafety.validate(question, request: request))
+    }
+
+    @Test("Single-category batches explore different perspectives without extra planning calls")
+    func singleSceneExpansion() async throws {
+        let catalog = DestinationCatalog()
+        var request = Self.request(count: 8)
+        request.destination = catalog.destination(id: "singapore")
+        request.scenes = [catalog.commonScenes[0]]
+        let fixture = CapabilityProvider(delay: .milliseconds(20))
+        let result = try await service(fixture).generate(request, configuration: ProviderConfiguration(kind: .openAIResponses))
+        let batches = await fixture.requests
+        #expect(result.count == 8 && batches.count == 3)
+        #expect(batches.allSatisfy { $0.scenes.map(\.id) == ["dining"] && $0.destination.facts == request.destination.facts })
+        #expect(Set(batches.compactMap(\.diversityHint)).count == batches.count)
+        #expect(batches.allSatisfy { $0.diversityHint?.contains("explore") == true })
     }
 
     @MainActor
@@ -194,6 +433,10 @@ struct GenerationCapabilityTests {
         while session.isFilling { try await Task.sleep(for: .milliseconds(20)) }
         #expect(!session.records.isEmpty)
         #expect(session.hasRemaining)
+        let calls = await provider.requests.count
+        session.fillIfNeeded(using: service, context: container.mainContext)
+        #expect(!session.isFilling)
+        #expect(await provider.requests.count == calls)
         #expect(session.fillMessage == String(localized: "Some questions did not pass review. Retry to prepare the rest."))
     }
 

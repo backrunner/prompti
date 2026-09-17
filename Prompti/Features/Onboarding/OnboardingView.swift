@@ -185,11 +185,11 @@ struct OnboardingView: View {
                 ViewThatFits(in: .horizontal) {
                     HStack(spacing: 10) {
                         OnboardingFact(value: "\(destination.languages.count)", label: "languages", symbol: "character.bubble.fill", tint: .promptAccent)
-                        OnboardingFact(value: "\(destination.localScenes.count)", label: "local picks", symbol: "mappin.and.ellipse", tint: .promptAccent)
+                        OnboardingFact(value: "\(dependencies.catalog.commonScenes.count)", label: "travel scenes", symbol: "suitcase.rolling.fill", tint: .promptAccent)
                     }
                     VStack(spacing: 10) {
                         OnboardingFact(value: "\(destination.languages.count)", label: "languages", symbol: "character.bubble.fill", tint: .promptAccent)
-                        OnboardingFact(value: "\(destination.localScenes.count)", label: "local picks", symbol: "mappin.and.ellipse", tint: .promptAccent)
+                        OnboardingFact(value: "\(dependencies.catalog.commonScenes.count)", label: "travel scenes", symbol: "suitcase.rolling.fill", tint: .promptAccent)
                     }
                 }
 
