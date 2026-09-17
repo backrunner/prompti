@@ -6939,6 +6939,155 @@
           }
         }
       }
+    },
+    "Flexible": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Flexible"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "宽松模式"
+          }
+        }
+      }
+    },
+    "Generate extra candidates to cover review and duplicates": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Generate extra candidates to cover review and duplicates"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "多生成候选题，应对审核和重复"
+          }
+        }
+      }
+    },
+    "Generate to the target with one bounded refill": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Generate to the target with one bounded refill"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "按目标题量生成，最多自动补题一次"
+          }
+        }
+      }
+    },
+    "Generation budget": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Generation budget"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "生成预算"
+          }
+        }
+      }
+    },
+    "Requests extra candidates so review and duplicate filtering can still produce a full set.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Extra candidates may use more tokens. Safety and quality checks stay the same."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "多生成候选题以应对审核淘汰和重复，可能消耗更多 Token；审核标准不变。"
+          }
+        }
+      }
+    },
+    "Start with approved questions, or retry to prepare the rest.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start with approved questions, or retry to prepare the rest."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "可以先练习已通过审核的题目，也可以重试补齐剩余题目。"
+          }
+        }
+      }
+    },
+    "Token-saving": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Token-saving"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "节省 Token"
+          }
+        }
+      }
+    },
+    "Uses fewer provider tokens.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uses fewer provider tokens."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用更少的模型 Token。"
+          }
+        }
+      }
+    },
+    "travel scenes": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "travel scenes"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "旅行场景"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

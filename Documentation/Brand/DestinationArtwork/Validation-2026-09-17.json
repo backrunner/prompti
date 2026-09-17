@@ -1,0 +1,94 @@
+{
+  "date": "2026-09-17",
+  "model": "openai/gpt-image-2.5-flare",
+  "quality": "medium",
+  "final_destinations": 65,
+  "predictions_total": 66,
+  "rejected": [
+    "naha-v1"
+  ],
+  "source_manifest": "manifest.json",
+  "prompts": "../../../Tools/GenerateDestinationArtwork.py",
+  "visual_asset_review": {
+    "all_65_inspected": true,
+    "large_preview": true,
+    "40pt_light_and_dark": true,
+    "64pt_light": true,
+    "sheets": [
+      "Review/sheet-1.png",
+      "Review/sheet-2.png",
+      "Review/sheet-3.png",
+      "Review/sheet-4.png"
+    ]
+  },
+  "checks": {
+    "brand": "passed",
+    "source_and_asset_sha256": "65 passed",
+    "build_for_testing": "passed",
+    "ui": "passed: 6 executions, 3 existing UI tests in each of light/zh-Hans and dark/en",
+    "localization": "passed: 641 catalog entries, 185 dynamic labels; build did not emit stringsdata",
+    "unit_tests": {
+      "passed": 2,
+      "failed": 0,
+      "suite": "DestinationPresentationTests",
+      "coverage": "65 compiled destination assets and scroll boundaries"
+    },
+    "ui_light": {
+      "language": "zh-Hans",
+      "passed": 3,
+      "failed": 0,
+      "result_bundle": "/tmp/prompti-bold-icons-light.xcresult",
+      "summary": "Screenshots/2026-09-17/Light/TestSummary.json",
+      "screenshots": "Screenshots/2026-09-17/Light/manifest.json"
+    },
+    "ui_dark": {
+      "language": "en",
+      "passed": 3,
+      "failed": 0,
+      "result_bundle": "/tmp/prompti-bold-icons-dark.xcresult",
+      "summary": "Screenshots/2026-09-17/Dark/TestSummary.json",
+      "screenshots": "Screenshots/2026-09-17/Dark/manifest.json"
+    }
+  },
+  "simulator": {
+    "name": "Prompti-Icon-Review",
+    "device": "iPhone 17e",
+    "os": "iOS 27.0",
+    "udid": "55C53990-F943-433C-88C2-80F1CC3EC9B3",
+    "text_size": "large (system default)",
+    "xcode": "27.0 (27A266a)"
+  },
+  "scope": "65 assets visually reviewed; iPhone 17e simulator, default text size, home and destination picker/filter/scroll/search in Chinese light and English dark. No physical iPhone, iPad or whole-app release validation. UI screenshots cover only cities visible in these flows.",
+  "gallery_interaction": "Not exercised: Paseo browser timeout, CUA browser authentication unavailable. SVG previews were rendered and inspected separately.",
+  "runtime_visual_review_light": {
+    "inspected": [
+      "home",
+      "destinations-top",
+      "destinations-middle",
+      "language-filter-selected",
+      "destinations-bottom",
+      "destinations-short"
+    ],
+    "result": "Visible city icons retain transparent counters, semantic green color and full unclipped contours."
+  },
+  "runtime_visual_review_dark": {
+    "inspected": [
+      "home",
+      "destinations-top",
+      "destinations-middle",
+      "language-filter-selected",
+      "destinations-bottom",
+      "destinations-short"
+    ],
+    "result": "Visible city icons retain transparent counters, semantic mint color and full unclipped contours."
+  },
+  "screenshots_count": 16,
+  "test_commands": [
+    "xcodebuild build-for-testing -project Prompti.xcodeproj -scheme Prompti -destination 'platform=iOS Simulator,id=55C53990-F943-433C-88C2-80F1CC3EC9B3' -derivedDataPath /tmp/prompti-bold-icons-20260917 CODE_SIGNING_ALLOWED=NO",
+    "xcrun simctl ui 55C53990-F943-433C-88C2-80F1CC3EC9B3 content_size large",
+    "xcrun simctl ui 55C53990-F943-433C-88C2-80F1CC3EC9B3 appearance light",
+    "xcodebuild test-without-building -project Prompti.xcodeproj -scheme Prompti -destination 'platform=iOS Simulator,id=55C53990-F943-433C-88C2-80F1CC3EC9B3' -derivedDataPath /tmp/prompti-bold-icons-20260917 -parallel-testing-enabled NO -testLanguage zh-Hans -testRegion CN -resultBundlePath /tmp/prompti-bold-icons-light.xcresult -only-testing:PromptiTests/DestinationPresentationTests -only-testing:PromptiUITests/PromptiUITests/testHomeVisualState -only-testing:PromptiUITests/PromptiUITests/testDestinationPickerVisualState -only-testing:PromptiUITests/PromptiUITests/testDestinationFiltersAndScrollBoundaries CODE_SIGNING_ALLOWED=NO",
+    "xcrun simctl ui 55C53990-F943-433C-88C2-80F1CC3EC9B3 appearance dark",
+    "xcodebuild test-without-building -project Prompti.xcodeproj -scheme Prompti -destination 'platform=iOS Simulator,id=55C53990-F943-433C-88C2-80F1CC3EC9B3' -derivedDataPath /tmp/prompti-bold-icons-20260917 -parallel-testing-enabled NO -testLanguage en -testRegion US -resultBundlePath /tmp/prompti-bold-icons-dark.xcresult -only-testing:PromptiUITests/PromptiUITests/testHomeVisualState -only-testing:PromptiUITests/PromptiUITests/testDestinationPickerVisualState -only-testing:PromptiUITests/PromptiUITests/testDestinationFiltersAndScrollBoundaries CODE_SIGNING_ALLOWED=NO"
+  ]
+}

@@ -61,6 +61,7 @@
 		CC3E8F0A241F9682298F251E /* SpeechAnswerEvaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA21C221E5858DA07BE18A8 /* SpeechAnswerEvaluator.swift */; };
 		D1870945EF817082D81A9592 /* ReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F9B688A795BC24F980074F /* ReviewView.swift */; };
 		D49C3BECE7E56175201812AD /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79706F9D8FD394ED6F6A57CE /* AppSettings.swift */; };
+		D4CCE7A1A0C910C3861EB0A6 /* DestinationCultureCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB19C7AB3C86F5C57226600D /* DestinationCultureCatalog.swift */; };
 		D69D2B26912B9CABBBA4F40A /* TrainingModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25850C2487635076A63B7F2F /* TrainingModels.swift */; };
 		D8EEDAF3A0A40A89973BE85D /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BF558054813B6B5AEAF8B4 /* ProgressView.swift */; };
 		DA70D148B478AA01766D2203 /* DestinationPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32823CB5E13DCFF0B494D27 /* DestinationPresentationTests.swift */; };
@@ -158,6 +159,7 @@
 		CB64D385BA41B765F507187C /* ModelConnectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelConnectionView.swift; sourceTree = "<group>"; };
 		CB6B4B4CEFA9A6FE53563FA0 /* InventoryConditions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryConditions.swift; sourceTree = "<group>"; };
 		D6793403550F142D1B5BCCB4 /* ModelAndLocalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelAndLocalizationTests.swift; sourceTree = "<group>"; };
+		DB19C7AB3C86F5C57226600D /* DestinationCultureCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationCultureCatalog.swift; sourceTree = "<group>"; };
 		E09DD5A726E695B31D6E7AA3 /* PromptiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptiApp.swift; sourceTree = "<group>"; };
 		E23CE64F34142A29866C8603 /* LandingConversationVisual.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingConversationVisual.swift; sourceTree = "<group>"; };
 		E46C014C897DF9566E39945C /* GenerationCapabilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerationCapabilityTests.swift; sourceTree = "<group>"; };
@@ -182,6 +184,7 @@
 		1F92680F7F3A9154EE4D5DB6 /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				DB19C7AB3C86F5C57226600D /* DestinationCultureCatalog.swift */,
 				8A5DBCC853FF30B18D296DE0 /* DestinationModels.swift */,
 				03D6A3311FCBC6CCE0A7667E /* ModelRecommendations.swift */,
 				C2DB877757A8A2E555362F62 /* PracticeMetrics.swift */,
@@ -561,6 +564,7 @@
 				641137A9FF0D1DF7D93F3E74 /* CatalogLocalization.swift in Sources */,
 				1592C5CF5DCDD1C4FA110409 /* ContentSafety.swift in Sources */,
 				081DF75AC1CC9B402911295A /* DestinationArtwork.swift in Sources */,
+				D4CCE7A1A0C910C3861EB0A6 /* DestinationCultureCatalog.swift in Sources */,
 				6EC9DB8160B8362F3B250D69 /* DestinationModels.swift in Sources */,
 				F4C5B99706E4D53035AD990F /* DestinationPickerView.swift in Sources */,
 				5775CD2AA49EA93297EEAE08 /* GenerationError.swift in Sources */,

@@ -1,0 +1,56 @@
+{
+  "ok": true,
+  "type": "prediction",
+  "data": {
+    "id": "5pyavrdns1rmy0d0ntzae4kzbr",
+    "model": "openai/gpt-image-2.5-flare",
+    "version": "hidden",
+    "input": {
+      "aspect_ratio": "1:1",
+      "background": "opaque",
+      "number_of_images": 1,
+      "output_format": "png",
+      "prompt": "Use case: logo-brand. Asset: ONE exceptionally simple bold outline city pictogram for a native iOS app, displayed at only 32 pixels.\nSubject: El Morro sentry box, San Juan.\nEssential silhouette: El Morro sentry box: stout rounded turret with a domed cap, one narrow slit and a short projecting support. No ocean or fortress panorama.\nDesign: a compact, iconic symbol, with the economy of a well-designed semibold UI symbol. ONE isolated subject. Front-facing or the simplest recognizable view. A few large geometric shapes, generous open counters. Rounded line caps and joins. Uniform HEAVY black strokes, 60 pixels thick on a 1024 pixel canvas, including every interior mark. Same weight everywhere, no delicate secondary lines. About 6-12 simple strokes in total; maximum THREE interior detail marks, only if needed for identity. Let the outline do the work. Interior gaps at least 70 pixels. Preserve the landmark's defining shape while radically reducing architectural detail. Centered, filling 78 percent of a square canvas, large clean margins. Pure black ink on a perfectly plain white background. White open interiors, no solid background shape.\nAvoid: thin lines, architectural illustration, realistic detail, complex facade, repeated windows, roof tiles, brickwork, lattice, hatching, perspective depth, hairlines, ornamental flourishes, multiple landmarks, landscape, scenery, ground lines, clouds, sun, stars, people, text, letters, numbers, labels, border, enclosing badge, color, shadows, gradients, texture, mockup, contact sheet. Do not add tiny marks or decorative details. The result must stay unmistakably clear as a very small app icon.",
+      "quality": "medium"
+    },
+    "logs": "Model: gpt-image-2.5-flare\nGenerating image...\nNo sid included.\nGenerated image in 9.4sec\nGenerated 1 images\nInput text token count: 353\nInput image token count: 0\nOutput token count: 439\n",
+    "output": [
+      "https://replicate.delivery/xezq/6CQq7Lqadp5rF9oHsmTZs1Vav9pYsTD7VcGP8FPAGHpePLnLA/tmpgkt8wu5n.png"
+    ],
+    "data_removed": false,
+    "error": null,
+    "source": "api",
+    "status": "succeeded",
+    "created_at": "2026-09-17T09:42:09.096Z",
+    "started_at": "2026-09-17T09:42:09.11372145Z",
+    "completed_at": "2026-09-17T09:42:18.633237607Z",
+    "urls": {
+      "cancel": "https://api.replicate.com/v1/predictions/5pyavrdns1rmy0d0ntzae4kzbr/cancel",
+      "get": "https://api.replicate.com/v1/predictions/5pyavrdns1rmy0d0ntzae4kzbr",
+      "stream": "https://stream.replicate.com/v1/files/jbxs-4c6v6kiajapwwhtoqy6l7jrj3zc43lcnxvqhpnqhzhgo3miczawa",
+      "web": "https://replicate.com/p/5pyavrdns1rmy0d0ntzae4kzbr"
+    },
+    "metrics": {
+      "image_output_count": 1,
+      "model_variant": "medium",
+      "predict_time": 9.519516157,
+      "resolution_target": "1:1",
+      "total_time": 9.537237607
+    }
+  },
+  "artifacts": [
+    {
+      "path": "/Volumes/BRData/projects/prompti/output/imagegen/destinations/bold-v2/sources/san-juan/5pyavrdns1rmy0d0ntzae4kzbr-output-0-0.png",
+      "bytes": 734563,
+      "sourceUrl": "https://replicate.delivery/xezq/6CQq7Lqadp5rF9oHsmTZs1Vav9pYsTD7VcGP8FPAGHpePLnLA/tmpgkt8wu5n.png",
+      "outputPath": "output.0",
+      "contentType": "image/png"
+    }
+  ],
+  "meta": {
+    "cliVersion": "0.1.1",
+    "authSource": "config",
+    "profile": "quaengine-demo",
+    "apiVersion": "v1"
+  }
+}

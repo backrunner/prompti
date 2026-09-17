@@ -95,6 +95,9 @@ struct ReviewRegressionTests {
         let now = try #require(ISO8601DateFormatter().date(from: "2026-09-06T12:00:00Z"))
         let settings = AppSettings(defaults: defaults)
         #expect(!settings.isPreGenerationEnabled)
+        #expect(settings.generationMode == .efficient)
+        settings.generationMode = .forgiving
+        #expect(AppSettings(defaults: defaults).generationMode == .forgiving)
         #expect(settings.preparationWiFiOnly)
         settings.dailyPreparationLimit = 5
         #expect(settings.reservePreparationCount(3, now: now) == 3)

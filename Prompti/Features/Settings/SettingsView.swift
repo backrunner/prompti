@@ -10,6 +10,7 @@ struct SettingsView: View {
     @State private var apiKey = ""
     @State private var explanationLanguage = ExplanationLanguage.english
     @State private var difficulty = TrainingDifficulty.basic
+    @State private var generationMode = GenerationMode.efficient
     @State private var questionCount = 5
     @State private var speechRate: Float = 0.44
     @State private var showImportConfirmation = false
@@ -56,6 +57,14 @@ struct SettingsView: View {
                         Text(LocalizedStringKey(difficulty.title)).tag(difficulty)
                     }
                 }
+                Picker("Generation budget", selection: $generationMode) {
+                    ForEach(GenerationMode.allCases) { mode in
+                        Text(LocalizedStringKey(mode.title)).tag(mode)
+                    }
+                }
+                Text(LocalizedStringKey(generationMode.detail))
+                    .font(.footnote)
+                    .foregroundStyle(Color.promptMuted)
                 Picker("Speech playback", selection: $speechRate) {
                     Text("Slow").tag(Float(0.34))
                     Text("Normal").tag(Float(0.44))
@@ -209,6 +218,7 @@ struct SettingsView: View {
         provider != dependencies.settings.provider || !apiKey.isEmpty
             || explanationLanguage != dependencies.settings.explanationLanguage
             || difficulty != dependencies.settings.difficulty
+            || generationMode != dependencies.settings.generationMode
             || questionCount != dependencies.settings.questionCount
             || speechRate != dependencies.settings.speechRate
             || isPreGenerationEnabled != dependencies.settings.isPreGenerationEnabled
@@ -227,6 +237,7 @@ struct SettingsView: View {
         provider = dependencies.settings.provider
         explanationLanguage = dependencies.settings.explanationLanguage
         difficulty = dependencies.settings.difficulty
+        generationMode = dependencies.settings.generationMode
         questionCount = dependencies.settings.questionCount
         speechRate = dependencies.settings.speechRate
         isPreGenerationEnabled = dependencies.settings.isPreGenerationEnabled
@@ -245,6 +256,7 @@ struct SettingsView: View {
             dependencies.settings.provider = provider
             dependencies.settings.explanationLanguage = explanationLanguage
             dependencies.settings.difficulty = difficulty
+            dependencies.settings.generationMode = generationMode
             dependencies.settings.questionCount = questionCount
             dependencies.settings.speechRate = speechRate
             dependencies.settings.isPreGenerationEnabled = isPreGenerationEnabled

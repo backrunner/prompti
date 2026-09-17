@@ -541,6 +541,55 @@ final class PromptiUITests: XCTestCase {
         attachScreenshot(named: "practice-summary-partial")
     }
 
+    func testGenerationModeAndBroadScenesEnglish() { verifyGenerationModeAndBroadScenes(language: "en") }
+    func testGenerationModeAndBroadScenesChinese() { verifyGenerationModeAndBroadScenes(language: "zh-Hans") }
+
+    private func verifyGenerationModeAndBroadScenes(language: String) {
+        launch(arguments: ["-prompti-demo", "-prompti-practice", "-AppleLanguages", "(\(language))",
+                           "-AppleLocale", language == "en" ? "en_US" : "zh_CN"])
+        XCTAssertTrue(app.buttons["practice.scene.dining"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.staticTexts["practice.sceneExpansion"].exists)
+        for id in ["tokyo-ramen", "tokyo-sushi", "tokyo-ic", "cafe", "desserts", "market"] {
+            XCTAssertFalse(app.buttons["practice.scene.\(id)"].exists)
+        }
+        attachScreenshot(named: "tokyo-scenes-\(language)")
+        app.buttons["practice.changeDestination"].tap()
+        let search = app.searchFields.firstMatch
+        XCTAssertTrue(search.waitForExistence(timeout: 5))
+        search.tap()
+        search.typeText("Singapore")
+        app.buttons["destination.singapore"].tap()
+        XCTAssertTrue(app.buttons["practice.scene.dining"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["practice.scene.transit"].exists)
+        for id in ["singapore-highlights", "singapore-bak-kut-teh", "singapore-durian", "singapore-dessert", "singapore-drinks"] {
+            XCTAssertFalse(app.buttons["practice.scene.\(id)"].exists)
+        }
+        attachScreenshot(named: "singapore-scenes-\(language)")
+        app.buttons["practice.changeDestination"].tap()
+        let parisSearch = app.searchFields.firstMatch
+        XCTAssertTrue(parisSearch.waitForExistence(timeout: 5))
+        parisSearch.tap()
+        parisSearch.typeText("Paris")
+        app.buttons["destination.paris"].tap()
+        XCTAssertTrue(app.buttons["practice.scene.dining"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.staticTexts["practice.sceneExpansion"].exists)
+        XCTAssertFalse(app.buttons["practice.scene.paris-highlights"].exists)
+        attachScreenshot(named: "paris-scenes-\(language)")
+        let control = app.segmentedControls["practice.generationMode"]
+        for _ in 0..<6 {
+            if control.exists && control.isHittable { break }
+            app.swipeUp()
+        }
+        XCTAssertTrue(control.isHittable)
+        control.buttons[language == "en" ? "Token-saving" : "节省 Token"].tap()
+        attachScreenshot(named: "generation-efficient-\(language)")
+        control.buttons[language == "en" ? "Flexible" : "宽松模式"].tap()
+        attachScreenshot(named: "generation-flexible-\(language)")
+        app.buttons["practice.generate"].tap()
+        XCTAssertTrue(app.buttons["session.submit"].waitForExistence(timeout: 8))
+        attachScreenshot(named: "generation-session-\(language)")
+    }
+
     private func launch(arguments: [String]) {
         app = XCUIApplication()
         app.launchArguments = ["-prompti-ui-clean-data"] + arguments

@@ -36,6 +36,31 @@ enum TrainingDifficulty: String, Codable, CaseIterable, Identifiable, Sendable {
     }
 }
 
+/// Controls how much candidate work is requested when review or de-duplication
+/// removes items. Efficient mode minimizes provider output; forgiving mode
+/// spends a small amount of extra output to make a complete, varied set more
+/// likely on the first attempt.
+enum GenerationMode: String, Codable, CaseIterable, Identifiable, Sendable {
+    case efficient
+    case forgiving
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .efficient: "Token-saving"
+        case .forgiving: "Flexible"
+        }
+    }
+
+    var detail: String {
+        switch self {
+        case .efficient: "Generate to the target with one bounded refill"
+        case .forgiving: "Generate extra candidates to cover review and duplicates"
+        }
+    }
+}
+
 enum ExplanationLanguage: String, Codable, CaseIterable, Identifiable, Sendable {
     case english = "en"
     case simplifiedChinese = "zh-Hans"
@@ -121,7 +146,11 @@ struct TrainingRequest: Sendable {
     var difficulty: TrainingDifficulty
     var kinds: Set<QuestionKind>
     var count: Int
+    var generationMode: GenerationMode = .efficient
     var previousPrompts: [String] = []
+    var previousQuestions: [GeneratedQuestion] = []
+    /// Advisory goals for this batch, carried only in the untrusted JSON context.
+    var diversityHint: String? = nil
 }
 
 enum AttemptResult: String, Codable, Sendable {

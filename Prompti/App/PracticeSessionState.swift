@@ -41,12 +41,20 @@ final class PracticeSessionState {
         return fillError.localizedDescription
     }
 
+    /// Entering practice after partial generation must not silently start a
+    /// second budgeted job. A visible retry remains an explicit user action.
+    func fillIfNeeded(using generation: QuestionGenerationService, context: ModelContext) {
+        guard fillError == nil else { return }
+        fill(using: generation, context: context)
+    }
+
     func fill(using generation: QuestionGenerationService, context: ModelContext) {
         guard hasRemaining, !isFilling, let request, let configuration else { return }
         let operation = UUID()
         operationID = operation
         isFilling = true
         fillError = nil
+        furthestStage = nil
         fillContext = context
         // At most one bounded generation job per start/retry; its batches run
         // concurrently inside the service. No endless retry loop.
@@ -64,7 +72,10 @@ final class PracticeSessionState {
                 var batch = request
                 batch.count = requestedCount - records.count
                 let existing = try context.fetch(FetchDescriptor<QuestionRecord>())
-                let signatures = Set(existing.filter { $0.destinationID == request.destination.id && $0.languageCode == request.language.code && $0.explanationLanguageCode == request.explanationLanguage.rawValue }.map { $0.question.contentSignature })
+                let relevant = existing.filter { $0.destinationID == request.destination.id && $0.languageCode == request.language.code }
+                    .sorted { $0.createdAt < $1.createdAt }
+                let signatures = Set(relevant.map { $0.question.contentSignature })
+                batch.previousQuestions = relevant.map(\.question)
                 batch.previousPrompts = Array(existing.filter { $0.destinationID == request.destination.id && $0.languageCode == request.language.code }
                     .sorted { $0.createdAt < $1.createdAt }.suffix(30).map(\.prompt))
                 let activeRequest = batch
@@ -73,6 +84,7 @@ final class PracticeSessionState {
                     await self?.handleGenerationEvent(event, request: activeRequest, operation: operation)
                 }
                 try Task.checkCancellation()
+                guard operationID == operation else { return }
                 if hasRemaining {
                     fillError = GenerationError.noApprovedQuestions
                 }
@@ -91,10 +103,15 @@ final class PracticeSessionState {
             if stage == .reviewing { furthestStage = .reviewing }
             else if furthestStage == nil { furthestStage = .generating }
         case .approved(let questions):
-            guard let context = fillContext,
-                  let saved = try? QuestionInventory.save(questions, request: request, context: context) else { return }
-            let known = Set(records.map(\.id))
-            records.append(contentsOf: saved.filter { !known.contains($0.id) })
+            guard let context = fillContext else { return }
+            do {
+                let saved = try QuestionInventory.save(Array(questions.prefix(max(0, requestedCount - records.count))), request: request, context: context)
+                let known = Set(records.map(\.id))
+                records.append(contentsOf: saved.filter { !known.contains($0.id) })
+            } catch {
+                cancelFill()
+                fillError = error
+            }
         }
     }
 
@@ -111,14 +128,14 @@ final class PracticeSessionState {
 enum QuestionInventory {
     static func save(_ questions: [GeneratedQuestion], request: TrainingRequest, context: ModelContext) throws -> [QuestionRecord] {
         let existing = try context.fetch(FetchDescriptor<QuestionRecord>())
-        var signatures = Set(existing.filter {
-            $0.destinationID == request.destination.id && $0.languageCode == request.language.code
-                && $0.explanationLanguageCode == request.explanationLanguage.rawValue
-        }.map { $0.question.contentSignature })
+        let relevant = existing.filter { $0.destinationID == request.destination.id && $0.languageCode == request.language.code }
+            .sorted { $0.createdAt < $1.createdAt }
+        var duplicates = QuestionDuplicateIndex(questions: relevant.map(\.question))
+        var ids = Set(existing.map(\.id))
         var saved: [QuestionRecord] = []
         do {
             for question in questions {
-                var isNew = signatures.insert(question.contentSignature).inserted
+                var isNew = ids.insert(question.id).inserted && duplicates.insert(question)
                 #if DEBUG
                 if ProcessInfo.processInfo.arguments.contains("-prompti-demo") { isNew = true }
                 #endif
@@ -136,14 +153,15 @@ enum QuestionInventory {
     static func available(_ questions: [QuestionRecord], attempts: [AttemptRecord], destinationID: String,
                           languageCode: String, explanationLanguage: ExplanationLanguage, difficulty: TrainingDifficulty) -> [QuestionRecord] {
         let attempted = Set(attempts.map(\.questionID))
-        let relevant = questions.filter { $0.destinationID == destinationID && $0.languageCode == languageCode && $0.explanationLanguageCode == explanationLanguage.rawValue }
-        let excluded = Set(relevant.filter { $0.isQuarantined || $0.isArchived || attempted.contains($0.id) }.map { $0.question.contentSignature })
-        var seen = excluded
+        let relevant = questions.filter { $0.destinationID == destinationID && $0.languageCode == languageCode }
+        var duplicates = QuestionDuplicateIndex(questions: relevant.filter {
+            $0.isQuarantined || $0.isArchived || attempted.contains($0.id)
+        }.map(\.question))
         return questions.filter {
             !$0.isQuarantined && !$0.isArchived && !attempted.contains($0.id)
                 && $0.destinationID == destinationID && $0.languageCode == languageCode
                 && $0.explanationLanguageCode == explanationLanguage.rawValue && $0.difficultyRaw == difficulty.rawValue
-                && seen.insert($0.question.contentSignature).inserted
+                && duplicates.insert($0.question)
         }
     }
 

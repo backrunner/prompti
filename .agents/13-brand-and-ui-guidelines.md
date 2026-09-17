@@ -30,7 +30,7 @@ P 对话品牌标识由 `Tools/GenerateAppIcon.swift` 中同一条轮廓生成�
 
 保持方向与长宽比；不挤压、不旋转 Logo，不给它增加飞机或额外气泡。独立 Logo 至少保留自身宽度 10% 的净空，推荐最小可见宽度 16px。欢迎页和设置页可展示完整字标；其他页面以内容为主。
 
-内置目的地不得再复用通用楼房、交通工具等 SF Symbols。每个稳定 ID 对应一幅独立的当地地标或知名代表物 SVG，图稿与资源清单见 [目的地图稿](../Documentation/Brand/DestinationArtwork/Gallery.html)。2026-09-10 起使用经审阅的 `gpt-image-2.5-flare` medium 线稿，清理背景、统一留白后转为真实矢量路径；源 PNG、提示词、生成 ID 和处理脚本按 [目的地图稿说明](../Documentation/Brand/DestinationArtwork/README.md) 保留，不能只替换导出的 SVG，也不能把生成图称为手工原创或实际 App 截图。原生资源保留矢量并按语义色着色；自定义地点使用中性定位符，不虚构当地地标。目的地绘图源与 P 品牌标识源分别维护，不能互相替代。
+内置目的地不得再复用通用楼房、交通工具等 SF Symbols。每个稳定 ID 对应一幅独立的当地地标或知名代表物 SVG，图稿与资源清单见 [目的地图稿](../Documentation/Brand/DestinationArtwork/Gallery.html)。2026-09-17 起使用经审阅的 `gpt-image-2.5-flare` medium 粗线简约图标：单个主体、统一粗圆线条，以轮廓和少量特征表达地标，避免窗格、瓦片、网格与多主体构图。以 40pt 徽标（含组件内边距）检查可辨性，不以放大插画效果作为验收依据。生成图清理背景、统一留白后转为真实矢量路径；源 PNG、提示词、生成 ID 和处理脚本按 [目的地图稿说明](../Documentation/Brand/DestinationArtwork/README.md) 保留，不能只替换导出的 SVG，也不能把生成图称为手工原创或实际 App 截图。原生资源保留矢量并按语义色着色；自定义地点使用中性定位符，不虚构当地地标。目的地绘图源与 P 品牌标识源分别维护，不能互相替代。
 
 ## 3. 语义配色
 

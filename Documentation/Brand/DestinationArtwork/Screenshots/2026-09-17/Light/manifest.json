@@ -1,0 +1,108 @@
+[
+  {
+    "attachments": [
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "55C53990-F943-433C-88C2-80F1CC3EC9B3",
+        "deviceName": "Prompti-Icon-Review",
+        "exportedFileName": "9B9BEA6F-E10F-482D-902F-3A302FE2368B.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "destinations-short_0_7D7D5B5C-0AF3-454E-B240-6BA2FD483B76.png",
+        "timestamp": 1789638641.715,
+        "savedFileName": "destinations-short.png",
+        "sha256": "a049dd925e47e4ac831ced15ff41965e0b1fba0542c6a25ae07381ee81969df7"
+      },
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "55C53990-F943-433C-88C2-80F1CC3EC9B3",
+        "deviceName": "Prompti-Icon-Review",
+        "exportedFileName": "80B9C8A6-1D14-4619-8714-D920360A1AA8.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "destinations-bottom_0_01CCBD1A-4060-41A6-B945-FD0039CFDEBE.png",
+        "timestamp": 1789638614.521,
+        "savedFileName": "destinations-bottom.png",
+        "sha256": "cd02ff35e95bab8b875d64446cd6794a963612b22d015ba1e6e025bf5e256a75"
+      },
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "55C53990-F943-433C-88C2-80F1CC3EC9B3",
+        "deviceName": "Prompti-Icon-Review",
+        "exportedFileName": "0018641C-D94D-4D80-A81E-A5AC125B00B2.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "language-filter-selected_0_47C4B837-5E28-4950-9328-F91CF1BEF3D7.png",
+        "timestamp": 1789638610.803,
+        "savedFileName": "language-filter-selected.png",
+        "sha256": "dacb55bb235412887b5860b958ee021c1e7d3566585d8eb2f24d2fd96d1a6105"
+      },
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "55C53990-F943-433C-88C2-80F1CC3EC9B3",
+        "deviceName": "Prompti-Icon-Review",
+        "exportedFileName": "313F8D6D-9C47-42B7-B3CC-E673B57DA6B8.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "language-filter-unselected_0_F1510AA0-46C6-49E4-AC9D-BA22018D8A4E.png",
+        "timestamp": 1789638608.817,
+        "savedFileName": "language-filter-unselected.png",
+        "sha256": "bc3b542b4095d6f171476cd63ce90a38466332fa664dfc0c1782c94f1bc3b49d"
+      },
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "55C53990-F943-433C-88C2-80F1CC3EC9B3",
+        "deviceName": "Prompti-Icon-Review",
+        "exportedFileName": "66DB4D67-6E05-48C9-A5E3-D57518CCE1EF.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "destinations-middle_0_6FA9D991-0FBA-4A71-AC2C-A6C33F580579.png",
+        "timestamp": 1789638608.228,
+        "savedFileName": "destinations-middle.png",
+        "sha256": "bc3b542b4095d6f171476cd63ce90a38466332fa664dfc0c1782c94f1bc3b49d"
+      },
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "55C53990-F943-433C-88C2-80F1CC3EC9B3",
+        "deviceName": "Prompti-Icon-Review",
+        "exportedFileName": "DE2CBAB4-86B0-4A4E-997C-96098E037BCA.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "destinations-top_0_120FD1B8-1BCF-44F7-90E3-39577B343F1C.png",
+        "timestamp": 1789638605.333,
+        "savedFileName": "destinations-top.png",
+        "sha256": "efb2c9eac5c7e6d3131fcecd7e520f24cd487af6cd0d497e738b8bb0af03ae54"
+      }
+    ],
+    "testIdentifier": "PromptiUITests/testDestinationFiltersAndScrollBoundaries()",
+    "testIdentifierURL": "test://com.apple.xcode/Prompti/PromptiUITests/PromptiUITests/testDestinationFiltersAndScrollBoundaries"
+  },
+  {
+    "attachments": [
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "55C53990-F943-433C-88C2-80F1CC3EC9B3",
+        "deviceName": "Prompti-Icon-Review",
+        "exportedFileName": "E67F43C5-55D7-4A0F-BA64-1AECA71B91F4.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "destination-picker_0_7E8A1979-F15C-46E6-A14B-7FF9756436F0.png",
+        "timestamp": 1789638714.247,
+        "savedFileName": "destination-picker.png",
+        "sha256": "11f9e74e1266ada74c6e986037cc6873a3cbf3547c561f30f2c144066892826e"
+      }
+    ],
+    "testIdentifier": "PromptiUITests/testDestinationPickerVisualState()",
+    "testIdentifierURL": "test://com.apple.xcode/Prompti/PromptiUITests/PromptiUITests/testDestinationPickerVisualState"
+  },
+  {
+    "attachments": [
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "55C53990-F943-433C-88C2-80F1CC3EC9B3",
+        "deviceName": "Prompti-Icon-Review",
+        "exportedFileName": "43385632-07E8-4E85-B37D-C27F0D8A0BE9.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "home_0_E8ECAC9F-6B0D-465C-B2C3-1FBC88C3FAC7.png",
+        "timestamp": 1789638725.16,
+        "savedFileName": "home.png",
+        "sha256": "78b6a84b53ed51f5a7b813bea5bb2eebbea9b2cf282b550f1adbd7c6ce4dc3d5"
+      }
+    ],
+    "testIdentifier": "PromptiUITests/testHomeVisualState()",
+    "testIdentifierURL": "test://com.apple.xcode/Prompti/PromptiUITests/PromptiUITests/testHomeVisualState"
+  }
+]

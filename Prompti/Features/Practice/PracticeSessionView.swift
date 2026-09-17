@@ -100,7 +100,7 @@ struct PracticeSessionView: View {
         }
         .task {
             providerSnapshot = session.configuration ?? dependencies.settings.provider
-            session.fill(using: dependencies.generation, context: modelContext)
+            session.fillIfNeeded(using: dependencies.generation, context: modelContext)
         }
         .onDisappear {
             speech.reset()
@@ -113,7 +113,7 @@ struct PracticeSessionView: View {
                 cancelEvaluation()
                 session.cancelFill()
             } else {
-                session.fill(using: dependencies.generation, context: modelContext)
+                session.fillIfNeeded(using: dependencies.generation, context: modelContext)
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: AVAudioSession.interruptionNotification)) { _ in speech.reset() }
@@ -302,7 +302,10 @@ struct PracticeSessionView: View {
             } else {
                 Text("Prepared questions completed").font(PromptiTypography.title)
                 if let message = session.fillMessage { Text(message).foregroundStyle(Color.promptMuted) }
-                Button("Retry remaining questions") { session.fill(using: dependencies.generation, context: modelContext) }
+                Button("Retry remaining questions") {
+                    session.configuration = dependencies.settings.provider
+                    session.fill(using: dependencies.generation, context: modelContext)
+                }
                     .buttonStyle(PrimaryActionButtonStyle())
                     .accessibilityIdentifier("session.retryFill")
                 Button("Finish with completed questions") { completed = true }

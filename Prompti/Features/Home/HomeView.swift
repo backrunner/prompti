@@ -258,7 +258,7 @@ struct HomeView: View {
     }
 
     private var inventoryContext: String {
-        "\(dependencies.settings.isPreGenerationEnabled)|\(scenePhase)|\(selectedTab)|\(destination.id)|\(dependencies.settings.languageCode)|\(dependencies.settings.difficulty)|\(dependencies.settings.explanationLanguage)|\(dependencies.settings.provider)|\(dependencies.inventoryConditions.hasNetwork)|\(dependencies.inventoryConditions.usesWiFi)|\(dependencies.settings.inventoryTarget)|\(dependencies.settings.dailyPreparationLimit)|\(dependencies.settings.preparationWiFiOnly)"
+        "\(dependencies.settings.isPreGenerationEnabled)|\(scenePhase)|\(selectedTab)|\(destination.id)|\(dependencies.settings.languageCode)|\(dependencies.settings.difficulty)|\(dependencies.settings.explanationLanguage)|\(dependencies.settings.generationMode)|\(dependencies.settings.provider)|\(dependencies.inventoryConditions.hasNetwork)|\(dependencies.inventoryConditions.usesWiFi)|\(dependencies.settings.inventoryTarget)|\(dependencies.settings.dailyPreparationLimit)|\(dependencies.settings.preparationWiFiOnly)"
     }
 
     private func prepareInventoryIfNeeded() async {
@@ -279,12 +279,15 @@ struct HomeView: View {
             destination: destination,
             language: language,
             explanationLanguage: dependencies.settings.explanationLanguage,
-            scenes: Array(dependencies.catalog.commonScenes.prefix(2)),
+            scenes: dependencies.catalog.suggestedScenes,
             customScene: nil,
             difficulty: dependencies.settings.difficulty,
             kinds: [.cloze, .multipleChoice],
-            count: count
+            count: count,
+            generationMode: dependencies.settings.generationMode
         )
+        request.previousQuestions = questions.filter { $0.destinationID == destination.id && $0.languageCode == language.code }
+            .sorted { $0.createdAt < $1.createdAt }.map(\.question)
         request.previousPrompts = Array(questions.filter { $0.destinationID == destination.id && $0.languageCode == language.code }.prefix(30).map(\.prompt))
         do {
             let generated = try await dependencies.generation.generate(request, configuration: dependencies.settings.provider,
@@ -308,11 +311,12 @@ struct HomeView: View {
             destination: destination,
             language: language,
             explanationLanguage: dependencies.settings.explanationLanguage,
-            scenes: Array(dependencies.catalog.commonScenes.prefix(2)),
+            scenes: dependencies.catalog.suggestedScenes,
             customScene: nil,
             difficulty: dependencies.settings.difficulty,
             kinds: [.cloze, .multipleChoice],
-            count: count
+            count: count,
+            generationMode: dependencies.settings.generationMode
         )
         openPractice {
             if ready.count == count {
