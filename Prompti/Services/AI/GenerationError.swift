@@ -24,10 +24,10 @@ enum GenerationError: LocalizedError, Sendable {
         switch self {
         case .permissionDenied: String(localized: "Your account does not have access to this model. Check provider permissions or choose another model.")
         case .modelNotFound: String(localized: "The model or API endpoint was not found. Check your model settings.")
-        case .timedOut: String(localized: "The model request timed out. Retry with fewer questions.")
+        case .timedOut: String(localized: "The model took too long to respond. Try again or choose another model.")
         case .networkUnavailable: String(localized: "The provider could not be reached. Check your connection and try again.")
         case .refused: String(localized: "The model declined this request. Choose another travel scene and try again.")
-        case .truncatedOutput: String(localized: "The model stopped before finishing. Try a smaller practice set.")
+        case .truncatedOutput: String(localized: "The model stopped before finishing a question. Try again or choose another model.")
         case .insufficientCredit: String(localized: "Add credits to your model account, or choose another model in Settings.")
         case .missingAPIKey: String(localized: "Connect a model in Settings to continue.")
         case .invalidEndpoint: String(localized: "Use a valid public HTTPS endpoint.")

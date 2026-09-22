@@ -87,7 +87,7 @@
 
 ### 3.2 QuestionAttempt
 
-采用 append-only 事件，便于 CloudKit 合并。
+正常作答采用 append-only 事件，便于 CloudKit 合并；用户主动删除复习记录是显式例外。
 
 - `id`, `questionID`, `sessionID`。
 - `startedAt`, `answeredAt`。
@@ -119,6 +119,8 @@
 - **生成数量**不是学习数量，不进入打卡。
 
 统计页面即时从事件或可重建聚合缓存获取，不能同步“总正确数 += 1”一类竞争写入。
+
+用户从错题或历史删除一条汇总记录时，移除该 `questionID` 的全部作答事件（包括同步产生的 UUID 副本）；批量清空只处理确认范围内的题目。进度、正确率和打卡仍按剩余事件派生，计算公式不变。题目保留 `isArchived` 库存墓碑，避免删除最后一条作答后重新成为待练题；不修改题目快照。报告 / 隔离记录不在本入口的删除范围。
 
 ## 5. SwiftData + CloudKit 映射规则
 
@@ -167,3 +169,7 @@ CloudKit store 中建议包含：`QuestionRecord`、`ChoiceRecord`、`PracticeSe
 - `QuestionDuplicateIndex` 从已存题目重建，按目的地 + 学习语言查重，切换讲解语言不会把同一句题干视为新题。保留原 contentHash 算法和历史快照，无数据库迁移或历史改写。
 - 精确题干查重覆盖全部历史并忽略大小写、标点、空白、全半角；完形与口语额外对完整答案查重，移动空位或切换这两类题型不会绕过去重。最近 200 道额外做保守的字符三元组近似检查（题干至少 24 字符、同答案、同数字、Jaccard >= 0.9）。不同数字细节不按近似重复拒绝。任意语义改写无法由此保证识别，现有模型审核补查最近 30 条提示与同批近义重复。
 - 已作答/隔离/归档内容阻止其重复变体进入随机库存；库存展示仍要求讲解语言、难度匹配。显式错题复习维持原行为。
+
+## 2026-09-22：审核来源快照
+
+`GenerationMetadata.review` 新增可选 `QuestionReviewProvenance`，记录最终审核 `provider/model`；Jev 路径额外记录 `policyVersion`、`jevModel` 和 14 项缺陷概率。转给原生成模型审核时最终来源仍为原模型。旧题缺少该字段可正常解码为 nil；题目 JSON payload 外的 SwiftData 模型不变，不需要数据库迁移，不回写历史作答快照。

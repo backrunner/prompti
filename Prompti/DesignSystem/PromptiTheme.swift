@@ -25,6 +25,8 @@ extension Color {
     static let promptWarningSurface = adaptive(light: 0xF8EFD8, dark: 0x3C3221)
     static let promptError = adaptive(light: 0xAE392F, dark: 0xFFAEA0)
     static let promptErrorSurface = adaptive(light: 0xFAE9E4, dark: 0x442B27)
+    // Native swipe actions keep white glyphs in both appearances.
+    static let promptDestructiveAction = adaptive(light: 0xAE392F, dark: 0xAE392F)
 
     private init(hex: UInt32) {
         self.init(.sRGB, red: Double((hex >> 16) & 255) / 255,
@@ -200,6 +202,88 @@ struct PromptiCredentialFieldModifier: ViewModifier {
                 RoundedRectangle(cornerRadius: PromptiRadius.compact)
                     .strokeBorder(Color.promptBorder, lineWidth: 0.75)
             }
+    }
+}
+
+/// A secondary connection action with one stable place for progress and results.
+struct PromptiConnectionTestRow: View {
+    let isBusy: Bool
+    let isVerified: Bool
+    let canTest: Bool
+    let error: String?
+    let actionID: String
+    let statusID: String
+    let action: () -> Void
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    private var title: String {
+        if isBusy { return String(localized: "Testing…") }
+        if isVerified { return String(localized: "Connection verified") }
+        return error == nil ? String(localized: "Not verified") : String(localized: "Connection failed")
+    }
+
+    private var tone: Color {
+        if isBusy { return .promptMuted }
+        if isVerified { return .promptSuccess }
+        return error == nil ? .promptMuted : .promptError
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: PromptiSpacing.inline) {
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: PromptiSpacing.related) {
+                    status.fixedSize(horizontal: true, vertical: false)
+                    Spacer(minLength: PromptiSpacing.inline)
+                    testButton
+                }
+                VStack(alignment: .leading, spacing: PromptiSpacing.inline) {
+                    status
+                    testButton
+                }
+            }
+            if let error, !isBusy, !isVerified {
+                Text(error)
+                    .font(.footnote)
+                    .foregroundStyle(Color.promptError)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+    }
+
+    private var status: some View {
+        HStack(spacing: PromptiSpacing.inline) {
+            Group {
+                if isBusy && !reduceMotion {
+                    ProgressView().controlSize(.small).tint(Color.promptAction)
+                } else {
+                    Image(systemName: isBusy ? "hourglass" : isVerified ? "checkmark.circle.fill"
+                          : error == nil ? "circle.dashed" : "exclamationmark.circle")
+                }
+            }
+            .frame(width: 20)
+            .accessibilityHidden(true)
+            Text(title)
+        }
+        .font(.subheadline)
+        .foregroundStyle(tone)
+        .fixedSize(horizontal: false, vertical: true)
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier(statusID)
+    }
+
+    private var testButton: some View {
+        Button(action: action) {
+            Text(isVerified ? String(localized: "Test again") : String(localized: "Test connection"))
+                .font(.subheadline.weight(.medium))
+                .fixedSize()
+                .frame(minHeight: 44)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.borderless)
+        .foregroundStyle(Color.promptAction)
+        .opacity(isBusy || !canTest ? 0.45 : 1)
+        .disabled(isBusy || !canTest)
+        .accessibilityIdentifier(actionID)
     }
 }
 

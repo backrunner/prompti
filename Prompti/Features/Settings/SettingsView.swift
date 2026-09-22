@@ -8,6 +8,13 @@ struct SettingsView: View {
     @State private var didLoad = false
     @State private var provider = ProviderConfiguration()
     @State private var apiKey = ""
+    @State private var questionReviewMode = QuestionReviewMode.generationModel
+    @State private var reviewAPIKey = ""
+    @State private var isTestingReview = false
+    @State private var reviewVerified = false
+    @State private var hasSavedReviewKey = false
+    @State private var removeReviewKey = false
+    private var isBusy: Bool { isTesting || isTestingReview }
     @State private var explanationLanguage = ExplanationLanguage.english
     @State private var difficulty = TrainingDifficulty.basic
     @State private var generationMode = GenerationMode.efficient
@@ -41,7 +48,14 @@ struct SettingsView: View {
                 if didLoad { ModelConnectionView(provider: $provider, apiKey: $apiKey,
                     isBusy: $isTesting, isVerified: $testSucceeded,
                     languageCode: dependencies.settings.languageCode)
-                    .padding(.vertical, 8) }
+                    .padding(.vertical, 8)
+                    .disabled(isTestingReview) }
+            }
+            if didLoad {
+                QuestionReviewConnectionView(mode: $questionReviewMode, apiKey: $reviewAPIKey,
+                    isBusy: $isTestingReview, isVerified: $reviewVerified,
+                    removeSavedKey: $removeReviewKey, hasSavedKey: hasSavedReviewKey)
+                    .disabled(isTesting)
             }
 
             if let statusMessage { Section { Text(LocalizedStringKey(statusMessage)).font(.footnote).foregroundStyle(Color.promptMuted) } }
@@ -182,7 +196,7 @@ struct SettingsView: View {
                     Button("Cancel", role: .cancel) { }
                 }
             }
-            .disabled(isTesting)
+            .disabled(isBusy)
             }
             .listRowBackground(Color.promptSurface)
         }
@@ -190,16 +204,16 @@ struct SettingsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
-                Button("Cancel") { dismiss() }.disabled(isTesting)
+                Button("Cancel") { dismiss() }.disabled(isBusy).accessibilityIdentifier("settings.cancel")
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button("Done", action: saveAndDismiss)
-                .disabled(isTesting || (providerNeedsTest && !testSucceeded))
+                .disabled(isBusy || (providerNeedsTest && !testSucceeded) || (questionReviewMode == .typeSafeJev && !reviewVerified))
                 .accessibilityIdentifier("settings.done")
             }
         }
         .onAppear(perform: loadSettings)
-        .interactiveDismissDisabled(isTesting || hasUnsavedChanges)
+        .interactiveDismissDisabled(isBusy || hasUnsavedChanges)
         .promptiScrollEdges()
         .scrollContentBackground(.hidden)
         .background(PromptiBackground())
@@ -216,6 +230,7 @@ struct SettingsView: View {
 
     private var hasUnsavedChanges: Bool {
         provider != dependencies.settings.provider || !apiKey.isEmpty
+            || questionReviewMode != dependencies.settings.questionReviewMode || !reviewAPIKey.isEmpty || removeReviewKey
             || explanationLanguage != dependencies.settings.explanationLanguage
             || difficulty != dependencies.settings.difficulty
             || generationMode != dependencies.settings.generationMode
@@ -235,6 +250,9 @@ struct SettingsView: View {
     private func loadSettings() {
         guard !didLoad else { return }
         provider = dependencies.settings.provider
+        questionReviewMode = dependencies.settings.questionReviewMode
+        hasSavedReviewKey = dependencies.secureStore.readReviewKey() != nil
+        reviewVerified = questionReviewMode == .typeSafeJev && hasSavedReviewKey
         explanationLanguage = dependencies.settings.explanationLanguage
         difficulty = dependencies.settings.difficulty
         generationMode = dependencies.settings.generationMode
@@ -249,10 +267,17 @@ struct SettingsView: View {
     }
 
     private func saveAndDismiss() {
+        guard !isBusy, questionReviewMode != .typeSafeJev || reviewVerified else { return }
         do {
+            if questionReviewMode == .typeSafeJev, !reviewAPIKey.isEmpty {
+                try dependencies.secureStore.saveReviewKey(reviewAPIKey.trimmingCharacters(in: .whitespacesAndNewlines))
+            } else if removeReviewKey {
+                dependencies.secureStore.deleteReviewKey()
+            }
             if !apiKey.isEmpty {
                 try dependencies.secureStore.saveAPIKey(apiKey, for: provider)
             }
+            dependencies.settings.questionReviewMode = questionReviewMode
             dependencies.settings.provider = provider
             dependencies.settings.explanationLanguage = explanationLanguage
             dependencies.settings.difficulty = difficulty

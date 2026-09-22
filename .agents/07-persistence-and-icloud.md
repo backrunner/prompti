@@ -70,4 +70,9 @@ CloudKit 是最终一致，不假设另一设备的数据已经出现。
 - 设置提供删除历史题目、删除录音临时文件、删除全部学习数据、删除 Provider 密钥。
 - 导出建议为 JSON，包含 schema 版本、题目快照和 attempt；默认不含 Provider 配置和内部 prompt。
 - 删除全部数据需要二次确认，CloudKit 删除可能延迟；UI 展示进行中状态。
+- 错题 / 历史的单条删除与批量清空统一通过 `ReviewRecordDeletion` 执行：保留并归档题目库存墓碑，删除选定题目的全部 `AttemptRecord`，一次显式保存，失败回滚并显示失败提示。事件删除由 SwiftData / CloudKit 的原生删除传播机制同步；这不等于删除题库、模型配置或全部学习数据，也不声明两设备删除已经实时收敛。操作时重新检查隔离和报告，避免确认期间同步到达的报告被移除。
 - 崩溃报告、诊断导出和 issue 模板必须自动移除 Key、Authorization header、用户自定义 endpoint query 和用户场景原文。
+
+## 2026-09-22：TypeSafe 审核配置
+
+审核模式保存在本机 AppSettings，默认使用生成模型；未知值恢复默认。TypeSafe Key 继续放入现有 `SecureStore` 的 `com.prompti.app.byok` service，account 来自独立 `systemone|https://api.typesafe.ai/v1/systemone` scope 的 SHA-256；不会覆盖任何生成 Provider 的 Key，不进入 UserDefaults、用量或题目元数据，使用 `AfterFirstUnlockThisDeviceOnly` 且不做 iCloud Key 同步。输入/替换/删除在设置 Done 时应用，取消保留原凭据。练习的非敏感审核来源快照随既有题目 payload 保存与同步。

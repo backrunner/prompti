@@ -1,0 +1,104 @@
+[
+  {
+    "attachments": [
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "E5EB9565-B5A4-4C11-A788-652C7B15C4CC",
+        "deviceName": "Prompti-Generation-Review",
+        "exportedFileName": "jev-failed-en-light.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "jev-failed-en-light_0_99DBE2E9-3AB2-43E1-8835-C2F394AC0E66.png",
+        "timestamp": 1790101681.994
+      },
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "E5EB9565-B5A4-4C11-A788-652C7B15C4CC",
+        "deviceName": "Prompti-Generation-Review",
+        "exportedFileName": "jev-testing-en-light.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "jev-testing-en-light_0_DE0B60FE-4950-435B-A2CC-3380C5AEE4A6.png",
+        "timestamp": 1790101678.35
+      }
+    ],
+    "testIdentifier": "PromptiUITests/testJevConnectionFailureKeepsSettingsEditable()",
+    "testIdentifierURL": "test://com.apple.xcode/Prompti/PromptiUITests/PromptiUITests/testJevConnectionFailureKeepsSettingsEditable"
+  },
+  {
+    "attachments": [
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "E5EB9565-B5A4-4C11-A788-652C7B15C4CC",
+        "deviceName": "Prompti-Generation-Review",
+        "exportedFileName": "jev-details-zh-Hans-dark.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "jev-details-zh-Hans-dark_0_F070DD1F-8CA0-4204-ACBF-5338E7B85BDF.png",
+        "timestamp": 1790101701.502
+      },
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "E5EB9565-B5A4-4C11-A788-652C7B15C4CC",
+        "deviceName": "Prompti-Generation-Review",
+        "exportedFileName": "jev-review-zh-Hans-dark.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "jev-review-zh-Hans-dark_0_CD8B443B-6A21-473F-AFF6-A944F1202A9C.png",
+        "timestamp": 1790101699.602
+      }
+    ],
+    "testIdentifier": "PromptiUITests/testJevReviewSettingsChineseDark()",
+    "testIdentifierURL": "test://com.apple.xcode/Prompti/PromptiUITests/PromptiUITests/testJevReviewSettingsChineseDark"
+  },
+  {
+    "attachments": [
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "E5EB9565-B5A4-4C11-A788-652C7B15C4CC",
+        "deviceName": "Prompti-Generation-Review",
+        "exportedFileName": "jev-details-en-light.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "jev-details-en-light_0_222E602C-F21E-4A9C-B65A-6842ECE488D1.png",
+        "timestamp": 1790101726.598
+      },
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "E5EB9565-B5A4-4C11-A788-652C7B15C4CC",
+        "deviceName": "Prompti-Generation-Review",
+        "exportedFileName": "jev-review-en-light.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "jev-review-en-light_0_CBD181DD-125E-4231-9072-EDD4F1F99BC5.png",
+        "timestamp": 1790101724.721
+      }
+    ],
+    "testIdentifier": "PromptiUITests/testJevReviewSettingsEnglishLight()",
+    "testIdentifierURL": "test://com.apple.xcode/Prompti/PromptiUITests/PromptiUITests/testJevReviewSettingsEnglishLight"
+  },
+  {
+    "attachments": [
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "E5EB9565-B5A4-4C11-A788-652C7B15C4CC",
+        "deviceName": "Prompti-Generation-Review",
+        "exportedFileName": "model-zh-Hans.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "model-zh-Hans_0_FFEE67C7-4726-4277-86EA-C8EDA236934B.png",
+        "timestamp": 1790101768.36
+      }
+    ],
+    "testIdentifier": "PromptiUITests/testLocalizedModelSelectionInChinese()",
+    "testIdentifierURL": "test://com.apple.xcode/Prompti/PromptiUITests/PromptiUITests/testLocalizedModelSelectionInChinese"
+  },
+  {
+    "attachments": [
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "E5EB9565-B5A4-4C11-A788-652C7B15C4CC",
+        "deviceName": "Prompti-Generation-Review",
+        "exportedFileName": "model-en.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "model-en_0_0F84A4D5-71E0-4636-ACAD-979AC5C1956A.png",
+        "timestamp": 1790101795.073
+      }
+    ],
+    "testIdentifier": "PromptiUITests/testLocalizedModelSelectionInEnglish()",
+    "testIdentifierURL": "test://com.apple.xcode/Prompti/PromptiUITests/PromptiUITests/testLocalizedModelSelectionInEnglish"
+  }
+]

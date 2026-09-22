@@ -101,13 +101,14 @@ struct GenerationMetadata: Codable, Hashable, Sendable {
     var provider: String
     var model: String
     var createdAt: Date
-    var promptVersion = "5"
+    var promptVersion = "7"
     var schemaVersion = "2"
     var policyVersion = "2"
     var catalogVersion = "2026-09.3"
     var sourceFactIDs: [String]
     var checks: [String]
     var sourceFacts: [GenerationSourceFact] = []
+    var review: QuestionReviewProvenance? = nil
 }
 
 struct QuestionReview: Codable, Sendable {

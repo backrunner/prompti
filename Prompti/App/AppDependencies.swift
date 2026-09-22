@@ -19,17 +19,20 @@ final class AppDependencies {
         modelContainer: ModelContainer? = nil,
         persistenceMode: PersistenceMode? = nil,
         settings: AppSettings? = nil,
-        secureStore: SecureStore = SecureStore(),
+        secureStore: SecureStore? = nil,
         catalog: DestinationCatalog = DestinationCatalog()
     ) {
         persistence = PersistenceController(container: modelContainer, mode: persistenceMode, inMemory: Self.usesCleanUITestData)
         self.settings = settings ?? Self.makeSettings()
+        let secureStore = secureStore ?? Self.makeSecureStore()
         self.secureStore = secureStore
         secureStore.migrateLegacyKey(for: self.settings.provider)
         self.catalog = catalog
         let usage = UsageLedger()
         self.usage = usage
-        generation = QuestionGenerationService(secureStore: secureStore, usageSink: { entry in await usage.record(entry) })
+        let activeSettings = self.settings
+        generation = QuestionGenerationService(secureStore: secureStore, usageSink: { entry in await usage.record(entry) },
+            reviewMode: { await activeSettings.questionReviewMode })
     }
 
     private static var usesCleanUITestData: Bool {
@@ -39,6 +42,15 @@ final class AppDependencies {
         #else
         false
         #endif
+    }
+
+    private static func makeSecureStore() -> SecureStore {
+        #if DEBUG
+        if usesCleanUITestData {
+            return SecureStore(service: "com.prompti.app.ui-tests." + UUID().uuidString)
+        }
+        #endif
+        return SecureStore()
     }
 
     private static func makeSettings() -> AppSettings {

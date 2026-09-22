@@ -1,0 +1,135 @@
+{
+  "device": "iPhone 17e",
+  "runtime": "iOS 27.0",
+  "size": "default",
+  "screenshots": [
+    {
+      "file": "short-answers-reset-light-en.png",
+      "test": "PromptiUITests/testLongAnswersKeepPromptPinnedAndResetForNextQuestion()",
+      "appearance": "light",
+      "language": "en",
+      "timestamp": 1789759282.139,
+      "resultBundle": "/tmp/prompti-cloze-scroll-light.xcresult"
+    },
+    {
+      "file": "long-answers-feedback-light-en.png",
+      "test": "PromptiUITests/testLongAnswersKeepPromptPinnedAndResetForNextQuestion()",
+      "appearance": "light",
+      "language": "en",
+      "timestamp": 1789759280.43,
+      "resultBundle": "/tmp/prompti-cloze-scroll-light.xcresult"
+    },
+    {
+      "file": "long-answers-bottom-light-en.png",
+      "test": "PromptiUITests/testLongAnswersKeepPromptPinnedAndResetForNextQuestion()",
+      "appearance": "light",
+      "language": "en",
+      "timestamp": 1789759271.751,
+      "resultBundle": "/tmp/prompti-cloze-scroll-light.xcresult"
+    },
+    {
+      "file": "long-answers-middle-light-en.png",
+      "test": "PromptiUITests/testLongAnswersKeepPromptPinnedAndResetForNextQuestion()",
+      "appearance": "light",
+      "language": "en",
+      "timestamp": 1789759271.075,
+      "resultBundle": "/tmp/prompti-cloze-scroll-light.xcresult"
+    },
+    {
+      "file": "long-answers-top-light-en.png",
+      "test": "PromptiUITests/testLongAnswersKeepPromptPinnedAndResetForNextQuestion()",
+      "appearance": "light",
+      "language": "en",
+      "timestamp": 1789759268.997,
+      "resultBundle": "/tmp/prompti-cloze-scroll-light.xcresult"
+    },
+    {
+      "file": "multiple-blanks-feedback-light-en.png",
+      "test": "PromptiUITests/testMultipleBlanksRequireEveryAnswer()",
+      "appearance": "light",
+      "language": "en",
+      "timestamp": 1789759295.221,
+      "resultBundle": "/tmp/prompti-cloze-scroll-light.xcresult"
+    },
+    {
+      "file": "multiple-blanks-partial-light-en.png",
+      "test": "PromptiUITests/testMultipleBlanksRequireEveryAnswer()",
+      "appearance": "light",
+      "language": "en",
+      "timestamp": 1789759293.146,
+      "resultBundle": "/tmp/prompti-cloze-scroll-light.xcresult"
+    },
+    {
+      "file": "multiple-blanks-unanswered-light-en.png",
+      "test": "PromptiUITests/testMultipleBlanksRequireEveryAnswer()",
+      "appearance": "light",
+      "language": "en",
+      "timestamp": 1789759292.614,
+      "resultBundle": "/tmp/prompti-cloze-scroll-light.xcresult"
+    },
+    {
+      "file": "short-answers-reset-dark-zh.png",
+      "test": "PromptiUITests/testLongAnswersKeepPromptPinnedAndResetForNextQuestion()",
+      "appearance": "dark",
+      "language": "zh-Hans",
+      "timestamp": 1789759439.481,
+      "resultBundle": "/tmp/prompti-cloze-scroll-dark.xcresult"
+    },
+    {
+      "file": "long-answers-feedback-dark-zh.png",
+      "test": "PromptiUITests/testLongAnswersKeepPromptPinnedAndResetForNextQuestion()",
+      "appearance": "dark",
+      "language": "zh-Hans",
+      "timestamp": 1789759436.561,
+      "resultBundle": "/tmp/prompti-cloze-scroll-dark.xcresult"
+    },
+    {
+      "file": "long-answers-bottom-dark-zh.png",
+      "test": "PromptiUITests/testLongAnswersKeepPromptPinnedAndResetForNextQuestion()",
+      "appearance": "dark",
+      "language": "zh-Hans",
+      "timestamp": 1789759431.069,
+      "resultBundle": "/tmp/prompti-cloze-scroll-dark.xcresult"
+    },
+    {
+      "file": "long-answers-middle-dark-zh.png",
+      "test": "PromptiUITests/testLongAnswersKeepPromptPinnedAndResetForNextQuestion()",
+      "appearance": "dark",
+      "language": "zh-Hans",
+      "timestamp": 1789759430.503,
+      "resultBundle": "/tmp/prompti-cloze-scroll-dark.xcresult"
+    },
+    {
+      "file": "long-answers-top-dark-zh.png",
+      "test": "PromptiUITests/testLongAnswersKeepPromptPinnedAndResetForNextQuestion()",
+      "appearance": "dark",
+      "language": "zh-Hans",
+      "timestamp": 1789759428.779,
+      "resultBundle": "/tmp/prompti-cloze-scroll-dark.xcresult"
+    },
+    {
+      "file": "multiple-blanks-feedback-dark-zh.png",
+      "test": "PromptiUITests/testMultipleBlanksRequireEveryAnswer()",
+      "appearance": "dark",
+      "language": "zh-Hans",
+      "timestamp": 1789759468.163,
+      "resultBundle": "/tmp/prompti-cloze-scroll-dark.xcresult"
+    },
+    {
+      "file": "multiple-blanks-partial-dark-zh.png",
+      "test": "PromptiUITests/testMultipleBlanksRequireEveryAnswer()",
+      "appearance": "dark",
+      "language": "zh-Hans",
+      "timestamp": 1789759466.052,
+      "resultBundle": "/tmp/prompti-cloze-scroll-dark.xcresult"
+    },
+    {
+      "file": "multiple-blanks-unanswered-dark-zh.png",
+      "test": "PromptiUITests/testMultipleBlanksRequireEveryAnswer()",
+      "appearance": "dark",
+      "language": "zh-Hans",
+      "timestamp": 1789759465.543,
+      "resultBundle": "/tmp/prompti-cloze-scroll-dark.xcresult"
+    }
+  ]
+}

@@ -290,11 +290,20 @@ struct HomeView: View {
             .sorted { $0.createdAt < $1.createdAt }.map(\.question)
         request.previousPrompts = Array(questions.filter { $0.destinationID == destination.id && $0.languageCode == language.code }.prefix(30).map(\.prompt))
         do {
-            let generated = try await dependencies.generation.generate(request, configuration: dependencies.settings.provider,
+            let activeRequest = request
+            _ = try await dependencies.generation.generate(request, configuration: dependencies.settings.provider,
                 excluding: Set(questions.filter { $0.destinationID == destination.id && $0.languageCode == language.code }.map { $0.question.contentSignature }),
-                allowsRegeneration: false)
+                reserveAdditionalAttempt: {
+                    await MainActor.run { settings.reservePreparationCount(1) == 1 }
+                }) { event in
+                    if case .approved(let approved) = event {
+                        try await MainActor.run {
+                            try Task.checkCancellation()
+                            _ = try QuestionInventory.save(approved, request: activeRequest, context: modelContext)
+                        }
+                    }
+                }
             try Task.checkCancellation()
-            _ = try QuestionInventory.save(generated, request: request, context: modelContext)
             inventoryMessage = "Your approved question tray has been topped up."
         } catch is CancellationError {
             return

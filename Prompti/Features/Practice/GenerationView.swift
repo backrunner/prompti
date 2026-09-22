@@ -17,6 +17,7 @@ private enum GenerationPhase: Equatable {
     case connecting
     case reviewing
     case ready
+    case paused
     case failed(GenerationFailure)
 
     var title: String {
@@ -25,6 +26,7 @@ private enum GenerationPhase: Equatable {
         case .connecting: "Creating useful questions"
         case .reviewing: "Checking safety and quality"
         case .ready: "Ready to practice"
+        case .paused: "Preparation paused"
         case .failed: "This set could not be prepared"
         }
     }
@@ -32,7 +34,7 @@ private enum GenerationPhase: Equatable {
     var isWorking: Bool {
         switch self {
         case .preparing, .connecting, .reviewing: true
-        case .ready, .failed: false
+        case .ready, .paused, .failed: false
         }
     }
 
@@ -42,6 +44,7 @@ private enum GenerationPhase: Equatable {
         case .connecting: "questionmark.bubble.fill"
         case .reviewing: "checkmark.shield.fill"
         case .ready: "checkmark.seal.fill"
+        case .paused: "pause.circle"
         case .failed: "exclamationmark.triangle.fill"
         }
     }
@@ -53,7 +56,7 @@ private enum GenerationPhase: Equatable {
         case .connecting: 1
         case .reviewing: 2
         case .ready: 3
-        case .failed: -1
+        case .paused, .failed: -1
         }
     }
 
@@ -68,6 +71,7 @@ private enum GenerationPhase: Equatable {
         case .connecting: "generating"
         case .reviewing: "reviewing"
         case .ready: "ready"
+        case .paused: "paused"
         case .failed: "failed"
         }
     }
@@ -102,6 +106,7 @@ struct GenerationView: View {
     @Environment(AppDependencies.self) private var dependencies
     @Environment(PracticeFlow.self) private var practiceFlow
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.scenePhase) private var scenePhase
 
     let request: TrainingRequest
     let session: PracticeSessionState
@@ -115,7 +120,7 @@ struct GenerationView: View {
 
     private var records: [QuestionRecord] { session.records }
     /// Enough approved questions to start while the rest keep generating.
-    private var readyThreshold: Int { min(3, request.count) }
+    private var readyThreshold: Int { 1 }
 
     private var autoStart: Bool {
         #if DEBUG
@@ -126,6 +131,7 @@ struct GenerationView: View {
     }
 
     private var phase: GenerationPhase {
+        if session.isPaused { return .paused }
         if session.isFilling || (records.isEmpty && session.fillError == nil) {
             switch session.furthestStage {
             case .reviewing: return .reviewing
@@ -139,20 +145,9 @@ struct GenerationView: View {
         return .ready
     }
 
-    /// Approved-question throughput with a small floor per reached stage, so
-    /// the bar always moves forward even when a batch is sent back internally.
+    /// Only saved, approved questions move the journey forward.
     private var progressTarget: CGFloat {
-        let approved = CGFloat(records.count) / CGFloat(max(1, request.count))
-        let floor: CGFloat
-        switch phase {
-        case .preparing: floor = 0.05
-        case .connecting: floor = 0.15
-        case .reviewing: floor = 0.55
-        case .ready: floor = 1
-        case .failed: floor = 0
-        }
-        if case .failed = phase { return routeProgress }
-        return min(1, max(floor, approved))
+        CGFloat(records.count) / CGFloat(max(1, request.count))
     }
 
     var body: some View {
@@ -165,7 +160,7 @@ struct GenerationView: View {
                         status
                         stageStrip
 
-                        if phase == .ready {
+                        if !records.isEmpty {
                             readyManifest
                                 .transition(.move(edge: .bottom).combined(with: .opacity))
                         }
@@ -213,6 +208,9 @@ struct GenerationView: View {
             updateRouteProgress()
             maybeOpenSession()
         }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .background { session.cancelFill() }
+        }
         .onChange(of: progressTarget) { _, _ in updateRouteProgress() }
         .onChange(of: records.count) { _, _ in maybeOpenSession() }
         .onChange(of: session.isFilling) { _, _ in maybeOpenSession() }
@@ -238,7 +236,7 @@ struct GenerationView: View {
             PracticeJourneyVisual(
                 progress: routeProgress,
                 destination: request.destination,
-                isComplete: phase == .ready
+                isComplete: records.count == request.count
             )
             .frame(height: 112)
         }
@@ -248,9 +246,19 @@ struct GenerationView: View {
 
     private var status: some View {
         VStack(spacing: 10) {
-            Image(systemName: phase.symbol)
-                .font(.title2.weight(.bold))
-                .foregroundStyle(phase.isFailed ? Color.promptError : Color.promptAccent)
+            Group {
+                if phase.isWorking && !reduceMotion {
+                    ProgressView()
+                        .controlSize(.large)
+                        .tint(.promptAccent)
+                } else {
+                    Image(systemName: phase.isWorking ? "hourglass" : phase.symbol)
+                        .font(.title2.weight(.bold))
+                        .foregroundStyle(phase.isFailed ? Color.promptError : Color.promptAccent)
+                }
+            }
+            .frame(height: 36)
+            .accessibilityHidden(true)
             Text(LocalizedStringKey(phase.title))
                 .font(PromptiTypography.title)
                 .fontDesign(.rounded)
@@ -261,7 +269,10 @@ struct GenerationView: View {
                 .foregroundStyle(Color.promptMuted)
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: 360)
-            if phase.isWorking || phase == .ready {
+            if phase.isWorking {
+                PreparationActivity(session: session, showsIndicator: false)
+            }
+            if !records.isEmpty {
                 Text("\(records.count) of \(request.count) questions prepared")
                     .font(.footnote.weight(.semibold))
                     .monospacedDigit()
@@ -274,58 +285,22 @@ struct GenerationView: View {
         .accessibilityValue(phase.accessibilityID)
     }
 
-    /// The three pipeline steps form one progress bar: the fill tracks prepared
-    /// questions and never shrinks when a batch is sent back for regeneration.
     private var stageStrip: some View {
-        let progress = min(max(routeProgress, 0), 1)
-        return HStack(spacing: 0) {
+        HStack(spacing: PromptiSpacing.related) {
             ForEach(GenerationStage.allCases) { stage in
-                stageItem(stage, progress: progress)
+                Label(LocalizedStringKey(stage.title), systemImage: stage.symbol)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(phase.stageIndex == stage.rawValue ? Color.promptText : Color.promptMuted)
                     .frame(maxWidth: .infinity)
+                    .padding(.vertical, PromptiSpacing.related)
+                    .background(phase.stageIndex == stage.rawValue ? Color.promptSelection : .clear,
+                                in: RoundedRectangle(cornerRadius: PromptiRadius.compact))
+                    .accessibilityValue(Text(LocalizedStringKey(phase.stageIndex > stage.rawValue
+                        ? "complete" : phase.stageIndex == stage.rawValue ? "in progress" : "up next")))
             }
-        }
-        .padding(6)
-        .frame(maxWidth: .infinity)
-        .background {
-            ZStack(alignment: .leading) {
-                RoundedRectangle(cornerRadius: PromptiRadius.control, style: .continuous)
-                    .fill(Color.promptSurface)
-                GeometryReader { proxy in
-                    RoundedRectangle(cornerRadius: PromptiRadius.control, style: .continuous)
-                        .fill(Color.promptAction)
-                        .frame(width: proxy.size.width * progress)
-                }
-            }
-        }
-        .overlay {
-            RoundedRectangle(cornerRadius: PromptiRadius.control, style: .continuous)
-                .strokeBorder(Color.promptBorder.opacity(0.65), lineWidth: 0.75)
-                .allowsHitTesting(false)
         }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("generation.progress")
-    }
-
-    private func stageItem(_ stage: GenerationStage, progress: CGFloat) -> some View {
-        let isComplete = phase.stageIndex > stage.rawValue
-        let isActive = phase.stageIndex == stage.rawValue
-        // Once the fill passes the middle of a stage's third, its label sits on
-        // the action color and switches to the on-action ink.
-        let covered = progress >= (CGFloat(stage.rawValue) + 0.5) / CGFloat(GenerationStage.allCases.count)
-        let localizedTitle = NSLocalizedString(stage.title, comment: "Generation stage title")
-        let status = isComplete ? "complete" : isActive ? "in progress" : "up next"
-        let localizedStatus = NSLocalizedString(status, comment: "Generation stage status")
-        return HStack(spacing: 7) {
-            Image(systemName: isComplete ? "checkmark.circle.fill" : stage.symbol)
-                .foregroundStyle(covered ? Color.promptOnAction : isComplete || isActive ? Color.promptAccent : Color.promptMuted)
-            Text(LocalizedStringKey(stage.title))
-                .font(.caption.weight(isActive ? .bold : .semibold))
-                .foregroundStyle(covered ? Color.promptOnAction : isActive || isComplete ? Color.promptText : Color.promptMuted)
-                .lineLimit(1)
-                .minimumScaleFactor(0.8)
-        }
-        .frame(maxWidth: .infinity)
-        .accessibilityLabel("\(localizedTitle), \(localizedStatus)")
     }
 
     private var readyManifest: some View {
@@ -385,37 +360,41 @@ struct GenerationView: View {
     @ViewBuilder
     private var actions: some View {
         VStack(spacing: 10) {
-            switch phase {
-            case .ready:
+            if !records.isEmpty {
                 if let message = session.fillMessage {
                     InlineNotice(symbol: "exclamationmark.circle", text: message, tone: .warning)
                 }
-                Button {
-                    openSession()
-                } label: {
+                Button(action: openSession) {
                     Label {
                         HStack(spacing: 5) {
                             Text("Start practice")
-                            Text("· \(records.count)")
-                                .monospacedDigit()
+                            Text("· \(records.count)").monospacedDigit()
                         }
-                    } icon: {
-                        Image(systemName: "play.fill")
-                    }
+                    } icon: { Image(systemName: "play.fill") }
                 }
                 .buttonStyle(PrimaryActionButtonStyle())
                 .accessibilityIdentifier("generation.start")
 
-                if session.hasRemaining {
-                    Button("Try to add \(request.count - records.count) more", systemImage: "arrow.clockwise") {
-                        retryFill()
-                    }
-                    .buttonStyle(SecondaryActionButtonStyle())
-                    .accessibilityIdentifier("generation.fillRemaining")
+                if session.isFilling {
+                    Button("Pause preparation", systemImage: "pause.fill") { session.cancelFill() }
+                        .buttonStyle(SecondaryActionButtonStyle())
+                        .accessibilityIdentifier("generation.pause")
+                } else if session.hasRemaining {
+                    Button("Try to add \(request.count - records.count) more", systemImage: "arrow.clockwise", action: retryFill)
+                        .buttonStyle(SecondaryActionButtonStyle())
+                        .accessibilityIdentifier("generation.fillRemaining")
                 }
-            case .failed(let failure):
-                recoveryButton(for: failure)
-            case .preparing, .connecting, .reviewing:
+            } else {
+                switch phase {
+                case .failed(let failure):
+                    recoveryButton(for: failure)
+                case .paused:
+                    Button("Continue preparation", systemImage: "play.fill", action: retryFill)
+                        .buttonStyle(PrimaryActionButtonStyle())
+                        .accessibilityIdentifier("generation.resume")
+                default:
+                    EmptyView()
+                }
                 Button("Cancel generation", role: .cancel, action: onCancel)
                     .buttonStyle(CompactGlassButtonStyle())
                     .accessibilityIdentifier("generation.cancel")
@@ -460,6 +439,8 @@ struct GenerationView: View {
             String(localized: "Your model is generating a small, practical set.")
         case .reviewing:
             String(localized: "Nothing appears in your tray until it passes review.")
+        case .paused:
+            String(localized: "Prepared questions are saved. Continue whenever you’re ready.")
         case .ready:
             records.count == request.count
                 ? String(localized: "All questions passed review.")
@@ -494,6 +475,9 @@ struct GenerationView: View {
     }
 
     private func failure(for error: Error) -> GenerationFailure {
+        if let error = error as? TypeSafeReviewError {
+            return GenerationFailure(message: error.localizedDescription, recovery: error.needsSettings ? .modelSettings : .retry)
+        }
         guard let error = error as? GenerationError else {
             return GenerationFailure(message: error.localizedDescription, recovery: .retry)
         }
@@ -506,5 +490,40 @@ struct GenerationView: View {
         case .rateLimited, .providerUnavailable, .malformedResponse, .timedOut, .networkUnavailable:
             return GenerationFailure(message: error.localizedDescription, recovery: .retry)
         }
+    }
+}
+
+/// Shared, observable progress for initial generation and an in-session wait.
+/// Counts describe active requests, never an estimated completion percentage.
+struct PreparationActivity: View {
+    let session: PracticeSessionState
+    var showsIndicator = true
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        VStack(spacing: PromptiSpacing.related) {
+            HStack(spacing: PromptiSpacing.related) {
+                if showsIndicator {
+                    if reduceMotion { Image(systemName: "hourglass") }
+                    else { ProgressView().tint(Color.promptAction) }
+                }
+                if session.generatingCount + session.reviewingCount > 0 {
+                    Text("Creating \(session.generatingCount) · Checking \(session.reviewingCount)")
+                } else {
+                    Text("Waiting for your model")
+                }
+            }
+            .font(.subheadline)
+            if let startedAt = session.fillStartedAt {
+                HStack(spacing: PromptiSpacing.inline) {
+                    Text("Elapsed")
+                    Text(startedAt, style: .timer).monospacedDigit()
+                }
+                .font(.caption)
+                .accessibilityElement(children: .combine)
+            }
+        }
+        .foregroundStyle(Color.promptMuted)
+        .accessibilityIdentifier("generation.activity")
     }
 }

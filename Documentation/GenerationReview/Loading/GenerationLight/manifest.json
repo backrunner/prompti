@@ -1,0 +1,26 @@
+[
+  {
+    "attachments": [
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "D091FCCC-8D1F-40A3-A766-676C89144B01",
+        "deviceName": "Prompti-Generation-Review",
+        "exportedFileName": "FF73F9EC-65C6-4A57-89D2-BA00B0F768CB.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "generation-ready_0_C5022C4E-77EF-49F7-B34C-622BC8CC46C6.png",
+        "timestamp": 1789759670.822
+      },
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "D091FCCC-8D1F-40A3-A766-676C89144B01",
+        "deviceName": "Prompti-Generation-Review",
+        "exportedFileName": "0EFEADB6-AD20-4CC5-BC16-318F61291FFF.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "generation-working_0_29E18552-B0AC-4FC8-8E46-13C0187791FB.png",
+        "timestamp": 1789759667.586
+      }
+    ],
+    "testIdentifier": "PromptiUITests/testPracticeVisualStates()",
+    "testIdentifierURL": "test://com.apple.xcode/Prompti/PromptiUITests/PromptiUITests/testPracticeVisualStates"
+  }
+]
