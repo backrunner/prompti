@@ -10,9 +10,9 @@ struct ModelConnectionView: View {
     let languageCode: String
 
     @Environment(AppDependencies.self) private var dependencies
+    @FocusState private var keyIsFocused: Bool
     @State private var status: String?
     @State private var connectionTask: Task<Void, Never>?
-    @State private var showAdvanced = false
     @State private var isEnteringModel = false
 
     private var appleStatus: AppleModelStatus { AppleModelCapability.status(for: languageCode) }
@@ -53,13 +53,6 @@ struct ModelConnectionView: View {
                 apiKeyControls
             }
 
-            if let status {
-                Label(status, systemImage: isVerified ? "checkmark.circle.fill" : "info.circle")
-                    .font(.footnote)
-                    .foregroundStyle(isVerified ? Color.promptSuccess : Color.promptMuted)
-                    .accessibilityIdentifier("model.status")
-            }
-
             if provider.kind != .apple {
                 Text("Your provider processes exercise data and may charge for usage.")
                     .font(.footnote).foregroundStyle(Color.promptMuted)
@@ -78,7 +71,6 @@ struct ModelConnectionView: View {
             apiKey = ""
             status = nil
             isEnteringModel = false
-            showAdvanced = false
             isVerified = preset == .apple && appleStatus == .available
         })
     }
@@ -131,6 +123,10 @@ struct ModelConnectionView: View {
             if needsEndpointField { endpointField }
             SecureField(hasCredential ? "Replace API key" : "API key", text: $apiKey)
                 .modifier(PromptiCredentialFieldModifier())
+                .textContentType(.oneTimeCode)
+                .focused($keyIsFocused)
+                .submitLabel(.done)
+                .onSubmit { keyIsFocused = false }
                 .accessibilityIdentifier("model.apiKey")
             if !recommendations.isEmpty { modelSelector }
             if needsModelField {
@@ -138,31 +134,16 @@ struct ModelConnectionView: View {
                     .modifier(PromptiCredentialFieldModifier())
                     .accessibilityIdentifier("model.customID")
             }
-            Button { connect() } label: {
-                HStack {
-                    if isBusy { ProgressView().tint(.promptOnAction) }
-                    Label(isVerified ? "Connection verified" : "Test connection",
-                          systemImage: isVerified ? "checkmark.circle.fill" : "bolt.horizontal.circle")
-                }
-            }
-            .buttonStyle(PrimaryActionButtonStyle())
-            .disabled(!canConnect)
-            .accessibilityIdentifier("model.connect")
+            PromptiConnectionTestRow(isBusy: isBusy, isVerified: isVerified,
+                canTest: canConnect, error: status,
+                actionID: "model.connect", statusID: "model.status", action: connect)
 
-            DisclosureGroup("More connection options", isExpanded: $showAdvanced) {
-                VStack(alignment: .leading, spacing: 12) {
-                    if !needsEndpointField && provider.kind != .openRouter { endpointField }
-                    if provider.kind == .openRouter {
-                        Link("Get an OpenRouter API key", destination: URL(string: "https://openrouter.ai/keys")!)
-                        Link("Source: OpenRouter · CC BY 4.0", destination: URL(string: "https://openrouter.ai/rankings")!)
-                    }
-                    Text("Your destination, language and scenes go to your selected provider. Credentials stay on this device. Model usage may use account credits.")
-                }
-                .font(.footnote).foregroundStyle(Color.promptMuted)
-                .padding(.top, 12)
+            if provider.kind == .openRouter {
+                Link("Get an OpenRouter API key", destination: URL(string: "https://openrouter.ai/keys")!)
+                    .font(.footnote)
+                Link("Source: OpenRouter · CC BY 4.0", destination: URL(string: "https://openrouter.ai/rankings")!)
+                    .font(.caption).foregroundStyle(Color.promptMuted)
             }
-            .font(.subheadline)
-            .accessibilityIdentifier("model.advanced")
         }
         .textInputAutocapitalization(.never).autocorrectionDisabled()
         .disabled(isBusy)
@@ -176,6 +157,7 @@ struct ModelConnectionView: View {
     }
 
     private func connect() {
+        keyIsFocused = false
         guard !isBusy, canConnect else { return }
         isBusy = true
         isVerified = false
@@ -191,7 +173,7 @@ struct ModelConnectionView: View {
                 try Task.checkCancellation()
                 provider.structuredOutputSupport = support
                 isVerified = true
-                status = String(localized: "Connected. Your model is ready.")
+                status = nil
             } catch is CancellationError {
                 return
             } catch {

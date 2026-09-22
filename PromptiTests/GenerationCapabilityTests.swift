@@ -4,29 +4,29 @@ import Testing
 @testable import Prompti
 
 actor CapabilityProvider: QuestionProvider {
-    enum ReviewMode: Sendable { case approve, rejectFirst, missing, duplicate, unknown }
+    enum ReviewMode: Sendable { case approve, rejectFirst, rejectFirstTwo, rejectAll, rejectAfterFirst, rejectInitialAttempt, missing, duplicate, unknown }
     private(set) var requests: [TrainingRequest] = []
     private(set) var speechCalls = 0
     private(set) var reviewedCounts: [Int] = []
+    private(set) var rejectedIDs = Set<UUID>()
     private(set) var maxInFlight = 0
     private var inFlight = 0
     var reviewMode: ReviewMode
     let delay: Duration
     let verdict: SemanticVerdict
-    /// Fail every batch whose size is below this value. Ordinal-based failure
-    /// is meaningless once batches run concurrently, so failures key off the
-    /// request itself.
-    let failsBelowCount: Int?
+    let failsAfterRequests: Int?
+    let failure: GenerationError
     let fixedPrompt: String?
     let citesAllFacts: Bool
 
     init(reviewMode: ReviewMode = .approve, delay: Duration = .zero,
          verdict: SemanticVerdict = SemanticVerdict(result: .correct, feedback: "Your request has the same meaning."),
-         failsBelowCount: Int? = nil, fixedPrompt: String? = nil, citesAllFacts: Bool = false) {
+         failsAfterRequests: Int? = nil, failure: GenerationError = .providerUnavailable, fixedPrompt: String? = nil, citesAllFacts: Bool = false) {
         self.reviewMode = reviewMode
         self.delay = delay
         self.verdict = verdict
-        self.failsBelowCount = failsBelowCount
+        self.failsAfterRequests = failsAfterRequests
+        self.failure = failure
         self.fixedPrompt = fixedPrompt
         self.citesAllFacts = citesAllFacts
     }
@@ -39,12 +39,12 @@ actor CapabilityProvider: QuestionProvider {
         inFlight += 1
         maxInFlight = max(maxInFlight, inFlight)
         defer { inFlight -= 1 }
-        if let failsBelowCount, request.count < failsBelowCount { throw GenerationError.providerUnavailable }
+        if let failsAfterRequests, ordinal > failsAfterRequests { throw failure }
         if delay != .zero { try await Task.sleep(for: delay) }
         return (0..<request.count).map { offset in
-            GeneratedQuestion(kind: .multipleChoice, prompt: fixedPrompt ?? "Where is platform \(ordinal * 10 + offset)?",
-                options: ["Over there", "Very tasty", "Three people", "Sunny"].map { QuestionOption(text: $0) },
-                correctAnswer: "Over there", translation: "Asking for directions.", explanation: "A clear, polite direction question.",
+            GeneratedQuestion(kind: .multipleChoice, prompt: fixedPrompt ?? "Are you travelling to platform \(ordinal * 10 + offset)?",
+                options: ["Yes, thank you", "Very tasty", "Three people", "Sunny"].map { QuestionOption(text: $0) },
+                correctAnswer: "Yes, thank you", translation: "A station worker checks your destination.", explanation: "Confirm where you are going.",
                 sceneID: request.scenes[0].id, sourceFactIDs: citesAllFacts ? PromptBuilder.factIDs(for: request) : [])
         }
     }
@@ -53,8 +53,17 @@ actor CapabilityProvider: QuestionProvider {
 
     func reviewQuestions(_ questions: [GeneratedQuestion], request: TrainingRequest) async throws -> [QuestionReview] {
         reviewedCounts.append(questions.count)
-        var decisions = questions.enumerated().map { index, question in
-            QuestionReview(questionID: question.id, safe: reviewMode != .rejectFirst || index != 0,
+        let rejected: Bool = switch reviewMode {
+        case .rejectFirst: reviewedCounts.count == 1
+        case .rejectFirstTwo: reviewedCounts.count <= 2
+        case .rejectAll: true
+        case .rejectAfterFirst: reviewedCounts.count > 1
+        case .rejectInitialAttempt: request.diversityHint?.contains("Fresh replacement") != true
+        default: false
+        }
+        if rejected { rejectedIDs.formUnion(questions.map(\.id)) }
+        var decisions = questions.map { question in
+            QuestionReview(questionID: question.id, safe: !rejected,
                 language: true, scene: true, natural: true, answer: true, difficulty: true, reason: "Reviewed")
         }
         switch reviewMode {
@@ -74,26 +83,140 @@ actor CapabilityProvider: QuestionProvider {
     }
 }
 
+/// Holds every sibling until the first approved event has been observed.
+/// A batching barrier would prevent that event and fail the test deadline.
+private actor GatedQuestionProvider: QuestionProvider {
+    let fixture = CapabilityProvider()
+    private var started = 0
+    private var released = false
+    private var waiters: [AsyncStream<Void>.Continuation] = []
+    private(set) var completed = 0
+
+    func release() {
+        released = true
+        let pending = waiters
+        waiters.removeAll()
+        for waiter in pending { waiter.finish() }
+    }
+
+    func generate(_ request: TrainingRequest) async throws -> [GeneratedQuestion] {
+        started += 1
+        if started > 1, !released {
+            let stream = AsyncStream<Void> { waiters.append($0) }
+            for await _ in stream { break }
+        }
+        try Task.checkCancellation()
+        let result = try await fixture.generate(request)
+        completed += 1
+        return result
+    }
+
+    func reviewScene(_ scene: String) async throws -> SceneReview { try await fixture.reviewScene(scene) }
+    func reviewQuestions(_ questions: [GeneratedQuestion], request: TrainingRequest) async throws -> [QuestionReview] {
+        try await fixture.reviewQuestions(questions, request: request)
+    }
+    func evaluateSpeech(_ question: GeneratedQuestion, transcript: String,
+                        languageCode: String, explanationLanguage: ExplanationLanguage) async throws -> SemanticVerdict {
+        try await fixture.evaluateSpeech(question, transcript: transcript, languageCode: languageCode, explanationLanguage: explanationLanguage)
+    }
+}
+
+private actor TypedCapabilityProvider: QuestionProvider {
+    let fixture = CapabilityProvider()
+    private(set) var requests: [TrainingRequest] = []
+    func generate(_ request: TrainingRequest) async throws -> [GeneratedQuestion] {
+        requests.append(request)
+        let ordinal = requests.count
+        var question = try await fixture.generate(request)[0]
+        if request.kinds == [.cloze] {
+            let cloze = ClozeContent(segments: ["Please take me to platform \(ordinal) ", "."],
+                blanks: [ClozeBlank(id: "courtesy", options: ["please", "rain", "ticket", "yesterday"], correctAnswer: "please")])
+            question.kind = .cloze
+            question.cloze = cloze
+            question.prompt = cloze.prompt
+            question.correctAnswer = cloze.answer
+            question.options = []
+        } else if request.kinds == [.spoken] {
+            question.kind = .spoken
+            question.prompt = "Ask how to reach platform \(ordinal)."
+            question.correctAnswer = "How do I reach platform \(ordinal)?"
+            question.sampleAnswer = question.correctAnswer
+            question.options = []
+            question.rubric = SpeechRubric(intent: "Ask for directions", requiredDetails: ["platform \(ordinal)"], acceptableVariations: ["polite paraphrases"])
+        }
+        return [question]
+    }
+    func reviewScene(_ scene: String) async throws -> SceneReview { try await fixture.reviewScene(scene) }
+    func reviewQuestions(_ questions: [GeneratedQuestion], request: TrainingRequest) async throws -> [QuestionReview] {
+        try await fixture.reviewQuestions(questions, request: request)
+    }
+    func evaluateSpeech(_ question: GeneratedQuestion, transcript: String,
+                        languageCode: String, explanationLanguage: ExplanationLanguage) async throws -> SemanticVerdict {
+        try await fixture.evaluateSpeech(question, transcript: transcript, languageCode: languageCode, explanationLanguage: explanationLanguage)
+    }
+}
+
 @Suite("Structured generation and semantic feedback")
 struct GenerationCapabilityTests {
     static func request(count: Int = 3) -> TrainingRequest {
         let catalog = DestinationCatalog()
         let destination = catalog.destination(id: "tokyo")
         return TrainingRequest(destination: destination, language: destination.languages[1], explanationLanguage: .english,
-            scenes: [catalog.commonScenes[2]], difficulty: .basic, kinds: [.multipleChoice, .cloze, .spoken], count: count)
+            scenes: [catalog.commonScenes[2]], difficulty: .basic, kinds: [.multipleChoice], count: count)
     }
 
     private func service(_ fixture: CapabilityProvider) -> QuestionGenerationService {
         QuestionGenerationService(secureStore: SecureStore(), providerFactory: { _, _ in fixture })
     }
 
-    @Test("Large sets use bounded batches and every accepted question has review provenance", arguments: [ProviderKind.apple, .openAIResponses])
+    @Test("Mixed sets schedule every selected type as an independently validated single question", arguments: [ProviderKind.apple, .openAIChat])
+    func mixedTypesStayBalanced(_ kind: ProviderKind) async throws {
+        let fixture = TypedCapabilityProvider()
+        let generation = QuestionGenerationService(secureStore: SecureStore(), providerFactory: { _, _ in fixture })
+        var request = Self.request(count: 6)
+        request.kinds = [.multipleChoice, .cloze, .spoken]
+        let questions = try await generation.generate(request, configuration: ProviderConfiguration(kind: kind))
+        #expect(questions.count == 6)
+        for style in request.kinds { #expect(questions.filter { $0.kind == style }.count == 2) }
+        #expect(await fixture.requests.allSatisfy { $0.count == 1 && $0.kinds.count == 1 })
+    }
+
+    @Test("Single-type requests reduce prompt and schema size without dropping shared quality rules", arguments: QuestionKind.allCases)
+    func focusedQuestionRequest(_ kind: QuestionKind) throws {
+        var request = Self.request(count: 1)
+        request.kinds = Set(QuestionKind.allCases)
+        let fullPrompt = try PromptBuilder.questionPrompt(request)
+        let fullSchema = try JSONSerialization.data(withJSONObject: RemoteAIClient.questionSchema(for: request.kinds))
+        request.kinds = [kind]
+        let prompt = try PromptBuilder.questionPrompt(request)
+        let schema = try JSONSerialization.data(withJSONObject: RemoteAIClient.questionSchema(for: request.kinds))
+        #expect(prompt.utf8.count < fullPrompt.utf8.count)
+        #expect(schema.count < fullSchema.count)
+        #expect(prompt.contains("learner role is fixed") && prompt.contains("sourceFactIDs"))
+        #expect(prompt.contains("near-duplicate") && prompt.contains(request.difficulty.generationConstraints))
+        #expect(prompt.contains("independently expand") && prompt.contains("never stereotype"))
+        print("Focused request \(kind.rawValue): prompt \(fullPrompt.utf8.count) -> \(prompt.utf8.count) bytes, schema \(fullSchema.count) -> \(schema.count) bytes")
+    }
+
+    @Test("Wrong question types are rejected before paid review")
+    func rejectsUnrequestedType() async {
+        var request = Self.request(count: 1)
+        request.kinds = [.spoken]
+        let fixture = CapabilityProvider() // Deliberately returns multiple choice.
+        await #expect(throws: GenerationError.self) {
+            try await service(fixture).generate(request, configuration: ProviderConfiguration())
+        }
+        #expect(await fixture.reviewedCounts.isEmpty)
+        #expect(await fixture.requests.count == 3)
+    }
+
+    @Test("Large sets use single-question requests and every accepted question has review provenance", arguments: [ProviderKind.apple, .openAIResponses])
     func smallBatches(_ kind: ProviderKind) async throws {
         let provider = CapabilityProvider()
         let generated = try await service(provider).generate(Self.request(count: 8), configuration: ProviderConfiguration(kind: kind, model: "fixture"))
         #expect(generated.count == 8)
         let requests = await provider.requests
-        #expect(requests.allSatisfy { $0.count <= (kind == .apple ? 2 : 3) })
+        #expect(requests.allSatisfy { $0.count == 1 })
         #expect(Set(generated.compactMap { $0.generation?.jobID }).count == 1)
         #expect(Set(generated.compactMap { $0.generation?.batchID }).count == requests.count)
         #expect(generated.allSatisfy { $0.generation?.checks == QuestionReview.checks && $0.generation?.model == "fixture" })
@@ -103,9 +226,92 @@ struct GenerationCapabilityTests {
     func individualReview() async throws {
         let fixture = CapabilityProvider(reviewMode: .rejectFirst)
         let result = try await service(fixture).generate(Self.request(), configuration: ProviderConfiguration())
-        #expect(result.count == 2)
-        #expect(result.allSatisfy { !$0.prompt.contains("10") })
-        #expect(await fixture.requests.count == 2) // One bounded regeneration, then partial success.
+        #expect(result.count == 3)
+        let rejectedIDs = await fixture.rejectedIDs
+        #expect(result.allSatisfy { !rejectedIDs.contains($0.id) })
+        #expect(await fixture.requests.count == 4) // Only the rejected slot is regenerated.
+    }
+
+    @Test("Every rejected slot automatically gets a fresh attempt")
+    func eachQuestionRetries() async throws {
+        let fixture = CapabilityProvider(reviewMode: .rejectInitialAttempt)
+        let result = try await service(fixture).generate(Self.request(count: 5), configuration: ProviderConfiguration())
+        #expect(result.count == 5)
+        #expect(await fixture.requests.count == 10)
+        #expect(await fixture.reviewedCounts.allSatisfy { $0 == 1 })
+    }
+
+    @Test("Two rejections recover on the last allowed attempt")
+    func finalAttemptSucceeds() async throws {
+        let fixture = CapabilityProvider(reviewMode: .rejectFirstTwo)
+        let result = try await service(fixture).generate(Self.request(count: 1), configuration: ProviderConfiguration())
+        #expect(result.count == 1)
+        #expect(await fixture.requests.count == 3)
+    }
+
+    @Test("Persistent rejection stops at two retries per question")
+    func rejectionLimit() async {
+        let fixture = CapabilityProvider(reviewMode: .rejectAll)
+        await #expect(throws: GenerationError.self) {
+            try await service(fixture).generate(Self.request(count: 4), configuration: ProviderConfiguration())
+        }
+        #expect(await fixture.requests.count == 12)
+    }
+
+    @Test("Malformed output and timeouts get bounded automatic regeneration", arguments: [
+        GenerationError.malformedResponse, .truncatedOutput, .timedOut, .providerUnavailable
+    ])
+    func recoverableErrors(_ error: GenerationError) async {
+        let fixture = CapabilityProvider(failsAfterRequests: 0, failure: error)
+        await #expect(throws: GenerationError.self) {
+            try await service(fixture).generate(Self.request(count: 1), configuration: ProviderConfiguration())
+        }
+        #expect(await fixture.requests.count == 3)
+    }
+
+    @Test("Automatic preparation reserves every extra attempt and respects an exhausted budget")
+    func retryReservation() async {
+        actor Budget {
+            var remaining = 1
+            var calls = 0
+            func reserve() -> Bool {
+                calls += 1
+                guard remaining > 0 else { return false }
+                remaining -= 1
+                return true
+            }
+        }
+        let budget = Budget()
+        let fixture = CapabilityProvider(reviewMode: .rejectAll)
+        await #expect(throws: GenerationError.self) {
+            try await service(fixture).generate(Self.request(count: 1), configuration: ProviderConfiguration(),
+                reserveAdditionalAttempt: { await budget.reserve() })
+        }
+        #expect(await fixture.requests.count == 2)
+        #expect(await budget.calls == 2)
+    }
+
+    @Test("An expired job never starts a paid generation request")
+    func expiredJob() async {
+        let fixture = CapabilityProvider()
+        await #expect(throws: GenerationError.self) {
+            try await service(fixture).generate(Self.request(count: 1), configuration: ProviderConfiguration(), deadline: .now)
+        }
+        #expect(await fixture.requests.isEmpty)
+    }
+
+    @Test("Generation and review keep the learner on the tourist side for every question style")
+    func touristPerspective() throws {
+        var request = Self.request()
+        request.kinds = [.multipleChoice, .cloze, .spoken]
+        let generation = try PromptBuilder.questionPrompt(request)
+        let review = try PromptBuilder.qualityReviewPrompt([], request: request)
+        #expect(PromptBuilder.systemInstructions.contains("ALWAYS a visiting tourist"))
+        #expect(generation.contains("utterance spoken by the tourist"))
+        #expect(generation.contains("telling the tourist what to say"))
+        #expect(!generation.contains("vary register and turn direction"))
+        #expect(review.contains("Reject role reversals with scene=false"))
+        #expect(review.contains("filled cloze text, spoken answer/sample"))
     }
 
     @Test("Missing, duplicate and unknown review IDs cannot approve a question", arguments: [CapabilityProvider.ReviewMode.missing, .duplicate, .unknown])
@@ -118,7 +324,7 @@ struct GenerationCapabilityTests {
 
     @Test("A later provider failure preserves already reviewed questions")
     func partialFailure() async throws {
-        let fixture = CapabilityProvider(failsBelowCount: 3)
+        let fixture = CapabilityProvider(failsAfterRequests: 3)
         let result = try await service(fixture).generate(Self.request(count: 5), configuration: ProviderConfiguration())
         #expect(result.count == 3)
         #expect(result.allSatisfy { $0.generation != nil })
@@ -143,6 +349,7 @@ struct GenerationCapabilityTests {
             private(set) var stages = Set<QuestionGenerationStage>()
             func record(_ event: QuestionGenerationEvent) {
                 switch event {
+                case .activity: break
                 case .stage(let stage): stages.insert(stage)
                 case .approved(let questions): approvedEvents += 1; approvedTotal += questions.count
                 }
@@ -151,13 +358,47 @@ struct GenerationCapabilityTests {
         let collector = Collector()
         let provider = CapabilityProvider(delay: .milliseconds(40))
         let result = try await service(provider).generate(Self.request(count: 9),
-            configuration: ProviderConfiguration(kind: .openAIResponses, model: "fixture")) { event in
+            configuration: ProviderConfiguration(kind: .openAIResponses, model: "fixture"), events: { event in
             await collector.record(event)
-        }
+        })
         #expect(result.count == 9)
-        #expect(await collector.approvedEvents == 3)
+        #expect(await collector.approvedEvents == 9)
         #expect(await collector.approvedTotal == 9)
         #expect(await collector.stages == [.generating, .reviewing])
+    }
+
+    @Test("The first approved question is delivered before slow siblings finish", .timeLimit(.minutes(1)))
+    func noSiblingBarrier() async throws {
+        actor Observer {
+            var sawFirst = false
+            func isFirst() -> Bool {
+                if sawFirst { return false }
+                sawFirst = true
+                return true
+            }
+        }
+        let provider = GatedQuestionProvider()
+        let observer = Observer()
+        let generation = QuestionGenerationService(secureStore: SecureStore(), providerFactory: { _, _ in provider })
+        let result = try await generation.generate(Self.request(count: 3), configuration: ProviderConfiguration(), events: { event in
+            if case .approved(let questions) = event, await observer.isFirst() {
+                #expect(questions.count == 1)
+                #expect(await provider.completed == 1)
+                await provider.release()
+            }
+        })
+        #expect(result.count == 3)
+    }
+
+    @Test("A failed inventory save stops scheduling new paid requests")
+    func consumerFailure() async {
+        let fixture = CapabilityProvider()
+        await #expect(throws: GenerationError.self) {
+            try await service(fixture).generate(Self.request(count: 5), configuration: ProviderConfiguration(), events: { event in
+                if case .approved = event { throw GenerationError.modelUnavailable }
+            })
+        }
+        #expect((1...3).contains(await fixture.requests.count))
     }
 
     @Test("Identical exercises across parallel batches are delivered once")
@@ -167,7 +408,7 @@ struct GenerationCapabilityTests {
             configuration: ProviderConfiguration(kind: .openAIResponses, model: "fixture"))
         #expect(result.count == 1)
         // Attempts stay bounded even though the remainder could never be filled.
-        #expect(await provider.requests.count <= 3)
+        #expect(await provider.requests.count == 16)
         #expect(await provider.reviewedCounts.reduce(0, +) == 1)
     }
 
@@ -180,7 +421,7 @@ struct GenerationCapabilityTests {
             configuration: ProviderConfiguration(kind: .openAIResponses, model: "fixture"))
         #expect(result.count == 5)
         let requested = await fixture.requests.map(\.count).reduce(0, +)
-        #expect(requested == 8) // Initial 5 + 3 cushion; no calls after completion.
+        #expect((5...7).contains(requested)) // At most two single-question peers remain in flight.
     }
 
     @Test("Flexible candidates absorb individual rejections without a serial refill")
@@ -190,7 +431,7 @@ struct GenerationCapabilityTests {
         request.generationMode = .forgiving
         let result = try await service(fixture).generate(request, configuration: ProviderConfiguration())
         #expect(result.count == 5)
-        #expect(await fixture.requests.count == 3)
+        #expect((6...8).contains(await fixture.requests.count))
     }
 
     @Test("Pre-generation cannot exceed its reserved count even in flexible mode")
@@ -217,9 +458,9 @@ struct GenerationCapabilityTests {
         #expect(await fixture.reviewedCounts == [1])
     }
 
-    @Test("Provider failures stop further scheduling while the initial parallel work finishes")
+    @Test("Invalid credentials stop scheduling after the initial parallel work")
     func noFailureRetry() async {
-        let fixture = CapabilityProvider(failsBelowCount: 4)
+        let fixture = CapabilityProvider(failsAfterRequests: 0, failure: .invalidCredential)
         await #expect(throws: GenerationError.self) {
             try await service(fixture).generate(Self.request(count: 20), configuration: ProviderConfiguration())
         }
@@ -238,9 +479,9 @@ struct GenerationCapabilityTests {
         let fixture = CapabilityProvider()
         var request = Self.request(count: count)
         request.generationMode = mode
-        let result = try await service(fixture).generate(request, configuration: ProviderConfiguration()) {
+        let result = try await service(fixture).generate(request, configuration: ProviderConfiguration(), events: {
             await collector.receive($0)
-        }
+        })
         #expect(result.count == count)
         #expect(await collector.total == count)
         let requested = await fixture.requests.map(\.count).reduce(0, +)
@@ -399,7 +640,7 @@ struct GenerationCapabilityTests {
         let fixture = CapabilityProvider(delay: .milliseconds(20))
         let result = try await service(fixture).generate(request, configuration: ProviderConfiguration(kind: .openAIResponses))
         let batches = await fixture.requests
-        #expect(result.count == 8 && batches.count == 3)
+        #expect(result.count == 8 && batches.count == 8)
         #expect(batches.allSatisfy { $0.scenes.map(\.id) == ["dining"] && $0.destination.facts == request.destination.facts })
         #expect(Set(batches.compactMap(\.diversityHint)).count == batches.count)
         #expect(batches.allSatisfy { $0.diversityHint?.contains("explore") == true })
@@ -425,7 +666,7 @@ struct GenerationCapabilityTests {
     @Test("A rejected remainder surfaces as a retryable shortfall when questions exist")
     func sessionShortfall() async throws {
         let container = ModelContainerFactory.make(inMemory: true)
-        let provider = CapabilityProvider(reviewMode: .rejectFirst)
+        let provider = CapabilityProvider(reviewMode: .rejectAfterFirst)
         let service = service(provider)
         let session = PracticeSessionState(records: [], request: Self.request(count: 5),
             configuration: ProviderConfiguration(kind: .openAIResponses, model: "fixture"))
@@ -437,29 +678,31 @@ struct GenerationCapabilityTests {
         session.fillIfNeeded(using: service, context: container.mainContext)
         #expect(!session.isFilling)
         #expect(await provider.requests.count == calls)
-        #expect(session.fillMessage == String(localized: "Some questions did not pass review. Retry to prepare the rest."))
+        #expect(session.fillMessage == String(localized: "Automatic preparation has stopped. Retry to prepare the remaining questions."))
     }
 
     @Test("Multi-gap answers require all choices and reject ambiguous or mismatched structures")
     func cloze() throws {
+        var request = Self.request()
+        request.kinds = [.cloze]
         let cloze = ClozeContent(segments: ["I'd like ", " tickets to ", "."], blanks: [
             ClozeBlank(id: "quantity", options: ["two", "eat", "go", "where"], correctAnswer: "two"),
             ClozeBlank(id: "place", options: ["Tokyo", "soon", "please", "yesterday"], correctAnswer: "Tokyo")
         ])
         var question = GeneratedQuestion(kind: .cloze, prompt: cloze.prompt, options: [], correctAnswer: cloze.answer,
             translation: "I'd like two tickets to Tokyo.", explanation: "Specify quantity and destination.", sceneID: "transit", cloze: cloze)
-        #expect(ContentSafety.validate(question, request: Self.request()))
+        #expect(ContentSafety.validate(question, request: request))
         #expect(!cloze.isCorrect(["quantity": "two"]))
         #expect(!cloze.isCorrect(["quantity": "two", "place": "soon"]))
         #expect(cloze.isCorrect(["quantity": "two", "place": "Tokyo"]))
         question.cloze?.blanks[1].id = "quantity"
-        #expect(!ContentSafety.validate(question, request: Self.request()))
+        #expect(!ContentSafety.validate(question, request: request))
         question.cloze = cloze
         question.cloze?.blanks[0].options[1] = "two"
-        #expect(!ContentSafety.validate(question, request: Self.request()))
+        #expect(!ContentSafety.validate(question, request: request))
         question.cloze = cloze
         question.correctAnswer = "Wrong filled sentence"
-        #expect(!ContentSafety.validate(question, request: Self.request()))
+        #expect(!ContentSafety.validate(question, request: request))
     }
 
     @Test("Paraphrases use provider meaning feedback; low confidence never calls or scores")

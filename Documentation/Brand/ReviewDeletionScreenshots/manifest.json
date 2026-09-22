@@ -1,0 +1,99 @@
+{
+  "device": "iPhone 17e",
+  "os": "iOS 27.0 (24A434)",
+  "fontSize": "system default",
+  "source": "actual App running local Demo fixtures; appearance injected by DEBUG-only isolated UI test flags",
+  "screenshots": [
+    {
+      "file": "review-history-cleared-zh-Hans-Dark.png",
+      "test": "PromptiUITests/testReviewDeletionChineseDark()",
+      "sourceAttachment": "BDD2E0FE-437A-4B33-B6EC-4710CC20E45D.png",
+      "timestamp": 1790097809.952,
+      "resultBundle": "/tmp/prompti-review-deletion-contrast-ui.xcresult"
+    },
+    {
+      "file": "review-history-swipe-zh-Hans-Dark.png",
+      "test": "PromptiUITests/testReviewDeletionChineseDark()",
+      "sourceAttachment": "82967AF1-E3E2-4478-8ABA-011A0FF7270C.png",
+      "timestamp": 1790097806.704,
+      "resultBundle": "/tmp/prompti-review-deletion-contrast-ui.xcresult"
+    },
+    {
+      "file": "review-mistakes-cleared-zh-Hans-Dark.png",
+      "test": "PromptiUITests/testReviewDeletionChineseDark()",
+      "sourceAttachment": "2EE64CCD-0DE5-401E-ABF0-935053D69F46.png",
+      "timestamp": 1790097791.983,
+      "resultBundle": "/tmp/prompti-review-deletion-contrast-ui.xcresult"
+    },
+    {
+      "file": "review-swipe-delete-zh-Hans-Dark.png",
+      "test": "PromptiUITests/testReviewDeletionChineseDark()",
+      "sourceAttachment": "ADCE63CB-EF63-4AF4-A128-BF2BAB98090A.png",
+      "timestamp": 1790097788.528,
+      "resultBundle": "/tmp/prompti-review-deletion-contrast-ui.xcresult"
+    },
+    {
+      "file": "review-clear-confirmation-zh-Hans-Dark.png",
+      "test": "PromptiUITests/testReviewDeletionChineseDark()",
+      "sourceAttachment": "3B21769B-8C68-4E8A-BF9A-5E12688FB0B9.png",
+      "timestamp": 1790097785.39,
+      "resultBundle": "/tmp/prompti-review-deletion-contrast-ui.xcresult"
+    },
+    {
+      "file": "review-mistakes-zh-Hans-Dark.png",
+      "test": "PromptiUITests/testReviewDeletionChineseDark()",
+      "sourceAttachment": "500B01BE-6B33-4DD8-BF01-9529C24CE371.png",
+      "timestamp": 1790097783.433,
+      "resultBundle": "/tmp/prompti-review-deletion-contrast-ui.xcresult"
+    },
+    {
+      "file": "review-history-cleared-en-Light.png",
+      "test": "PromptiUITests/testReviewDeletionEnglishLight()",
+      "sourceAttachment": "E4332AC1-1D33-4ACF-BBB0-5FAFD65582ED.png",
+      "timestamp": 1790097649.203,
+      "resultBundle": "/tmp/prompti-review-deletion-appearance-ui.xcresult"
+    },
+    {
+      "file": "review-filtered-en-Light.png",
+      "test": "PromptiUITests/testReviewDeletionEnglishLight()",
+      "sourceAttachment": "155CE1F6-EE35-4E54-875E-01F3231FE8A7.png",
+      "timestamp": 1790097642.754,
+      "resultBundle": "/tmp/prompti-review-deletion-appearance-ui.xcresult"
+    },
+    {
+      "file": "review-history-swipe-en-Light.png",
+      "test": "PromptiUITests/testReviewDeletionEnglishLight()",
+      "sourceAttachment": "0734B2DC-A77D-4A57-A4A8-DB6F58C2DD23.png",
+      "timestamp": 1790097639.415,
+      "resultBundle": "/tmp/prompti-review-deletion-appearance-ui.xcresult"
+    },
+    {
+      "file": "review-mistakes-cleared-en-Light.png",
+      "test": "PromptiUITests/testReviewDeletionEnglishLight()",
+      "sourceAttachment": "6103B64E-948A-4DB5-A264-698EFDA27BD6.png",
+      "timestamp": 1790097627.036,
+      "resultBundle": "/tmp/prompti-review-deletion-appearance-ui.xcresult"
+    },
+    {
+      "file": "review-swipe-delete-en-Light.png",
+      "test": "PromptiUITests/testReviewDeletionEnglishLight()",
+      "sourceAttachment": "9CE95B73-989E-4DF3-ADB5-6B2EEFA4BD18.png",
+      "timestamp": 1790097623.713,
+      "resultBundle": "/tmp/prompti-review-deletion-appearance-ui.xcresult"
+    },
+    {
+      "file": "review-clear-confirmation-en-Light.png",
+      "test": "PromptiUITests/testReviewDeletionEnglishLight()",
+      "sourceAttachment": "345D7020-D241-41FE-B648-874BB34B8233.png",
+      "timestamp": 1790097620.615,
+      "resultBundle": "/tmp/prompti-review-deletion-appearance-ui.xcresult"
+    },
+    {
+      "file": "review-mistakes-en-Light.png",
+      "test": "PromptiUITests/testReviewDeletionEnglishLight()",
+      "sourceAttachment": "C7E8226E-32FC-46EA-8FAF-9FFB3CFFE445.png",
+      "timestamp": 1790097618.571,
+      "resultBundle": "/tmp/prompti-review-deletion-appearance-ui.xcresult"
+    }
+  ]
+}

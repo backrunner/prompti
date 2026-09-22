@@ -1,5 +1,32 @@
 import Foundation
 
+/// Models with mandatory reasoning are kept in the catalog. They receive the
+/// lowest supported effort instead of an invalid disable request.
+enum ModelReasoningPolicy {
+    static func requiresReasoning(_ model: String) -> Bool {
+        let name = model.lowercased().split(separator: "/").last.map(String.init) ?? model.lowercased()
+        let base = name.split(separator: ":").first.map(String.init) ?? name
+        return base.hasPrefix("gemini-3-") || base.hasPrefix("gemini-3.")
+            || base == "gemini-2.5-pro" || base.hasPrefix("gemini-2.5-pro-")
+            || base == "glm-5.3-flash" || base.hasPrefix("glm-5.3-flash-")
+            || base == "deepseek-r1" || base.hasPrefix("deepseek-r1-")
+            || ["gpt-5", "gpt-5-mini", "gpt-5-nano"].contains(base)
+            || base.hasPrefix("gpt-5-2025-") || base.hasPrefix("gpt-5-mini-2025-")
+            || base.hasPrefix("gpt-5-nano-2025-")
+    }
+
+    static func effort(_ model: String) -> String {
+        requiresReasoning(model) ? "low" : "none"
+    }
+
+    static func isLegacyNonReasoningOpenAI(_ model: String) -> Bool {
+        // These older official models have no thinking mode and reject the
+        // reasoning parameter. Unknown/custom models still get an explicit off.
+        let name = model.lowercased()
+        return name.hasPrefix("gpt-4") || name.hasPrefix("gpt-3.5") || name.hasPrefix("chatgpt-4o")
+    }
+}
+
 struct ModelRecommendation: Codable, Identifiable, Sendable {
     let id: String
     let name: String

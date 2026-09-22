@@ -23,6 +23,9 @@ struct ModelAndLocalizationTests {
         #expect(Set(catalog.models.map(\.id)).count == catalog.models.count)
         #expect(try #require(catalog.models.first).weeklyRequests != nil)
         #expect(ProviderKind.openRouter.defaultModel == catalog.models.first?.id)
+        #expect(ModelReasoningPolicy.effort("google/gemini-3.8-flash") == "low")
+        #expect(ModelReasoningPolicy.effort("deepseek/deepseek-v4.1-flash") == "none")
+        #expect(ModelRecommendations.gemini.first?.id == "gemini-3.8-flash")
     }
 
     @Test("New shortcuts use existing adapters, with exact compatible endpoint routing", arguments: [

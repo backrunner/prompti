@@ -36,6 +36,7 @@ struct PracticeSessionView: View {
     @State private var showCelebration = false
     @State private var correctFeedback = 0
     @State private var incorrectFeedback = 0
+    @State private var questionPromptHeight: CGFloat?
 
     init(records: [QuestionRecord], onFinish: (() -> Void)? = nil) {
         _session = State(initialValue: PracticeSessionState(records: records))
@@ -84,6 +85,11 @@ struct PracticeSessionView: View {
                 .padding(.bottom, PromptiSpacing.inline)
                 .background(PromptiActionScrim())
 
+            } else if index >= records.count, !records.isEmpty {
+                waitingActions
+                    .frame(maxWidth: 640).frame(maxWidth: .infinity)
+                    .padding(.horizontal, PromptiSpacing.page).padding(.vertical, 10)
+                    .background(PromptiActionScrim())
             } else if index < records.count {
                 primaryQuestionAction
                     .frame(maxWidth: 720).frame(maxWidth: .infinity)
@@ -111,9 +117,7 @@ struct PracticeSessionView: View {
             if phase != .active {
                 speech.reset()
                 cancelEvaluation()
-                session.cancelFill()
-            } else {
-                session.fillIfNeeded(using: dependencies.generation, context: modelContext)
+                if phase == .background { session.cancelFill() }
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: AVAudioSession.interruptionNotification)) { _ in speech.reset() }
@@ -179,11 +183,46 @@ struct PracticeSessionView: View {
     }
 
     private var questionContent: some View {
-        PromptiScrollView {
-            VStack(spacing: 20) {
-                progressHeader
-                questionPrompt
+        VStack(spacing: PromptiSpacing.page) {
+            progressHeader
+                .padding(.horizontal, PromptiSpacing.page)
+                .padding(.top, PromptiSpacing.related)
 
+            GeometryReader { geometry in
+                VStack(spacing: 0) {
+                    pinnedQuestionPrompt(maxHeight: geometry.size.height / 2)
+
+                    questionAnswers
+                }
+            }
+        }
+        .frame(maxWidth: 720)
+        .frame(maxWidth: .infinity)
+        .id(current.id)
+    }
+
+    private func pinnedQuestionPrompt(maxHeight: CGFloat) -> some View {
+        // Use the natural height for short prompts. Long prompts and keyboard
+        // layouts scroll separately, leaving at least half the area for answers.
+        PromptiScrollView {
+            questionPrompt
+                .fixedSize(horizontal: false, vertical: true)
+                .onGeometryChange(for: CGFloat.self) { geometry in
+                    geometry.size.height
+                } action: { height in
+                    questionPromptHeight = height
+                }
+        }
+        .frame(height: min(questionPromptHeight ?? maxHeight, maxHeight))
+        .scrollBounceBehavior(.basedOnSize)
+        .scrollIndicators(.hidden)
+        .padding(.horizontal, PromptiSpacing.page)
+        .padding(.bottom, PromptiSpacing.related)
+    }
+
+    private var questionAnswers: some View {
+        PromptiScrollView {
+            VStack(spacing: PromptiSpacing.page) {
                 if question.kind == .spoken {
                     spokenPanel
                 } else if let cloze = question.cloze {
@@ -195,14 +234,14 @@ struct PracticeSessionView: View {
                 if let result {
                     feedback(result)
                 }
-
             }
-            .padding(16)
-            .padding(.bottom, 20)
-            .frame(maxWidth: 720)
-            .frame(maxWidth: .infinity)
+            .padding(.horizontal, PromptiSpacing.page)
+            .padding(.top, PromptiSpacing.inline)
+            .padding(.bottom, PromptiSpacing.page)
         }
+        .scrollBounceBehavior(.basedOnSize)
         .scrollIndicators(.hidden)
+        .accessibilityIdentifier("session.answers")
     }
 
     private var progressHeader: some View {
@@ -227,14 +266,43 @@ struct PracticeSessionView: View {
             }
 
             if session.hasRemaining {
-                Text("\(records.count) of \(session.requestedCount) questions prepared")
-                    .font(.caption).foregroundStyle(Color.promptMuted)
-                    .accessibilityIdentifier("session.preparationStatus")
+                HStack(spacing: PromptiSpacing.related) {
+                    if session.isFilling {
+                        if reduceMotion { Image(systemName: "hourglass") }
+                        else { ProgressView().controlSize(.small).tint(Color.promptAction) }
+                    } else {
+                        Image(systemName: session.fillError == nil ? "pause.circle" : "exclamationmark.circle")
+                    }
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("\(records.count) of \(session.requestedCount) questions prepared")
+                            .accessibilityIdentifier("session.preparationStatus")
+                        if !session.isFilling {
+                            Text(session.isPaused ? String(localized: "Preparation paused") : String(localized: "Preparation stopped"))
+                        }
+                    }
+                    .font(.caption)
+                    Spacer(minLength: 0)
+                    if session.isFilling {
+                        Button("Pause preparation", systemImage: "pause.fill") { session.cancelFill() }
+                            .labelStyle(.iconOnly)
+                            .frame(minWidth: 44, minHeight: 44)
+                            .accessibilityIdentifier("session.pauseFill")
+                    } else {
+                        Button(action: retryFill) {
+                            Text(session.isPaused ? String(localized: "Continue") : String(localized: "Try again"))
+                        }
+                        .font(.subheadline.weight(.semibold))
+                        .frame(minHeight: 44)
+                        .accessibilityIdentifier("session.retryFill")
+                    }
+                }
+                .foregroundStyle(Color.promptMuted)
+                .tint(Color.promptAction)
             }
             ProgressView(value: Double(index + 1), total: Double(session.requestedCount))
                 .tint(Color.promptAccent)
         }
-        .accessibilityElement(children: .combine)
+        .accessibilityElement(children: .contain)
     }
 
     private var questionPrompt: some View {
@@ -254,6 +322,7 @@ struct PracticeSessionView: View {
                 .font(PromptiTypography.title)
                 .fontDesign(.rounded)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .accessibilityIdentifier("session.prompt")
             Text(question.translation)
                 .font(.subheadline)
                 .foregroundStyle(Color.promptMuted)
@@ -291,33 +360,72 @@ struct PracticeSessionView: View {
     private var displayPrompt: String {
         guard let cloze = question.cloze, cloze.segments.count == cloze.blanks.count + 1 else { return question.prompt }
         return cloze.blanks.indices.reduce(cloze.segments[0]) {
-            $0 + (blankSelections[cloze.blanks[$1].id] ?? "[\($1 + 1)]") + cloze.segments[$1 + 1]
+            $0 + (blankSelections[cloze.blanks[$1].id] ?? "___") + cloze.segments[$1 + 1]
         }
     }
 
     private var waitingForQuestions: some View {
-        VStack(spacing: 16) {
-            if session.isFilling {
-                ProgressView("Preparing the remaining questions")
-            } else {
-                Text("Prepared questions completed").font(PromptiTypography.title)
-                if let message = session.fillMessage { Text(message).foregroundStyle(Color.promptMuted) }
-                Button("Retry remaining questions") {
-                    session.configuration = dependencies.settings.provider
-                    session.fill(using: dependencies.generation, context: modelContext)
+        GeometryReader { proxy in
+            PromptiScrollView {
+                VStack(spacing: PromptiSpacing.section) {
+                    Image(systemName: session.isFilling ? "text.bubble" : "pause.circle")
+                        .font(.largeTitle)
+                        .foregroundStyle(Color.promptAction)
+                        .accessibilityHidden(true)
+                    Text(session.isFilling ? String(localized: "Preparing your next question") : String(localized: "Prepared questions completed"))
+                        .font(PromptiTypography.title)
+                        .multilineTextAlignment(.center)
+                    VStack(spacing: PromptiSpacing.related) {
+                        Text("\(records.count) of \(session.requestedCount) questions prepared")
+                            .font(.headline).monospacedDigit()
+                        ProgressView(value: Double(records.count), total: Double(session.requestedCount))
+                            .tint(Color.promptAction)
+                        if session.isFilling {
+                            PreparationActivity(session: session)
+                        } else if let message = session.fillMessage {
+                            Text(message).font(.subheadline).foregroundStyle(Color.promptMuted)
+                        } else {
+                            Text("Preparation paused").font(.subheadline).foregroundStyle(Color.promptMuted)
+                        }
+                    }
+                    .padding(PromptiSpacing.page)
+                    .promptiSurface()
+                    Text(session.isFilling
+                         ? String(localized: "Your answers are saved. The next question opens as soon as it’s ready, or you can finish this set now.")
+                         : String(localized: "Your answers are saved. Continue preparing questions or finish this set."))
+                        .font(.subheadline)
+                        .foregroundStyle(Color.promptMuted)
+                        .multilineTextAlignment(.center)
                 }
-                    .buttonStyle(PrimaryActionButtonStyle())
-                    .accessibilityIdentifier("session.retryFill")
-                Button("Finish with completed questions") { completed = true }
-                    .buttonStyle(SecondaryActionButtonStyle())
-                    .accessibilityIdentifier("session.finishPartial")
+                .padding(PromptiSpacing.page)
+                .frame(maxWidth: 640)
+                .frame(maxWidth: .infinity, minHeight: proxy.size.height)
             }
-            Text("\(records.count) of \(session.requestedCount) questions prepared")
-                .font(.subheadline).foregroundStyle(Color.promptMuted)
         }
-        .padding(24)
-        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("session.waiting")
+    }
+
+    private var waitingActions: some View {
+        VStack(spacing: PromptiSpacing.related) {
+            if !session.isFilling {
+                Button(action: retryFill) {
+                    Label(session.isPaused ? String(localized: "Continue preparation") : String(localized: "Retry remaining questions"), systemImage: "arrow.clockwise")
+                }
+                .buttonStyle(PrimaryActionButtonStyle())
+                .accessibilityIdentifier("session.retryFill")
+            }
+            Button("Finish with completed questions") {
+                session.cancelFill()
+                completed = true
+            }
+            .buttonStyle(SecondaryActionButtonStyle())
+            .accessibilityIdentifier("session.finishPartial")
+        }
+    }
+
+    private func retryFill() {
+        session.configuration = dependencies.settings.provider
+        session.fill(using: dependencies.generation, context: modelContext)
     }
 
     private func clozeOptions(_ cloze: ClozeContent) -> some View {

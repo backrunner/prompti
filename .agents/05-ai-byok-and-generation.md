@@ -77,17 +77,17 @@ TrainingConfiguration
   -> capability + budget check
   -> destination facts + scene context
   -> prompt assembly (untrusted data fenced as data)
-  -> provider generation          # 小批次：远端 ≤3 题/批、最多 3 批并发；Apple ≤2 题/批串行
+  -> provider generation          # 每次 1 题，远端最多 3 条链并发；Apple 串行
   -> transport/schema decode
   -> deterministic validation
   -> safety classification
-  -> language/answer/destination quality checks   # 每批独立审核，单题粒度通过/打回
+  -> language/answer/destination/tourist-role quality checks   # 每题独立审核
   -> deduplication                # 跨并发批次按 contentSignature 去重
-  -> approved 事件逐批下发 → 即时落库
+  -> approved 事件逐题下发 → 即时落库
   -> ready inventory
 ```
 
-每批是一条独立的 generate → review 链；批内生成与该批审核顺序执行，兄弟批次互不阻塞。单个批次失败不拖累同批其他链；首批 min(3, 目标数) 题过审即可开练，其余在后台继续补足。审核打回允许有限重生成，但外显进度只前不退（记录最远阶段）；总尝试次数 ≤ 所需批次数 + 1 次重生成，整体 180s 截止。
+每题是一条独立的 generate → review 链；生成和审核顺序执行，其他题互不阻塞。第一道过审题保存后即可开练，其余继续补足。审核打回、本地结构不合格、重复、拒答、截断或可恢复模型错误在原任务内重新生成该题，每个候选位置最多 2 次重试（共 3 次尝试）。外显进度保持最远阶段；达到题量后取消剩余工作。单次生成/审核各 120s，整组按题数设置 180–600s 硬截止；任一上限先到就停止，保留已保存题目。
 
 ### 5.1 Prompt 组成
 
@@ -133,9 +133,9 @@ schema 与 Swift DTO 维护单一来源或在 CI 检查同步，避免两边漂�
 
 ### 6.3 重试预算
 
-- 第一次失败：只修复失败题，并传递字段级错误代码。
-- 第二次失败：重新生成失败题，降低批次大小。
-- 最多 2 次额外模型调用；总时长、输出 token 和每日预算均设置上限。
+- 每道候选初次失败后只重生成该题，最多再尝试 2 次；合格题不重新生成。
+- 每次尝试包含一次单题生成与必要的一次单题审核；结构不合格和重复候选不进入付费审核。
+- 原任务自动重试覆盖审核打回、格式/截断、拒答、超时和 Provider 暂时不可用；认证、权限、余额、限流、配置、网络不可达和取消不会自动追加调用。总时长、输出 token 和每日预算均有上限。
 - 安全失败不把违规原文重新塞给另一个 Provider；只传分类和重写要求。
 - 达到上限后返回部分成功或明确失败，不无限循环消费用户额度。
 
@@ -166,7 +166,7 @@ Adapter 不把所有非 2xx 都映射成“网络错误”。UI 根据错误提�
 ## 2026-09-09：API Key 快捷配置（取代账号 OAuth）
 
 - 按用户决定移除全部 OpenRouter OAuth / PKCE、授权码页面、浏览器登录和 App scheme 回调注册。FlowDown 当前公开源码的云模型使用端点 + Bearer 凭据，没有发现 OAuth 实现；证据及旧尝试历史见 [连接方式复核](../Documentation/OpenRouter-Integration-Options.md)。
-- 引导和设置共用 API Key 配置：选择服务商，填入 API Key，从只显示名称的菜单选择模型，或选择“输入模型 ID”。常用服务商预填地址；自定义兼容接口保留地址和模型 ID 输入。展开选项保留详细说明，OpenRouter 另提供 keys 页面及推荐数据来源链接。
+- 引导和设置共用 API Key 配置：选择服务商，填入 API Key，从只显示名称的菜单选择模型，或选择“输入模型 ID”。常用服务商预填地址；自定义兼容接口保留地址和模型 ID 输入。2026-09-18 移除仅以说明为主的“更多连接方式”折叠区；OpenRouter keys 页面及推荐数据来源链接直接显示，保留一句数据处理/费用提示。
 - OpenRouter 运行时类型更名为 `openRouter`，仅保留 `openRouterOAuth` 作为历史持久化 raw value，保证已保存配置、使用记录及 Keychain scope 不变。这不是仍启用 OAuth；项目不再包含浏览器会话或换码端点。
 - OpenRouter 固定使用 `https://openrouter.ai/api/v1/chat/completions` 与用户 API Key 的 Bearer header；固定预设不能修改为其他主机。其他服务商继续使用现有 Responses / Chat / Messages 协议。
 - API Key、端点或模型改变会使连接验证失效。填好后测试连接，完成最小能力探测再保存；缺少 key 或模型时不能测试，未经验证不能完成引导。认证失败提示更新 API Key，余额不足和模型不可用沿用既有恢复行为。
@@ -192,7 +192,7 @@ Adapter 不把所有非 2xx 都映射成“网络错误”。UI 根据错误提�
 - 引导和设置共用 `ModelConnectionView` / `ModelRecommendations`。默认推荐快速、低成本的文本模型：OpenAI GPT-5.6 Luna、Gemini 3.8 Flash / 3.5 Flash-Lite、DeepSeek V4.1 Flash、Claude Haiku 4.5；OpenRouter 另含 GLM、Qwen 等快速模型。未将旗舰、图像、音频、医学或金融专用模型作为默认练习模型。
 - `ProviderPreset` 是连接快捷方式，继续使用既有 Responses / Chat / Messages 协议与凭据隔离。Gemini 使用官方 OpenAI 兼容的完整 `v1beta/openai/chat/completions` 端点；完整端点不再追加 `/v1`。不引入新的持久化 Provider 类型。
 - `OpenRouterRecommendations.json` 是带日期、来源和许可的近 7 天请求次数快照。只在已核实的快速模型候选中按 `weeklyRequests` 降序排列，未知调用量排在末尾；并不宣称是所有模型的全量请求排行榜。OpenRouter 网站可见榜单主要按 token 排名，不能直接把其名次当成调用次数排名。按 2026-09-09 的界面约定，下拉只显示模型名，不展示调用次数或按用量分组；排序与快照元数据保留。
-- 连接区域默认保留服务商、模型、连接按钮和一句数据处理/费用提示。移除营销标语和排名说明，将完整凭据/隐私说明及 OpenRouter CC BY 4.0 来源链接收进“更多连接选项”。连接状态与错误仍就地显示。
+- 连接区域默认保留服务商、模型、连接按钮和一句数据处理/费用提示。移除营销标语和排名说明。2026-09-18 起不再显示“更多连接方式”；OpenRouter API Key 与 CC BY 4.0 来源链接直接显示。连接状态与错误仍就地显示。
 - `Tools/UpdateModelRecommendations.py` 从 `/api/v1/models` 核对模型 ID、文本输出与 canonical slug，并读取公开排名页 `rankings/models/view=week` 数据中的 `count`。页面内嵌数据不是稳定 API，格式变化、缺少请求数或全部匹配失败时停止且保留原快照；绝不以 token 数代替请求数。App 运行时只读取内置资源，不抓网页，不在 landing 请求用户凭据或产生模型调用。
 - 每次发布前刷新快照，复核候选型号。新增版本不能仅凭名称自动收入；核对官方型号、用途、结构化输出后维护名单。已存模型、手填 ID 和连接验证保持原行为，选择不同模型后必须重新验证。
 - 数据来源：Source: OpenRouter (openrouter.ai/rankings), as of 2026-09-06. Licensed under CC BY 4.0. 当前快照读取的是公开流量，缺少请求数不代表零调用。
@@ -216,3 +216,59 @@ Adapter 不把所有非 2xx 都映射成“网络错误”。UI 根据错误提�
 - 选中场景作为宽泛类别；目的地常青事实提供地域启发，AI 在原有生成请求内自主扩展具体店铺类型、物品与交流情境，不增加规划请求或输出规划文本。并发批次轮换沟通目标与探索角度；已有题目提示和共享去重继续生效。事实示例不是话题白名单，审核允许分类内合理的虚构交流，但不允许捏造真实地点或时效事实。
 - 所有目的地使用同一文化扩展规则，要求当地生活、文化、情境礼仪与说话习惯对交流本身有意义，例如先问候再请求、确认轮候、征求许可、澄清当地用词或礼貌拒绝。每道短题按场景和难度选取合适维度，不硬塞全部文化要素，不转成礼仪常识题。生成与审核读取同一份、按地点与学习语言裁剪的背景。
 - 事实与目录版本 `2026-09.3`，提示版本 `5`；Provider 响应 schema、Keychain、计分规则与数据库 schema 不变。实测范围见 `Documentation/Generation-Review-2026-09-17.md`。
+
+
+## 2026-09-18：DeepSeek 等待与连接设置
+
+- 最初为 OpenRouter DeepSeek V4.1 Flash 关闭默认高强度思考；随后按用户要求统一为全部请求禁用额外 reasoning，最终规则见下节。
+- 保留单次 60 秒、整组 180 秒截止和小批并行，安全/质量判定与逐题审核仍执行。未用真实 API Key 验证首题耗时，不能把默认参数问题当作用户这次超时的唯一已证实原因。
+- 生成页等待时展示系统加载指示，降低动态效果时显示静态沙漏；首批到达前显示等待文案，已有过审题才显示真实计数。生成完成或失败不显示加载动画。
+- 设置/引导移除“更多连接方式”及重复长说明，保留自定义地址、API Key/模型输入、验证操作、费用提示和 OpenRouter 必要链接。
+- 证据、回归及视觉验收见 [生成等待修复记录](../Documentation/Generation-Loading-2026-09-18.md)。
+
+
+## 2026-09-19：强制思考模型保留，统一低强度
+
+模型请求按服务商协议应用统一策略：可关闭思考的模型显式关闭；服务商标记为强制思考的模型继续出现在推荐列表和用户已保存配置中，并把思考强度设为最低的 `low`，不在请求前拦截。
+
+| 协议/端点 | 可关闭思考的模型 | 强制思考的模型 |
+| --- | --- | --- |
+| OpenRouter | `reasoning: { enabled: false }` | `reasoning: { effort: "low" }` |
+| OpenAI Responses / Responses 兼容 | `reasoning: { effort: "none" }` | `reasoning: { effort: "low" }` |
+| OpenAI Chat / Gemini / 通用 Chat 兼容 | `reasoning_effort: "none"` | `reasoning_effort: "low"` |
+| DeepSeek 官方 Chat | `thinking: { type: "disabled" }` | `thinking: { type: "enabled" }` 与 `reasoning_effort: "low"` |
+| Anthropic Messages | `thinking: { type: "disabled" }` | 当前推荐列表没有强制思考型号 |
+| Apple Foundation Models | 保留现有 guided generation | 由系统模型控制 |
+
+已知强制思考型号包括 Gemini 3 系列、Gemini 2.5 Pro、GLM 5.3 Flash、DeepSeek R1 和 GPT-5/mini/nano 系列；模型能力规则集中在 `ModelReasoningPolicy`。旧版 GPT-4/GPT-3.5 等不支持 reasoning 的模型不附加无效字段。JSON mode 回退沿用同一策略，不通过重试删除参数来改变思考模式。
+
+推荐刷新工具保留强制思考候选；刷新只校验文本能力和请求数，不因 `reasoning.mandatory` 删除或拒绝候选。完整协议依据和回归证据见 [生成等待修复记录](../Documentation/Generation-Loading-2026-09-18.md#强制思考模型与低强度)。
+
+## 2026-09-20：游客视角、逐题入库与自动补题（取代上述旧批次策略）
+
+- 生成系统规则、选择题/完形/口语说明及语义审核统一固定游客身份。当地人或服务人员可向游客说话，但学习者必须是顾客、住客、乘客或访客。角色反转使 `scene=false`；示例明确区分游客点茶和服务员为客人上茶。移除“变换说话角色/方向”的歧义。新题 promptVersion=6，原题与作答历史不改写。
+- 所有 Provider 都按单题生成和审核；远端最多 3 条链并发，Apple 串行。过审立即发事件并保存，不等另外两题；第一题就可以自动开练。生成页和练习页继续共用一个有界任务。
+- 每个候选位置至多初次 + 2 次重试，不共享整组的一次补题机会。节省模式最多 `3 * count` 个生成尝试；宽松模式候选位置上限保持 `count + min(10, max(2, ceil(count/2)))`，各位置同样最多 3 次。足量即停止，不为了用完预算继续调用；因并发最多存在 2 个额外进行中候选。
+- 首页预生成同样逐题保存。初始请求按已预留题数执行，每个重试或宽松候选必须先额外预留 1 个每日准备额度；额度不足不请求。取消/失败不会清除已过审保存的题目。原 `allowsRegeneration=false` 调用仍严格遵守已预留候选数。
+- 生成/审核统一 120s 单次上限，URLRequest 与 URLSession resource 上限同步；原 60s 硬截止不能因收到空行 keep-alive 自动变为无限等待。任务时限为 `min(600, max(180, count * 30))` 秒（按本次缺题数），取消仍立即传播。每次生成输出上限从 12000 降为 4000 token，审核/探测等上限 2000。
+- DeepSeek 直连关闭思考仅发送 `thinking: {type: disabled}`，不再发送 Chat 接口不支持的 `reasoning_effort: none`；强制思考模型仍保留并使用 low。OpenRouter 延续 `reasoning.enabled=false` / 必须思考时 low，并设置 `provider.require_parameters=true`、`provider.sort=latency`，要求路由支持所发参数并优先低延迟端点。参数支持不足导致的 OpenRouter 404 可降级为 JSON mode；模型不存在的 404 不降级。
+- 实测范围、公开文档与真实 Provider 边界见 [2026-09-20 生成修复记录](../Documentation/Generation-Review-2026-09-20.md)。本地合约测试不能证明真实模型角色遵循率或用户实际线路延迟。
+
+## 2026-09-22：请求效率与可观察的补题
+
+- 每个单题候选位置明确分配一种选中题型，按选择题、完形、口语轮换；prompt 只携带该类型的生成说明，schema 只允许该类型，非适用的 cloze / rubric / sampleAnswer 为 null。游客角色、目的地、难度、去重和安全规则保留；promptVersion 为 7。模型返回非请求类型仍在付费审核前拒绝。
+- 结构化模式只在协议的 schema 字段发送结构定义，不再同时将整份 schema 附在 user prompt；JSON mode 和 Anthropic 文本模式仍携带完整 schema。固定规则置于变化的 JSON 场景 / 历史 / 题目数据之前，JSON key 排序稳定。前缀复用是否命中缓存由服务商决定。
+- 同一 `RemoteAIClient` / 生成任务按 schema 记忆成功的 JSON 降级，后续同 schema 请求直接使用 JSON mode，避免每题重复一次已知失败的 schema 请求。不同 schema、不同 client/新任务独立；失败的 fallback 不写入记忆。无额外持久化，不改变模型、端点或 reasoning 策略。
+- `.activity(attemptID, stage?)` 跟踪正在生成与审核的请求，完成、取消、失败清除。显示已用时与真实请求数，不估计剩余秒数。
+- 仍为远端最多 3 条链、Apple 串行，逐题独立审核及保存；每位置至多两次重试、预算与截止保持原上限。取消后自动进入 / 前台恢复不启动新任务；用户显式继续或重试仍只请求缺题。
+
+验证证据与真实服务商边界见 [2026-09-22 生成体验记录](../Documentation/Generation-Experience-2026-09-22.md)。
+
+## 2026-09-22：可选 TypeSafe Jev 题目审核
+
+- 设置新增“题目审核”，默认仍由生成模型审核。用户选择 TypeSafe Jev，输入独立 API Key 并主动完成连接测试后才能保存启用。设置取消不写入新 Key、不删除旧 Key；审核 Key 复用现有 Keychain 管理与独立协议/端点 scope，不作为生成 Provider。
+- 适配固定官方 `POST https://api.typesafe.ai/v1/systemone`、锁定 `jev-1.13.0`，发送 `{model,state,questions}`；一次请求包含 14 个独立 Noul 缺陷判断，避免生成长审核文本。请求只含必要练习、场景、语言、难度、事实及最近 30 条题干，不含凭据、选项 UUID、用户标识或完整历史。
+- 每个任务开始时固定审核模式；初次生成、练习中补题及自动库存准备共用此配置。先本地校验/去重，再 Jev；明确通过跳过生成模型审核，明确拒绝沿用每题最多三次候选的预算；有效但不确定的判断交给生成模型完整审核。具体阈值与未校准边界见安全文档。
+- Jev 的认证、权限/额度、限流、连接、超时、协议错误立即终止本轮任务并取消其他进行中链；不静默换审核服务、不自动追加请求。已收到 approved 事件的题目保留，用户可修改配置或显式重试。每次 Jev 请求限时 30 秒，仍受整个任务截止约束；凭据请求拒绝重定向，响应上限 2 MB。
+- 审核与连接测试都进入既有本机用量账本，保留真实 usage 与失败/取消状态；缺失 usage 仍为未知。TypeSafe 可能收费，连接测试只在用户点击后发出。场景过滤和口语评分继续走既有流程。
+- 协议、验证记录及官方来源见 [TypeSafe 审核接入](../Documentation/TypeSafe-Review-2026-09-22.md)。离线测试不证明真实账号、延迟、安全召回或语言质量。

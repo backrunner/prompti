@@ -56,6 +56,7 @@ private struct ReviewPractice: Hashable {
 
 struct ReviewView: View {
     @Binding var selectedTab: AppTab
+    @Environment(\.modelContext) private var modelContext
     @Query(sort: \QuestionRecord.createdAt, order: .reverse) private var questions: [QuestionRecord]
     @Query(sort: \AttemptRecord.createdAt, order: .reverse) private var attempts: [AttemptRecord]
 
@@ -65,6 +66,11 @@ struct ReviewView: View {
     @State private var sceneFilter = "all"
     @State private var dateFilter = ReviewDateFilter.all
     @State private var selectedPractice: ReviewPractice?
+    @State private var pendingClearIDs = Set<UUID>()
+    @State private var isConfirmingClear = false
+    @State private var deletionFailed = false
+
+    private var canDeleteRecords: Bool { mode == .mistakes || mode == .history }
 
     private var attemptsByQuestion: [UUID: [AttemptRecord]] {
         Dictionary(grouping: AttemptRecord.unique(in: attempts), by: \AttemptRecord.questionID)
@@ -162,6 +168,20 @@ struct ReviewView: View {
         .navigationTitle("Review")
         .accessibilityIdentifier("review.root")
         .toolbar { filterToolbar }
+        .alert("Clear these records?", isPresented: $isConfirmingClear) {
+            Button("Cancel", role: .cancel) { pendingClearIDs.removeAll() }
+            Button("Clear all", role: .destructive) {
+                deleteRecords(questionIDs: pendingClearIDs)
+                pendingClearIDs.removeAll()
+            }
+        } message: {
+            Text("Delete all attempts for these \(pendingClearIDs.count) questions? They will be removed from Mistakes and History, and your progress will be recalculated. This cannot be undone.")
+        }
+        .alert("Could not delete records", isPresented: $deletionFailed) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("Your records are still saved. Please try again.")
+        }
         .navigationDestination(item: $selectedPractice) { session in
             PracticeSessionView(records: session.records)
         }
@@ -205,9 +225,9 @@ struct ReviewView: View {
                 .frame(maxWidth: 560)
             }
         } else {
-            PromptiScrollView {
-                LazyVStack(spacing: 12) {
-                    ForEach(visibleQuestions) { question in
+            List {
+                ForEach(visibleQuestions) { question in
+                    Group {
                         if mode == .reported {
                             reviewRow(question)
                         } else {
@@ -219,13 +239,29 @@ struct ReviewView: View {
                             .buttonStyle(.plain)
                         }
                     }
+                    .listRowInsets(EdgeInsets(top: 0, leading: PromptiSpacing.page,
+                                             bottom: 12, trailing: PromptiSpacing.page))
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
+                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                        if canDeleteRecords {
+                            Button("Delete", systemImage: "trash", role: .destructive) {
+                                deleteRecords(questionIDs: [question.id])
+                            }
+                            .tint(Color.promptDestructiveAction)
+                            .accessibilityIdentifier("review.delete.\(question.id.uuidString)")
+                        }
+                    }
                 }
-                .padding(.horizontal, PromptiSpacing.page)
-                .padding(.bottom, 96)
-                .frame(maxWidth: 760)
-                .frame(maxWidth: .infinity)
             }
+            .listStyle(.plain)
+            .scrollContentBackground(.hidden)
+            .contentMargins(.vertical, 0, for: .scrollContent)
             .scrollIndicators(.hidden)
+            .promptiScrollEdges()
+            .frame(maxWidth: 760)
+            .frame(maxWidth: .infinity)
+            .accessibilityIdentifier("review.list")
         }
     }
 
@@ -266,6 +302,22 @@ struct ReviewView: View {
 
     @ToolbarContentBuilder
     private var filterToolbar: some ToolbarContent {
+        if canDeleteRecords {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    pendingClearIDs = Set(visibleQuestions.map(\.id))
+                    isConfirmingClear = true
+                } label: {
+                    if activeFilterCount == 0 {
+                        Text("Clear all")
+                    } else {
+                        Text("Clear filtered")
+                    }
+                }
+                .disabled(visibleQuestions.isEmpty)
+                .accessibilityIdentifier("review.clearAll")
+            }
+        }
         ToolbarItem(placement: .topBarTrailing) {
             Menu {
                 Picker("Destination", selection: $destinationFilter) {
@@ -360,6 +412,14 @@ struct ReviewView: View {
         languageFilter = "all"
         sceneFilter = "all"
         dateFilter = .all
+    }
+
+    private func deleteRecords(questionIDs: Set<UUID>) {
+        do {
+            try ReviewRecordDeletion.delete(questionIDs: questionIDs, context: modelContext)
+        } catch {
+            deletionFailed = true
+        }
     }
 
     private var activeFilterSummary: String {

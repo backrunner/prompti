@@ -13,6 +13,7 @@ final class AppSettings {
         static let questionCount = "training.questionCount"
         static let generationMode = "generation.mode"
         static let provider = "provider.configuration"
+        static let questionReview = "generation.questionReview"
         static let preGeneration = "generation.prefetch"
         static let customDestination = "training.customDestination"
         static let inventoryTarget = "generation.inventoryTarget"
@@ -33,6 +34,7 @@ final class AppSettings {
     var difficulty: TrainingDifficulty { didSet { defaults.set(difficulty.rawValue, forKey: Key.difficulty) } }
     var questionCount: Int { didSet { defaults.set(questionCount, forKey: Key.questionCount) } }
     var generationMode: GenerationMode { didSet { defaults.set(generationMode.rawValue, forKey: Key.generationMode) } }
+    var questionReviewMode: QuestionReviewMode { didSet { defaults.set(questionReviewMode.rawValue, forKey: Key.questionReview) } }
     var provider: ProviderConfiguration { didSet { saveProvider() } }
     var isPreGenerationEnabled: Bool { didSet { defaults.set(isPreGenerationEnabled, forKey: Key.preGeneration) } }
     var customDestination: Destination? { didSet { saveCustomDestination() } }
@@ -50,6 +52,7 @@ final class AppSettings {
         difficulty = TrainingDifficulty(rawValue: defaults.string(forKey: Key.difficulty) ?? "") ?? .basic
         let storedCount = defaults.integer(forKey: Key.questionCount)
         questionCount = storedCount == 0 ? 5 : min(20, max(3, storedCount))
+        questionReviewMode = QuestionReviewMode(rawValue: defaults.string(forKey: Key.questionReview) ?? "") ?? .generationModel
         generationMode = GenerationMode(rawValue: defaults.string(forKey: Key.generationMode) ?? "") ?? .efficient
         inventoryTarget = min(20, max(3, defaults.object(forKey: Key.inventoryTarget) as? Int ?? 3))
         dailyPreparationLimit = min(50, max(3, defaults.object(forKey: Key.dailyPreparationLimit) as? Int ?? 12))

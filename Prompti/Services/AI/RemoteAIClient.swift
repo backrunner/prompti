@@ -44,6 +44,14 @@ private struct StructuredJSONResult: Sendable {
     let support: StructuredOutputSupport
 }
 
+/// Scoped to this client/job. A successful JSON fallback avoids repeating a
+/// known unsupported schema request for every subsequent question and review.
+private actor SchemaFallbackMemory {
+    private var schemas = Set<String>()
+    func contains(_ key: String) -> Bool { schemas.contains(key) }
+    func remember(_ key: String) { schemas.insert(key) }
+}
+
 struct RemoteAIClient: QuestionProvider {
     let configuration: ProviderConfiguration
     let apiKey: String
@@ -51,6 +59,7 @@ struct RemoteAIClient: QuestionProvider {
 
     var usageSink: UsageSink? = nil
     var jobID: UUID? = nil
+    private let fallbackMemory = SchemaFallbackMemory()
 
     func generate(_ request: TrainingRequest) async throws -> [GeneratedQuestion] {
         let prompt = try PromptBuilder.questionPrompt(request)
@@ -58,7 +67,7 @@ struct RemoteAIClient: QuestionProvider {
             system: PromptBuilder.systemInstructions,
             user: prompt,
             schemaName: "prompti_question_batch",
-            schema: Self.questionSchema
+            schema: Self.questionSchema(for: request.kinds)
         )
         let payload = try JSONDecoder().decode(QuestionBatchPayload.self, from: result.data)
         return payload.questions.compactMap(\.question)
@@ -116,16 +125,19 @@ struct RemoteAIClient: QuestionProvider {
         let endpoint = try endpointURL()
         var request = URLRequest(url: endpoint)
         request.httpMethod = "POST"
-        request.timeoutInterval = 60
+        request.timeoutInterval = ["prompti_question_batch", "prompti_question_review"].contains(schemaName) ? 120 : 45
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
+        let schemaKey = schemaName + String(decoding: try JSONSerialization.data(withJSONObject: schema, options: [.sortedKeys]), as: UTF8.self)
+        let learnedFallback = await fallbackMemory.contains(schemaKey)
+        let usesSchema = configuration.structuredOutputSupport != .unsupported && !learnedFallback
         let primaryBody: [String: Any]
         let fallbackBody: [String: Any]?
         let primaryUsesStructuredOutputs: Bool
         switch configuration.kind {
         case .openAIResponses:
             request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-            primaryUsesStructuredOutputs = configuration.structuredOutputSupport != .unsupported
+            primaryUsesStructuredOutputs = usesSchema
             primaryBody = try responsesBody(
                 system: system,
                 user: user,
@@ -138,7 +150,7 @@ struct RemoteAIClient: QuestionProvider {
                 : nil
         case .openAIChat, .openRouter:
             request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-            primaryUsesStructuredOutputs = configuration.structuredOutputSupport != .unsupported
+            primaryUsesStructuredOutputs = usesSchema
             primaryBody = try chatBody(
                 system: system,
                 user: user,
@@ -156,6 +168,10 @@ struct RemoteAIClient: QuestionProvider {
             primaryBody = [
                 "model": configuration.model,
                 "max_tokens": Self.outputLimit(for: schemaName),
+                // No recommended Anthropic model requires reasoning. Keep
+                // this protocol on its explicit disabled form because the
+                // Messages API does not use OpenAI's effort field.
+                "thinking": ["type": "disabled"],
                 "system": system,
                 "messages": [["role": "user", "content": try Self.schemaPrompt(user, schema: schema)]]
             ]
@@ -173,18 +189,29 @@ struct RemoteAIClient: QuestionProvider {
         }
 
         if primaryUsesStructuredOutputs,
-           [400, 422].contains(primaryResponse.statusCode),
+           allowsSchemaFallback(status: primaryResponse.statusCode, data: primaryResponse.data),
            let fallbackBody {
             let fallbackResponse = try await perform(request, body: fallbackBody, operation: schemaName + ".fallback")
             try validateStatus(fallbackResponse.statusCode, data: fallbackResponse.data)
-            return StructuredJSONResult(
-                data: try outputData(from: fallbackResponse.data),
-                support: .unsupported
-            )
+            let data = try outputData(from: fallbackResponse.data)
+            await fallbackMemory.remember(schemaKey)
+            return StructuredJSONResult(data: data, support: .unsupported)
         }
 
         try validateStatus(primaryResponse.statusCode, data: primaryResponse.data)
         throw GenerationError.malformedResponse
+    }
+
+    private func allowsSchemaFallback(status: Int, data: Data) -> Bool {
+        if [400, 422].contains(status) { return true }
+        // OpenRouter can return 404 when parameter-aware routing has no
+        // schema-capable endpoint. A missing model must still remain a 404.
+        guard status == 404,
+              configuration.kind == .openRouter || URL(string: configuration.baseURL)?.host == "openrouter.ai",
+              let body = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any],
+              let error = body["error"] as? [String: Any],
+              let message = (error["message"] as? String)?.lowercased() else { return false }
+        return message.contains("no endpoints") && message.contains("support") && message.contains("parameters")
     }
 
     private func perform(_ request: URLRequest, body: [String: Any], operation: String) async throws -> (data: Data, statusCode: Int) {
@@ -201,19 +228,8 @@ struct RemoteAIClient: QuestionProvider {
                 let configuration = URLSessionConfiguration.ephemeral
                 configuration.httpCookieStorage = nil
                 configuration.urlCache = nil
-                configuration.timeoutIntervalForResource = 90
-                let session = URLSession(configuration: configuration, delegate: ProviderRedirectPolicy(), delegateQueue: nil)
-                defer { session.invalidateAndCancel() }
-                let (bytes, response) = try await session.bytes(for: request)
-                guard let response = response as? HTTPURLResponse,
-                      response.expectedContentLength <= 2_000_000 else { throw GenerationError.malformedResponse }
-                http = response
-                var buffer = Data()
-                for try await byte in bytes {
-                    guard buffer.count < 2_000_000 else { throw GenerationError.malformedResponse }
-                    buffer.append(byte)
-                }
-                data = buffer
+                configuration.timeoutIntervalForResource = request.timeoutInterval
+                (data, http) = try await Self.response(for: request, configuration: configuration)
             }
             usage.complete(data: data, statusCode: http.statusCode)
             await usageSink?(usage)
@@ -228,6 +244,20 @@ struct RemoteAIClient: QuestionProvider {
             if error.code == .timedOut { throw GenerationError.timedOut }
             throw GenerationError.networkUnavailable
         }
+    }
+
+    static func response(for request: URLRequest, configuration: URLSessionConfiguration) async throws -> (Data, HTTPURLResponse) {
+        let session = URLSession(configuration: configuration, delegate: ProviderRedirectPolicy(), delegateQueue: nil)
+        defer { session.invalidateAndCancel() }
+        let (bytes, response) = try await session.bytes(for: request)
+        guard let response = response as? HTTPURLResponse,
+              response.expectedContentLength <= 2_000_000 else { throw GenerationError.malformedResponse }
+        var buffer = Data()
+        for try await byte in bytes {
+            guard buffer.count < 2_000_000 else { throw GenerationError.malformedResponse }
+            buffer.append(byte)
+        }
+        return (buffer, response)
     }
 
     func validateStatus(_ statusCode: Int, data: Data = Data()) throws {
@@ -313,7 +343,7 @@ struct RemoteAIClient: QuestionProvider {
     }
 
     private static func outputLimit(for schemaName: String) -> Int {
-        schemaName == "prompti_question_batch" ? 12_000 : 4_000
+        schemaName == "prompti_question_batch" ? 4_000 : 2_000
     }
 
     private static func schemaPrompt(_ user: String, schema: [String: Any]) throws -> String {
@@ -333,7 +363,7 @@ struct RemoteAIClient: QuestionProvider {
             "model": configuration.model,
             "messages": [
                 ["role": "system", "content": system],
-                ["role": "user", "content": try Self.schemaPrompt(user, schema: schema)]
+                ["role": "user", "content": usesStructuredOutputs ? user : try Self.schemaPrompt(user, schema: schema)]
             ]
         ]
         if URL(string: configuration.baseURL)?.host?.lowercased() == "api.openai.com" {
@@ -341,6 +371,26 @@ struct RemoteAIClient: QuestionProvider {
             result["max_completion_tokens"] = Self.outputLimit(for: schemaName)
         } else {
             result["max_tokens"] = Self.outputLimit(for: schemaName)
+        }
+        // Apply the same reasoning policy to every operation and JSON
+        // fallback: disable it where supported, otherwise use the lowest
+        // supported effort for models that require it.
+        let host = URL(string: configuration.baseURL)?.host?.lowercased()
+        if configuration.kind == .openRouter || host == "openrouter.ai" {
+            result["provider"] = ["require_parameters": true, "sort": "latency"]
+            result["reasoning"] = ModelReasoningPolicy.requiresReasoning(configuration.model)
+                ? ["effort": "low"] : ["enabled": false]
+        } else if host == "api.deepseek.com" {
+            result["thinking"] = ModelReasoningPolicy.requiresReasoning(configuration.model)
+                ? ["type": "enabled"] : ["type": "disabled"]
+            // DeepSeek Chat accepts low/high/max, not OpenAI's "none".
+            // The thinking toggle alone disables optional reasoning.
+            if ModelReasoningPolicy.requiresReasoning(configuration.model) {
+                result["reasoning_effort"] = "low"
+            }
+        } else if host != "api.openai.com" || !ModelReasoningPolicy.isLegacyNonReasoningOpenAI(configuration.model) {
+            // Gemini's OpenAI-compatible API also maps none to thinking off.
+            result["reasoning_effort"] = ModelReasoningPolicy.effort(configuration.model)
         }
         if usesStructuredOutputs {
             result["response_format"] = [
@@ -360,11 +410,11 @@ struct RemoteAIClient: QuestionProvider {
         schema: [String: Any],
         usesStructuredOutputs: Bool
     ) throws -> [String: Any] {
-        [
+        var result: [String: Any] = [
             "model": configuration.model,
             "store": false,
             "instructions": system,
-            "input": try Self.schemaPrompt(user, schema: schema),
+            "input": usesStructuredOutputs ? user : try Self.schemaPrompt(user, schema: schema),
             "max_output_tokens": Self.outputLimit(for: schemaName),
             "text": [
                 "format": usesStructuredOutputs
@@ -372,10 +422,15 @@ struct RemoteAIClient: QuestionProvider {
                     : ["type": "json_object"]
             ]
         ]
+        if URL(string: configuration.baseURL)?.host?.lowercased() != "api.openai.com"
+            || !ModelReasoningPolicy.isLegacyNonReasoningOpenAI(configuration.model) {
+            result["reasoning"] = ["effort": ModelReasoningPolicy.effort(configuration.model)]
+        }
+        return result
     }
 
     func extractText(from data: Data) throws -> String {
-        guard let object = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+        guard let object = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] else {
             throw GenerationError.malformedResponse
         }
         switch configuration.kind {
@@ -456,7 +511,7 @@ struct RemoteAIClient: QuestionProvider {
         ]
     }
 
-    private static var questionSchema: [String: Any] {
+    static func questionSchema(for kinds: Set<QuestionKind>) -> [String: Any] {
         [
             "type": "object",
             "additionalProperties": false,
@@ -467,16 +522,16 @@ struct RemoteAIClient: QuestionProvider {
                         "type": "object",
                         "additionalProperties": false,
                         "properties": [
-                            "type": ["type": "string", "enum": ["cloze", "multipleChoice", "spoken"]],
+                            "type": ["type": "string", "enum": kinds.map(\.rawValue).sorted()],
                             "prompt": ["type": "string"],
                             "options": ["type": "array", "items": ["type": "string"]],
                             "correctAnswer": ["type": "string"],
                             "translation": ["type": "string"],
                             "explanation": ["type": "string"],
-                            "sampleAnswer": ["type": ["string", "null"]],
+                            "sampleAnswer": kinds.contains(.spoken) ? ["type": ["string", "null"]] : ["type": "null"],
                             "sceneID": ["type": "string"],
-                            "cloze": Self.nullable(Self.clozeSchema),
-                            "rubric": Self.nullable(Self.rubricSchema),
+                            "cloze": kinds.contains(.cloze) ? Self.nullable(Self.clozeSchema) : ["type": "null"],
+                            "rubric": kinds.contains(.spoken) ? Self.nullable(Self.rubricSchema) : ["type": "null"],
                             "sourceFactIDs": Self.stringArray
                         ],
                         "required": ["type", "prompt", "options", "correctAnswer", "translation", "explanation", "sampleAnswer", "sceneID", "cloze", "rubric", "sourceFactIDs"]

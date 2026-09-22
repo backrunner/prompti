@@ -1,0 +1,32 @@
+[
+  {
+    "attachments": [
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "E5EB9565-B5A4-4C11-A788-652C7B15C4CC",
+        "deviceName": "Prompti-Generation-Review",
+        "exportedFileName": "jev-review-zh-Hans-dark.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "jev-review-zh-Hans-dark_0_73D9A611-2E3D-4834-94FB-F4A238B6147B.png",
+        "timestamp": 1790100652.607
+      }
+    ],
+    "testIdentifier": "PromptiUITests/testJevReviewSettingsChineseDark()",
+    "testIdentifierURL": "test://com.apple.xcode/Prompti/PromptiUITests/PromptiUITests/testJevReviewSettingsChineseDark"
+  },
+  {
+    "attachments": [
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "E5EB9565-B5A4-4C11-A788-652C7B15C4CC",
+        "deviceName": "Prompti-Generation-Review",
+        "exportedFileName": "jev-review-en-light.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "jev-review-en-light_0_AE62BFCA-A96B-4FEB-9259-C6CDE16CBEC2.png",
+        "timestamp": 1790100675.219
+      }
+    ],
+    "testIdentifier": "PromptiUITests/testJevReviewSettingsEnglishLight()",
+    "testIdentifierURL": "test://com.apple.xcode/Prompti/PromptiUITests/PromptiUITests/testJevReviewSettingsEnglishLight"
+  }
+]

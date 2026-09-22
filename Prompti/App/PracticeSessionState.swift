@@ -18,6 +18,13 @@ final class PracticeSessionState {
     /// may send work back to generation internally, but this never regresses so
     /// the UI can show steady forward progress.
     private(set) var furthestStage: QuestionGenerationStage?
+    private(set) var fillStartedAt: Date?
+    private(set) var hasStartedFill = false
+    private(set) var activeWork: [UUID: QuestionGenerationStage] = [:]
+    var generatingCount: Int { activeWork.values.filter { $0 == .generating }.count }
+    var reviewingCount: Int { activeWork.values.filter { $0 == .reviewing }.count }
+    var isPaused: Bool { hasStartedFill && hasRemaining && !isFilling && fillError == nil }
+
     private var fillTask: Task<Void, Never>?
     private var fillContext: ModelContext?
     private var operationID = UUID()
@@ -36,7 +43,7 @@ final class PracticeSessionState {
     var fillMessage: String? {
         guard let fillError else { return nil }
         if case GenerationError.noApprovedQuestions = fillError, !records.isEmpty {
-            return String(localized: "Some questions did not pass review. Retry to prepare the rest.")
+            return String(localized: "Automatic preparation has stopped. Retry to prepare the remaining questions.")
         }
         return fillError.localizedDescription
     }
@@ -44,7 +51,7 @@ final class PracticeSessionState {
     /// Entering practice after partial generation must not silently start a
     /// second budgeted job. A visible retry remains an explicit user action.
     func fillIfNeeded(using generation: QuestionGenerationService, context: ModelContext) {
-        guard fillError == nil else { return }
+        guard !hasStartedFill, fillError == nil else { return }
         fill(using: generation, context: context)
     }
 
@@ -53,17 +60,21 @@ final class PracticeSessionState {
         let operation = UUID()
         operationID = operation
         isFilling = true
+        hasStartedFill = true
+        fillStartedAt = .now
+        activeWork.removeAll()
         fillError = nil
         furthestStage = nil
         fillContext = context
         // At most one bounded generation job per start/retry; its batches run
         // concurrently inside the service. No endless retry loop.
-        let deadline = ContinuousClock.now.advanced(by: .seconds(180))
+        let deadline = ContinuousClock.now.advanced(by: QuestionGenerationService.jobDuration(for: requestedCount - records.count))
         fillTask = Task { [weak self] in
             guard let self else { return }
             defer {
                 if operationID == operation {
                     isFilling = false
+                    activeWork.removeAll()
                     fillTask = nil
                     fillContext = nil
                 }
@@ -99,6 +110,8 @@ final class PracticeSessionState {
     private func handleGenerationEvent(_ event: QuestionGenerationEvent, request: TrainingRequest, operation: UUID) {
         guard operationID == operation else { return }
         switch event {
+        case .activity(let id, let stage):
+            activeWork[id] = stage
         case .stage(let stage):
             if stage == .reviewing { furthestStage = .reviewing }
             else if furthestStage == nil { furthestStage = .generating }
@@ -121,6 +134,7 @@ final class PracticeSessionState {
         fillTask = nil
         fillContext = nil
         isFilling = false
+        activeWork.removeAll()
     }
 }
 

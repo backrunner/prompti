@@ -1693,17 +1693,6 @@
         }
       }
     },
-    "More connection options": {
-      "extractionState": "manual",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "更多连接方式"
-          }
-        }
-      }
-    },
     "Mostly understandable": {
       "extractionState": "manual",
       "localizations": {
@@ -2418,8 +2407,13 @@
       }
     },
     "Question review": {
-      "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Question review"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3119,13 +3113,13 @@
         }
       }
     },
-    "Some questions did not pass review. Retry to prepare the rest.": {
+    "Automatic preparation has stopped. Retry to prepare the remaining questions.": {
       "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "部分题目未通过审核，可以重试生成剩余题目。"
+            "value": "自动补题已停止。你可以重试，补齐剩余题目。"
           }
         }
       }
@@ -3436,13 +3430,13 @@
         }
       }
     },
-    "The model request timed out. Retry with fewer questions.": {
+    "The model took too long to respond. Try again or choose another model.": {
       "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "模型请求超时，请减少题量后重试。"
+            "value": "模型响应超时。请重试或更换模型。"
           }
         }
       }
@@ -3458,13 +3452,13 @@
         }
       }
     },
-    "The model stopped before finishing. Try a smaller practice set.": {
+    "The model stopped before finishing a question. Try again or choose another model.": {
       "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "模型未能生成完整内容，请减少题量后重试。"
+            "value": "模型未能完成这道题目。请重试或更换模型。"
           }
         }
       }
@@ -3851,16 +3845,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "练习数据由所选服务商处理，使用可能产生费用。"
-          }
-        }
-      }
-    },
-    "Your destination, language and scenes go to your selected provider. Credentials stay on this device. Model usage may use account credits.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "目的地、学习语言和场景会发送给所选服务商，用于生成练习。登录凭据只保存在本机。使用模型可能扣除服务商账号的可用额度。"
           }
         }
       }
@@ -7085,6 +7069,786 @@
           "stringUnit": {
             "state": "translated",
             "value": "旅行场景"
+          }
+        }
+      }
+    },
+    "Waiting for the first approved questions": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting for the first approved questions"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在准备首批可练习的题目"
+          }
+        }
+      }
+    },
+    "Clear these records?": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear these records?"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "清空这些记录？"
+          }
+        }
+      }
+    },
+    "Clear all": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear all"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "一键清空"
+          }
+        }
+      }
+    },
+    "Clear filtered": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear filtered"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "清空筛选结果"
+          }
+        }
+      }
+    },
+    "Delete": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "删除"
+          }
+        }
+      }
+    },
+    "Could not delete records": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not delete records"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未能删除记录"
+          }
+        }
+      }
+    },
+    "Your records are still saved. Please try again.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your records are still saved. Please try again."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "记录仍然保留，请重试。"
+          }
+        }
+      }
+    },
+    "Delete all attempts for these %lld questions? They will be removed from Mistakes and History, and your progress will be recalculated. This cannot be undone.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Delete all attempts for this %lld question? It will be removed from Mistakes and History, and your progress will be recalculated. This cannot be undone."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Delete all attempts for these %lld questions? They will be removed from Mistakes and History, and your progress will be recalculated. This cannot be undone."
+                }
+              }
+            }
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "删除这 %lld 道题的全部答题记录？它们将从错题和历史中移除，学习进度也会重新计算。此操作无法撤销。"
+          }
+        }
+      }
+    },
+    "OK": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "好"
+          }
+        }
+      }
+    },
+    "Preparation paused": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparation paused"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已暂停准备题目"
+          }
+        }
+      }
+    },
+    "Preparation stopped": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparation stopped"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "题目准备已停止"
+          }
+        }
+      }
+    },
+    "Pause preparation": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pause preparation"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "暂停准备题目"
+          }
+        }
+      }
+    },
+    "Continue preparation": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continue preparation"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "继续准备题目"
+          }
+        }
+      }
+    },
+    "Prepared questions are saved. Continue whenever you’re ready.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prepared questions are saved. Continue whenever you’re ready."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已准备的题目已保存，可以稍后继续。"
+          }
+        }
+      }
+    },
+    "Creating %lld · Checking %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Creating %lld · Checking %lld"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "生成中 %lld 道 · 审核中 %lld 道"
+          }
+        }
+      }
+    },
+    "Waiting for your model": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting for your model"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在等待模型响应"
+          }
+        }
+      }
+    },
+    "Elapsed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elapsed"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已用时"
+          }
+        }
+      }
+    },
+    "Preparing your next question": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparing your next question"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在准备下一题"
+          }
+        }
+      }
+    },
+    "Your answers are saved. The next question opens as soon as it’s ready, or you can finish this set now.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your answers are saved. The next question opens as soon as it’s ready, or you can finish this set now."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "作答记录已保存。下一题准备好后会自动显示，也可以现在结束本组练习。"
+          }
+        }
+      }
+    },
+    "Your answers are saved. Continue preparing questions or finish this set.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your answers are saved. Continue preparing questions or finish this set."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "作答记录已保存。可以继续准备题目，或结束本组练习。"
+          }
+        }
+      }
+    },
+    "Use generation model": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use generation model"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用生成模型"
+          }
+        }
+      }
+    },
+    "TypeSafe Jev": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TypeSafe Jev"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TypeSafe Jev"
+          }
+        }
+      }
+    },
+    "Review with": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Review with"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "审核模型"
+          }
+        }
+      }
+    },
+    "Jev checks each question. Uncertain results are reviewed by your generation model; connection failures stop preparation.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jev checks each question. Uncertain results are reviewed by your generation model; connection failures stop preparation."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jev 逐题审核，存疑时由生成模型复核；连接失败时会停止准备题目。"
+          }
+        }
+      }
+    },
+    "Replace TypeSafe API key": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Replace TypeSafe API key"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "替换 TypeSafe API Key"
+          }
+        }
+      }
+    },
+    "TypeSafe API key": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TypeSafe API key"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TypeSafe API Key"
+          }
+        }
+      }
+    },
+    "Test Jev connection": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test Jev connection"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "测试 Jev 连接"
+          }
+        }
+      }
+    },
+    "Testing connection…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Testing connection…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在测试连接…"
+          }
+        }
+      }
+    },
+    "TypeSafe receives exercise content and may charge for reviews and connection tests. Your key stays in this device’s Keychain.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TypeSafe receives exercise content and may charge for reviews and connection tests. Your key stays in this device’s Keychain."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TypeSafe 会接收题目内容，审核和连接测试可能产生费用。Key 仅保存在本机钥匙串中。"
+          }
+        }
+      }
+    },
+    "Jev works best in English. Review quality in other languages needs validation.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jev works best in English. Review quality in other languages needs validation."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jev 的英语表现最好，其他语言的审核质量仍需验证。"
+          }
+        }
+      }
+    },
+    "Get a TypeSafe API key": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Get a TypeSafe API key"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "获取 TypeSafe API Key"
+          }
+        }
+      }
+    },
+    "Remove TypeSafe key": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove TypeSafe key"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "移除 TypeSafe Key"
+          }
+        }
+      }
+    },
+    "Connected. Jev is ready to review questions.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connected. Jev is ready to review questions."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "连接成功，Jev 可以开始审核题目。"
+          }
+        }
+      }
+    },
+    "Add your TypeSafe API key in Question review settings, or use the generation model for review.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add your TypeSafe API key in Question review settings, or use the generation model for review."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请在“题目审核”设置中添加 TypeSafe API Key，或改用生成模型审核。"
+          }
+        }
+      }
+    },
+    "The TypeSafe API key is invalid or revoked. Update it in Question review settings.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The TypeSafe API key is invalid or revoked. Update it in Question review settings."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TypeSafe API Key 无效或已撤销，请在“题目审核”设置中更新。"
+          }
+        }
+      }
+    },
+    "Check your TypeSafe account access and credits, or use the generation model for review.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check your TypeSafe account access and credits, or use the generation model for review."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请检查 TypeSafe 账户权限和余额，或改用生成模型审核。"
+          }
+        }
+      }
+    },
+    "TypeSafe is busy or rate-limited. Preparation has stopped. Try again shortly.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TypeSafe is busy or rate-limited. Preparation has stopped. Try again shortly."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TypeSafe 繁忙或触发限流，已停止准备题目，请稍后重试。"
+          }
+        }
+      }
+    },
+    "TypeSafe review could not finish. Check your connection or try again. Prepared questions are saved.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TypeSafe review could not finish. Check your connection or try again. Prepared questions are saved."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TypeSafe 未能完成审核，请检查网络或重试。已准备的题目已保存。"
+          }
+        }
+      }
+    },
+    "TypeSafe returned an incomplete or unexpected review. No unchecked questions were saved.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TypeSafe returned an incomplete or unexpected review. No unchecked questions were saved."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TypeSafe 返回的审核结果不完整或格式异常，未保存未经检查的题目。"
+          }
+        }
+      }
+    },
+    "Testing…": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Testing…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在测试…"
+          }
+        }
+      }
+    },
+    "Not verified": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not verified"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未验证"
+          }
+        }
+      }
+    },
+    "Connection failed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connection failed"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "连接失败"
+          }
+        }
+      }
+    },
+    "Test again": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test again"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重新测试"
+          }
+        }
+      }
+    },
+    "Get API key": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Get API key"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "获取 Key"
+          }
+        }
+      }
+    },
+    "Paste API key": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paste API key"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "粘贴 API Key"
+          }
+        }
+      }
+    },
+    "Review details": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Review details"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "审核详情"
+          }
+        }
+      }
+    },
+    "TypeSafe receives exercise content. Reviews and connection tests may incur charges. Your key stays on this device.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TypeSafe receives exercise content. Reviews and connection tests may incur charges. Your key stays on this device."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "题目内容会发送至 TypeSafe，审核和连接测试可能产生费用。Key 仅保存在本机。"
           }
         }
       }

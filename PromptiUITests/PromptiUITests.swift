@@ -79,6 +79,157 @@ final class PromptiUITests: XCTestCase {
         attachScreenshot(named: "settings")
     }
 
+    func testJevReviewSettingsEnglishLight() { verifyJevReviewSettings(language: "en", appearance: "light") }
+    func testJevReviewSettingsChineseDark() { verifyJevReviewSettings(language: "zh-Hans", appearance: "dark") }
+
+    private func verifyJevReviewSettings(language: String, appearance: String) {
+        launch(arguments: ["-prompti-demo", "-prompti-ui-jev-probe", "-prompti-ui-\(appearance)",
+                           "-AppleLanguages", "(\(language))", "-AppleLocale", language == "en" ? "en_US" : "zh_CN"])
+        XCTAssertTrue(app.buttons["home.settings"].waitForExistence(timeout: 5))
+        app.buttons["home.settings"].tap()
+        let picker = app.buttons["review.provider"]
+        for _ in 0..<5 {
+            if picker.exists && picker.isHittable { break }
+            app.swipeUp()
+        }
+        XCTAssertTrue(picker.isHittable)
+        XCTAssertFalse(app.secureTextFields["review.apiKey"].exists)
+        picker.tap()
+        app.buttons["TypeSafe Jev"].tap()
+        let key = app.secureTextFields["review.apiKey"]
+        XCTAssertTrue(key.waitForExistence(timeout: 3))
+        let done = app.buttons["settings.done"]
+        let test = app.buttons["review.test"]
+        XCTAssertFalse(done.isEnabled)
+        XCTAssertFalse(test.isEnabled)
+        key.tap()
+        key.typeText("fixture-jev-ui")
+        for _ in 0..<3 {
+            if test.isHittable { break }
+            app.swipeUp()
+        }
+        test.tap()
+        let verified = XCTNSPredicateExpectation(predicate: NSPredicate(format: "enabled == true"), object: done)
+        XCTAssertEqual(XCTWaiter.wait(for: [verified], timeout: 5), .completed)
+        XCTAssertTrue(app.descendants(matching: .any)["review.status"].exists)
+        for _ in 0..<5 {
+            if picker.exists && picker.isHittable { break }
+            app.swipeDown()
+        }
+        XCTAssertTrue(picker.isHittable)
+        for _ in 0..<4 {
+            let offset = min(180, max(-180, 330 - key.frame.minY))
+            if abs(offset) < 20 { break }
+            let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.85, dy: 0.5))
+            start.press(forDuration: 0.1, thenDragTo: start.withOffset(CGVector(dx: 0, dy: offset)),
+                        withVelocity: .slow, thenHoldForDuration: 0.5)
+        }
+        XCTAssertTrue(test.isHittable)
+        attachScreenshot(named: "jev-review-\(language)-\(appearance)")
+        let details = app.buttons["review.details"]
+        XCTAssertTrue(details.isHittable)
+        details.tap()
+        let reviewDetail = language == "en"
+            ? "Jev works best in English. Review quality in other languages needs validation."
+            : "Jev 的英语表现最好，其他语言的审核质量仍需验证。"
+        XCTAssertTrue(app.staticTexts[reviewDetail].waitForExistence(timeout: 2))
+        attachScreenshot(named: "jev-details-\(language)-\(appearance)")
+        details.tap()
+        for _ in 0..<3 {
+            if key.isHittable { break }
+            app.swipeDown()
+        }
+        key.tap()
+        key.typeText("-changed")
+        XCTAssertFalse(done.isEnabled)
+        app.buttons["settings.cancel"].tap()
+        XCTAssertTrue(app.buttons["home.settings"].waitForExistence(timeout: 3))
+        app.buttons["home.settings"].tap()
+        XCTAssertTrue(done.waitForExistence(timeout: 3))
+        for _ in 0..<5 {
+            if picker.exists && picker.isHittable { break }
+            app.swipeUp()
+        }
+        XCTAssertFalse(app.secureTextFields["review.apiKey"].exists)
+        XCTAssertTrue(done.isEnabled)
+        if language == "en" {
+            picker.tap()
+            app.buttons["TypeSafe Jev"].tap()
+            XCTAssertFalse(test.isEnabled)
+            key.tap()
+            key.typeText("fixture-jev-save")
+            test.tap()
+            let savedConnection = XCTNSPredicateExpectation(predicate: NSPredicate(format: "enabled == true"), object: done)
+            XCTAssertEqual(XCTWaiter.wait(for: [savedConnection], timeout: 5), .completed)
+            done.tap()
+            XCTAssertTrue(app.buttons["home.settings"].waitForExistence(timeout: 3))
+            app.buttons["home.settings"].tap()
+            XCTAssertTrue(done.waitForExistence(timeout: 3))
+            XCTAssertTrue(done.isEnabled)
+            let remove = app.buttons["review.removeKey"]
+            for _ in 0..<5 {
+                if remove.exists && remove.isHittable { break }
+                app.swipeUp()
+            }
+            remove.tap()
+            app.buttons["settings.cancel"].tap()
+            XCTAssertTrue(app.buttons["home.settings"].waitForExistence(timeout: 3))
+            app.buttons["home.settings"].tap()
+            XCTAssertTrue(done.waitForExistence(timeout: 3))
+            for _ in 0..<5 {
+                if remove.exists && remove.isHittable { break }
+                app.swipeUp()
+            }
+            // Cancelling the removal leaves the existing key and enabled mode intact.
+            XCTAssertTrue(done.isEnabled)
+            remove.tap()
+            done.tap()
+            XCTAssertTrue(app.buttons["home.settings"].waitForExistence(timeout: 3))
+            app.buttons["home.settings"].tap()
+            XCTAssertTrue(done.waitForExistence(timeout: 3))
+            for _ in 0..<5 {
+                if picker.exists && picker.isHittable { break }
+                app.swipeUp()
+            }
+            picker.tap()
+            app.buttons["TypeSafe Jev"].tap()
+            XCTAssertFalse(done.isEnabled)
+            XCTAssertFalse(test.isEnabled)
+            XCTAssertFalse(remove.exists)
+        }
+        app.buttons["settings.cancel"].tap()
+    }
+
+    func testJevConnectionFailureKeepsSettingsEditable() {
+        launch(arguments: ["-prompti-demo", "-prompti-ui-jev-probe", "-prompti-ui-jev-probe-failure",
+                           "-prompti-ui-light", "-AppleLanguages", "(en)", "-AppleLocale", "en_US"])
+        XCTAssertTrue(app.buttons["home.settings"].waitForExistence(timeout: 5))
+        app.buttons["home.settings"].tap()
+        let picker = app.buttons["review.provider"]
+        for _ in 0..<5 {
+            if picker.exists && picker.isHittable { break }
+            app.swipeUp()
+        }
+        picker.tap()
+        app.buttons["TypeSafe Jev"].tap()
+        let key = app.secureTextFields["review.apiKey"]
+        XCTAssertTrue(key.waitForExistence(timeout: 3))
+        key.tap()
+        key.typeText("fixture-invalid-key")
+        app.buttons["review.test"].tap()
+        XCTAssertFalse(app.buttons["review.test"].isEnabled)
+        attachScreenshot(named: "jev-testing-en-light")
+        let status = app.descendants(matching: .any)["review.status"].firstMatch
+        let failed = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@", "Connection failed"), object: status)
+        XCTAssertEqual(XCTWaiter.wait(for: [failed], timeout: 8), .completed)
+        XCTAssertTrue(key.isEnabled)
+        XCTAssertFalse(app.buttons["settings.done"].isEnabled)
+        XCTAssertTrue(app.buttons["settings.cancel"].isEnabled)
+        XCTAssertTrue(app.buttons["review.test"].isEnabled)
+        attachScreenshot(named: "jev-failed-en-light")
+        app.buttons["settings.cancel"].tap()
+    }
+
     func testReviewVisualState() {
         launch(arguments: ["-prompti-demo"])
 
@@ -215,6 +366,51 @@ final class PromptiUITests: XCTestCase {
         XCTAssertTrue(app.buttons["home.destination"].waitForExistence(timeout: 5))
     }
 
+    func testLongAnswersKeepPromptPinnedAndResetForNextQuestion() {
+        launch(arguments: ["-prompti-demo", "-prompti-practice", "-prompti-ui-long-answers"])
+        startFiveQuestionSession()
+
+        let prompt = app.staticTexts["session.prompt"]
+        let answers = app.scrollViews["session.answers"]
+        let options = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "session.option."))
+        XCTAssertTrue(prompt.waitForExistence(timeout: 5))
+        let promptFrame = prompt.frame
+        let submitFrame = app.buttons["session.submit"].frame
+        XCTAssertLessThanOrEqual(promptFrame.maxY, answers.frame.minY)
+        attachScreenshot(named: "long-answers-top")
+
+        answers.swipeUp(velocity: .slow)
+        XCTAssertEqual(prompt.frame.minY, promptFrame.minY, accuracy: 1)
+        XCTAssertTrue(prompt.isHittable)
+        attachScreenshot(named: "long-answers-middle")
+
+        let last = options.element(boundBy: 3)
+        for _ in 0..<6 {
+            if answers.frame.contains(last.frame) { break }
+            answers.swipeUp(velocity: .slow)
+        }
+        XCTAssertTrue(answers.frame.contains(last.frame))
+        XCTAssertLessThan(last.frame.maxY, submitFrame.minY)
+        XCTAssertEqual(prompt.frame.minY, promptFrame.minY, accuracy: 1)
+        XCTAssertEqual(app.buttons["session.submit"].frame.minY, submitFrame.minY, accuracy: 1)
+        attachScreenshot(named: "long-answers-bottom")
+
+        last.tap()
+        app.buttons["session.submit"].tap()
+        XCTAssertTrue(app.buttons["session.next"].waitForExistence(timeout: 5))
+        let feedbackPromptFrame = prompt.frame
+        answers.swipeUp(velocity: .slow)
+        XCTAssertTrue(prompt.isHittable)
+        XCTAssertEqual(prompt.frame.minY, feedbackPromptFrame.minY, accuracy: 1)
+        attachScreenshot(named: "long-answers-feedback")
+
+        app.buttons["session.next"].tap()
+        XCTAssertTrue(app.staticTexts["2 / 5"].waitForExistence(timeout: 5))
+        XCTAssertTrue(answers.frame.contains(options.firstMatch.frame))
+        XCTAssertTrue(options.firstMatch.isHittable)
+        attachScreenshot(named: "short-answers-reset")
+    }
+
     func testPracticeDestinationTracksHomeSelection() {
         launch(arguments: ["-prompti-demo", "-prompti-practice"])
         XCTAssertTrue(app.buttons["practice.generate"].waitForExistence(timeout: 5))
@@ -346,6 +542,97 @@ final class PromptiUITests: XCTestCase {
         attachScreenshot(named: "progress-with-data")
     }
 
+    func testReviewDeletionEnglishLight() { verifyReviewDeletion(language: "en", style: "Light") }
+    func testReviewDeletionChineseDark() { verifyReviewDeletion(language: "zh-Hans", style: "Dark") }
+
+    private func verifyReviewDeletion(language: String, style: String) {
+        launch(arguments: ["-prompti-demo", "-prompti-practice", "-AppleLanguages", "(\(language))",
+                           "-AppleLocale", language == "en" ? "en_US" : "zh_CN",
+                           style == "Dark" ? "-prompti-ui-dark" : "-prompti-ui-light"])
+        startFiveQuestionSession()
+        let options = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "session.option."))
+        for index in 0..<5 {
+            if index == 2 || index == 4 {
+                XCTAssertTrue(app.buttons["session.options"].waitForExistence(timeout: 5))
+                app.buttons["session.options"].tap()
+                app.buttons["session.skip"].tap()
+            } else {
+                let option = options.element(boundBy: index == 3 ? 0 : 1)
+                XCTAssertTrue(option.waitForExistence(timeout: 5))
+                option.tap()
+                app.buttons["session.submit"].tap()
+                XCTAssertTrue(app.buttons["session.next"].waitForExistence(timeout: 5))
+                app.buttons["session.next"].tap()
+            }
+        }
+        XCTAssertTrue(app.buttons["session.done"].waitForExistence(timeout: 5))
+        app.buttons["session.done"].tap()
+        selectTab(systemImage: "arrow.counterclockwise.circle.fill", fallbackIndex: 2)
+
+        let rows = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "review.question."))
+        XCTAssertTrue(rows.firstMatch.waitForExistence(timeout: 5))
+        XCTAssertEqual(rows.count, 2)
+        attachScreenshot(named: "review-mistakes-\(language)-\(style)")
+
+        app.buttons["review.clearAll"].tap()
+        XCTAssertTrue(app.alerts.firstMatch.waitForExistence(timeout: 3))
+        attachScreenshot(named: "review-clear-confirmation-\(language)-\(style)")
+        app.alerts.buttons[language == "en" ? "Cancel" : "取消"].tap()
+        XCTAssertEqual(rows.count, 2)
+
+        let removedID = rows.firstMatch.identifier
+        rows.firstMatch.swipeLeft()
+        let delete = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "review.delete.")).firstMatch
+        XCTAssertTrue(delete.waitForExistence(timeout: 3))
+        XCTAssertEqual(delete.label, language == "en" ? "Delete" : "删除")
+        XCTAssertEqual(rows.count, 2) // Swiping alone must never delete a record.
+        attachScreenshot(named: "review-swipe-delete-\(language)-\(style)")
+        delete.tap()
+        XCTAssertFalse(app.buttons[removedID].exists)
+        XCTAssertEqual(rows.count, 1)
+
+        app.buttons["review.clearAll"].tap()
+        app.alerts.buttons[language == "en" ? "Clear all" : "一键清空"].tap()
+        XCTAssertTrue(rows.firstMatch.waitForNonExistence(timeout: 3))
+        XCTAssertFalse(app.buttons["review.clearAll"].isEnabled)
+        attachScreenshot(named: "review-mistakes-cleared-\(language)-\(style)")
+
+        selectTab(systemImage: "chart.bar.fill", fallbackIndex: 3)
+        XCTAssertTrue(app.descendants(matching: .any)["progress.metrics"].waitForExistence(timeout: 5))
+        selectTab(systemImage: "arrow.counterclockwise.circle.fill", fallbackIndex: 2)
+        app.buttons["review.mode.history"].tap()
+        XCTAssertTrue(rows.firstMatch.waitForExistence(timeout: 3))
+        XCTAssertEqual(rows.count, 3) // Correct and skipped questions survive clearing mistakes.
+        rows.firstMatch.swipeLeft()
+        XCTAssertTrue(delete.waitForExistence(timeout: 3))
+        attachScreenshot(named: "review-history-swipe-\(language)-\(style)")
+        delete.tap()
+        XCTAssertEqual(rows.count, 2)
+        if language == "en" {
+            app.buttons["review.filters"].tap()
+            app.buttons["Dining"].tap()
+            XCTAssertEqual(rows.count, 1)
+            XCTAssertEqual(app.buttons["review.clearAll"].label, "Clear filtered")
+            attachScreenshot(named: "review-filtered-\(language)-\(style)")
+            app.buttons["review.clearAll"].tap()
+            app.alerts.buttons["Clear all"].tap()
+            XCTAssertTrue(rows.firstMatch.waitForNonExistence(timeout: 3))
+            XCTAssertFalse(app.buttons["review.clearAll"].isEnabled)
+            app.buttons["Clear"].tap()
+            XCTAssertTrue(rows.firstMatch.waitForExistence(timeout: 3))
+            XCTAssertEqual(rows.count, 1) // The question outside the filter stays saved.
+        }
+        app.buttons["review.clearAll"].tap()
+        app.alerts.buttons[language == "en" ? "Clear all" : "一键清空"].tap()
+        XCTAssertTrue(rows.firstMatch.waitForNonExistence(timeout: 3))
+        XCTAssertFalse(app.buttons["review.clearAll"].isEnabled)
+        attachScreenshot(named: "review-history-cleared-\(language)-\(style)")
+
+        selectTab(systemImage: "chart.bar.fill", fallbackIndex: 3)
+        XCTAssertTrue(app.descendants(matching: .any)["progress.root"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.descendants(matching: .any)["progress.metrics"].exists)
+    }
+
     func testHomeStartsDefaultPracticeSet() {
         launch(arguments: ["-prompti-demo"])
         let start = app.buttons["home.startPractice"]
@@ -357,13 +644,24 @@ final class PromptiUITests: XCTestCase {
     }
 
     func testPracticeAutoStartsWhileRemainingQuestionsFill() {
-        launch(arguments: ["-prompti-demo", "-prompti-practice", "-prompti-ui-auto-fill"])
+        verifyFirstQuestionStarts(language: "en")
+    }
+
+    func testPracticeAutoStartsWithFirstQuestionChinese() {
+        verifyFirstQuestionStarts(language: "zh-Hans")
+    }
+
+    private func verifyFirstQuestionStarts(language: String) {
+        launch(arguments: ["-prompti-demo", "-prompti-practice", "-prompti-ui-auto-fill",
+                           "-AppleLanguages", "(\(language))", "-AppleLocale", language == "en" ? "en_US" : "zh_CN"])
         let generate = app.buttons["practice.generate"]
         XCTAssertTrue(generate.waitForExistence(timeout: 5))
         generate.tap()
-        // The session opens on the first approved batch without tapping start.
+        // The fixture emits exactly one approved question, then holds the rest.
         XCTAssertTrue(app.staticTexts["1 / 5"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["session.submit"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["session.preparationStatus"].exists)
+        XCTAssertTrue(app.buttons["session.submit"].exists)
+        attachScreenshot(named: "first-question-\(language)")
     }
 
     func testModelSetupRequiresVerifiedConnection() {
@@ -401,12 +699,14 @@ final class PromptiUITests: XCTestCase {
     }
 
     private func checkLocalizedModelSelection(language: String, locale: String) {
-        launch(arguments: ["-prompti-onboarding", "-AppleLanguages", "(\(language))", "-AppleLocale", locale])
+        launch(arguments: ["-prompti-onboarding", language == "en" ? "-prompti-ui-light" : "-prompti-ui-dark",
+                           "-AppleLanguages", "(\(language))", "-AppleLocale", locale])
         let next = app.buttons["onboarding.continue"]
         XCTAssertTrue(next.waitForExistence(timeout: 5))
         for _ in 0..<3 { next.tap() }
         let selection = app.buttons["model.selection"]
         XCTAssertTrue(selection.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.descendants(matching: .any)["model.advanced"].exists)
         XCTAssertTrue(selection.label.contains("GPT-5.6 Luna"))
         XCTAssertFalse(next.isEnabled)
         attachScreenshot(named: "model-\(language)")
@@ -484,8 +784,10 @@ final class PromptiUITests: XCTestCase {
         startFiveQuestionSession()
         let submit = app.buttons["session.submit"]
         XCTAssertFalse(submit.isEnabled)
+        attachScreenshot(named: "multiple-blanks-unanswered")
         app.buttons["session.blank.0.0"].tap()
         XCTAssertFalse(submit.isEnabled)
+        attachScreenshot(named: "multiple-blanks-partial")
         let second = app.buttons["session.blank.1.0"]
         if !second.isHittable { app.swipeUp() }
         second.tap()
@@ -510,6 +812,62 @@ final class PromptiUITests: XCTestCase {
         app.swipeUp()
         XCTAssertTrue(app.buttons["session.hearSample"].waitForExistence(timeout: 5))
         attachScreenshot(named: "speech-feedback")
+    }
+
+    func testWaitingCanFinishEnglishLight() { verifyWaitingCanFinish(language: "en", style: "Light") }
+    func testWaitingCanFinishChineseDark() { verifyWaitingCanFinish(language: "zh-Hans", style: "Dark") }
+
+    private func verifyWaitingCanFinish(language: String, style: String) {
+        launch(arguments: ["-prompti-demo", "-prompti-practice", "-prompti-ui-auto-fill", "-prompti-ui-waiting",
+                           "-AppleLanguages", "(\(language))", "-AppleLocale", language == "en" ? "en_US" : "zh_CN",
+                           style == "Dark" ? "-prompti-ui-dark" : "-prompti-ui-light"])
+        startFiveQuestionSession()
+        XCTAssertTrue(app.buttons["session.pauseFill"].exists)
+        attachScreenshot(named: "preparation-active-\(language)")
+        let prompt = app.staticTexts["session.prompt"].label
+        app.buttons["session.pauseFill"].tap()
+        XCTAssertTrue(app.buttons["session.retryFill"].waitForExistence(timeout: 3))
+        XCTAssertEqual(app.staticTexts["session.prompt"].label, prompt)
+        attachScreenshot(named: "preparation-paused-\(language)")
+        app.buttons["session.retryFill"].tap()
+        XCTAssertTrue(app.buttons["session.pauseFill"].waitForExistence(timeout: 3))
+        // The retry can prepare one extra question immediately. Skip all ready questions.
+        for _ in 0..<2 {
+            app.buttons["session.options"].tap()
+            app.buttons["session.skip"].tap()
+        }
+        XCTAssertTrue(app.buttons["session.finishPartial"].waitForExistence(timeout: 3))
+        XCTAssertFalse(app.buttons["session.retryFill"].exists)
+        attachScreenshot(named: "preparation-waiting-\(language)")
+        app.buttons["session.finishPartial"].tap()
+        XCTAssertTrue(app.staticTexts["session.summary"].waitForExistence(timeout: 3))
+    }
+
+    func testBackgroundDoesNotRestartPreparation() {
+        launch(arguments: ["-prompti-demo", "-prompti-practice", "-prompti-ui-auto-fill", "-prompti-ui-waiting"])
+        startFiveQuestionSession()
+        let prompt = app.staticTexts["session.prompt"].label
+        XCUIDevice.shared.press(.home)
+        app.activate()
+        XCTAssertTrue(app.buttons["session.retryFill"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["session.pauseFill"].exists)
+        XCTAssertEqual(app.staticTexts["session.prompt"].label, prompt)
+        XCTAssertTrue(app.staticTexts["1 / 5"].exists)
+    }
+
+    func testTopUpKeepsStartAvailable() {
+        launch(arguments: ["-prompti-demo", "-prompti-practice", "-prompti-ui-partial-generation",
+                           "-prompti-ui-slow-generation", "-prompti-ui-manual-start"])
+        app.buttons["practice.generate"].tap()
+        let fill = app.buttons["generation.fillRemaining"]
+        XCTAssertTrue(fill.waitForExistence(timeout: 8))
+        fill.tap()
+        XCTAssertTrue(app.buttons["generation.pause"].waitForExistence(timeout: 2))
+        let start = app.buttons["generation.start"]
+        XCTAssertTrue(start.isEnabled)
+        attachScreenshot(named: "top-up-start-available")
+        start.tap()
+        XCTAssertTrue(app.buttons["session.submit"].waitForExistence(timeout: 5))
     }
 
     func testAutomaticFillPreservesCurrentQuestion() {

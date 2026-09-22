@@ -78,13 +78,23 @@ struct UsageAndSessionTests {
         cancelled.cancelFill()
         try await Task.sleep(for: .milliseconds(50))
         #expect(!cancelled.isFilling && cancelled.records.isEmpty)
+        #expect(cancelled.isPaused && cancelled.activeWork.isEmpty)
+        let startedCalls = await slow.requests.count
+        cancelled.fillIfNeeded(using: slowService, context: other.mainContext)
+        try await Task.sleep(for: .milliseconds(50))
+        #expect(!cancelled.isFilling)
+        #expect(await slow.requests.count == startedCalls)
+        cancelled.fill(using: slowService, context: other.mainContext)
+        try await waitUntil { cancelled.generatingCount > 0 }
+        #expect(cancelled.isFilling && !cancelled.isPaused)
+        cancelled.cancelFill()
         #expect(try other.mainContext.fetchCount(FetchDescriptor<QuestionRecord>()) == 0)
     }
 
     @Test("Fill errors retain approved questions and leave a retryable remainder")
     func fillFailure() async throws {
         let container = ModelContainerFactory.make(inMemory: true)
-        let fixture = CapabilityProvider(failsBelowCount: 3)
+        let fixture = CapabilityProvider(failsAfterRequests: 3)
         let service = QuestionGenerationService(secureStore: SecureStore(), providerFactory: { _, _ in fixture })
         let request = GenerationCapabilityTests.request(count: 5)
         let state = PracticeSessionState(records: [], request: request, configuration: ProviderConfiguration())

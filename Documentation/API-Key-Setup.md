@@ -8,7 +8,7 @@ FlowDown 当前公开源码（提交 `a2fd55911720bfa0d11c1d4e354359d4801d9387`�
 
 - 引导和设置共用同一配置区域。选择 OpenRouter、OpenAI、Gemini、DeepSeek 或 Anthropic 时预填服务地址，默认显示 API Key、模型和测试连接。
 - 模型菜单只显示名称，可选“输入模型 ID”切换到手动输入。已保存的自定义模型直接显示输入框，不被推荐值覆盖。API Key 和模型未填完整时不能测试；测试通过前不能完成引导。
-- 新建自定义兼容接口的地址与模型 ID 留空，等待用户填写；已有自定义配置保留。预设的更多选项保留必要的地址编辑、凭据说明，以及 OpenRouter keys 页和数据来源链接。主页面删除账号登录说明、OAuth、授权码入口与额外宣传文字。
+- 新建自定义兼容接口的地址与模型 ID 留空，等待用户填写；已有自定义配置保留。2026-09-18 起移除“更多连接方式”折叠区；自定义兼容接口/已有自定义配置的地址继续直接显示，OpenRouter keys 页和数据来源链接直接放在连接区域。主页面删除账号登录说明、OAuth、授权码入口与额外宣传文字。
 - 主操作使用语义配色和既有按钮样式，API Key 使用安全输入框；继续保留 Apple 设备端模型。
 
 ## 协议与已有数据
@@ -43,3 +43,7 @@ API Key、模型或端点改变后需要重新验证。既有 Responses / Chat /
 | 英文手填模型 | [查看](ModelConnectionScreenshots/Build5/Light/model-custom-en.png) | [查看](ModelConnectionScreenshots/Build5/Dark/model-custom-en.png) |
 | 中文兼容接口 | [查看](ModelConnectionScreenshots/Build5/Light/model-compatible-zh-Hans.png) | [查看](ModelConnectionScreenshots/Build5/Dark/model-compatible-zh-Hans.png) |
 | 英文兼容接口 | [查看](ModelConnectionScreenshots/Build5/Light/model-compatible-en.png) | [查看](ModelConnectionScreenshots/Build5/Dark/model-compatible-en.png) |
+
+## 2026-09-22：可选审核 Key
+
+设置新增独立的 TypeSafe Jev 审核选项，默认关闭，需要用户自己的 TypeSafe API Key。测试通过后点击 Done 才启用；取消保留旧设置，删除 Key 同样在 Done 后应用。Key 与生成服务商凭据使用同一个 SecureStore、不同的协议/端点 scope。详见 [TypeSafe 审核配置与验证](TypeSafe-Review-2026-09-22.md)。
