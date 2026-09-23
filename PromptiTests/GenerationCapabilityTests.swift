@@ -156,6 +156,57 @@ private actor TypedCapabilityProvider: QuestionProvider {
     }
 }
 
+private actor SceneBalanceProvider: QuestionProvider {
+    let fixture = CapabilityProvider()
+    let rejectedScene: String?
+    let rejectionLimit: Int
+    let heldScene: String?
+    private var rejectionCount = 0
+    private var released = false
+    private var waiters: [AsyncStream<Void>.Continuation] = []
+    private var otherApprovals = 0
+
+    init(rejectedScene: String? = nil, rejectionLimit: Int = 0, heldScene: String? = nil) {
+        self.rejectedScene = rejectedScene
+        self.rejectionLimit = rejectionLimit
+        self.heldScene = heldScene
+    }
+
+    func observe(_ event: QuestionGenerationEvent) {
+        guard case .approved(let questions) = event else { return }
+        otherApprovals += questions.filter { $0.sceneID != heldScene }.count
+        if otherApprovals >= 4 {
+            released = true
+            for waiter in waiters { waiter.finish() }
+            waiters.removeAll()
+        }
+    }
+
+    func generate(_ request: TrainingRequest) async throws -> [GeneratedQuestion] {
+        if request.scenes[0].id == heldScene, !released {
+            let stream = AsyncStream<Void> { waiters.append($0) }
+            for await _ in stream { break }
+        }
+        try Task.checkCancellation()
+        return try await fixture.generate(request)
+    }
+
+    func reviewQuestions(_ questions: [GeneratedQuestion], request: TrainingRequest) async throws -> [QuestionReview] {
+        if request.scenes[0].id == rejectedScene, rejectionCount < rejectionLimit {
+            rejectionCount += 1
+            return questions.map { QuestionReview(questionID: $0.id, safe: true, language: true,
+                scene: false, natural: true, answer: true, difficulty: true, reason: "Fixture scene mismatch") }
+        }
+        return try await fixture.reviewQuestions(questions, request: request)
+    }
+
+    func reviewScene(_ scene: String) async throws -> SceneReview { try await fixture.reviewScene(scene) }
+    func evaluateSpeech(_ question: GeneratedQuestion, transcript: String,
+                        languageCode: String, explanationLanguage: ExplanationLanguage) async throws -> SemanticVerdict {
+        try await fixture.evaluateSpeech(question, transcript: transcript, languageCode: languageCode, explanationLanguage: explanationLanguage)
+    }
+}
+
 @Suite("Structured generation and semantic feedback")
 struct GenerationCapabilityTests {
     static func request(count: Int = 3) -> TrainingRequest {
@@ -167,6 +218,53 @@ struct GenerationCapabilityTests {
 
     private func service(_ fixture: CapabilityProvider) -> QuestionGenerationService {
         QuestionGenerationService(secureStore: SecureStore(), providerFactory: { _, _ in fixture })
+    }
+
+    @Test("Approved scenes keep their quotas in both generation modes and provider schedules",
+          arguments: [ProviderKind.apple, .openAIChat], [GenerationMode.efficient, .forgiving])
+    func balancedScenes(_ kind: ProviderKind, _ mode: GenerationMode) async throws {
+        var request = Self.request(count: 10)
+        request.scenes = Array(DestinationCatalog().commonScenes.prefix(3))
+        request.generationMode = mode
+        let result = try await service(CapabilityProvider()).generate(request, configuration: ProviderConfiguration(kind: kind))
+        #expect(Dictionary(grouping: result, by: \.sceneID).values.map(\.count).sorted() == [3, 3, 4])
+    }
+
+    @Test("Small consecutive sets rotate through all selected scenes")
+    func smallSetsRotateScenes() async throws {
+        var request = Self.request(count: 2)
+        request.scenes = Array(DestinationCatalog().commonScenes.prefix(5))
+        let generation = service(CapabilityProvider())
+        for _ in 0..<5 {
+            let result = try await generation.generate(request, configuration: ProviderConfiguration())
+            #expect(Set(result.compactMap(\.sceneID)).count == 2)
+            request.previousQuestions += result
+        }
+        #expect(Dictionary(grouping: request.previousQuestions, by: \.sceneID).values.map(\.count).sorted() == [2, 2, 2, 2, 2])
+    }
+
+    @Test("Flexible candidates fill the failed scene instead of exceeding another scene's quota", arguments: [3, Int.max])
+    func rejectedSceneQuota(_ rejectionLimit: Int) async throws {
+        var request = Self.request(count: 6)
+        request.scenes = Array(DestinationCatalog().commonScenes.prefix(2))
+        request.generationMode = .forgiving
+        let fixture = SceneBalanceProvider(rejectedScene: "dining", rejectionLimit: rejectionLimit)
+        let generation = QuestionGenerationService(secureStore: SecureStore(), providerFactory: { _, _ in fixture })
+        let result = try await generation.generate(request, configuration: ProviderConfiguration())
+        #expect(result.filter { $0.sceneID == "shopping" }.count == 3)
+        #expect(result.filter { $0.sceneID == "dining" }.count == (rejectionLimit == 3 ? 3 : 0))
+        #expect(await fixture.fixture.requests.count <= 27)
+    }
+
+    @Test("Slow scenes retain their places while approved peers stream immediately", .timeLimit(.minutes(1)))
+    func slowSceneQuota() async throws {
+        var request = Self.request(count: 6)
+        request.scenes = Array(DestinationCatalog().commonScenes.prefix(3))
+        request.generationMode = .forgiving
+        let fixture = SceneBalanceProvider(heldScene: "dining")
+        let generation = QuestionGenerationService(secureStore: SecureStore(), providerFactory: { _, _ in fixture })
+        let result = try await generation.generate(request, configuration: ProviderConfiguration(), events: { await fixture.observe($0) })
+        #expect(Dictionary(grouping: result, by: \.sceneID).values.map(\.count).sorted() == [2, 2, 2])
     }
 
     @Test("Mixed sets schedule every selected type as an independently validated single question", arguments: [ProviderKind.apple, .openAIChat])

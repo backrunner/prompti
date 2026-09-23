@@ -11,6 +11,7 @@
 - schema、choice 唯一性、cloze 回填、fact allowlist、内容 hash。
 - 统计口径、跨时区 `localDayKey`、streak 和 mastery 重建。
 - 预算、库存低水位和重试策略。
+- 场景名额：1–20 题与多场景组合、余数/小题组的历史轮换、并发慢场景、持续审核拒绝、宽松额外候选及已保存题组补题；完整题组的场景数量差不超过 1。
 - cancellation 不被映射成错误提示。
 
 使用 Swift Testing；时间、UUID、locale、calendar、network 和 model provider 均注入可控依赖，禁止依赖 sleep 的脆弱测试。
@@ -114,3 +115,9 @@
 - iCloud 不可用时不丢本地作答。
 - 后台预生成默认关闭且成本说明可见。
 - 开源许可证、第三方 notices、贡献指南、安全报告渠道和隐私政策齐备。
+
+## 2026-09-23：场景均衡回归
+
+- iOS 27 iPhone 模拟器执行 `xcodebuild test -project Prompti.xcodeproj -scheme Prompti -destination 'platform=iOS Simulator,id=63A7D2B3-5B57-46EA-8727-3710264356A9' -only-testing:PromptiTests -parallel-testing-enabled NO`，构建及全部 144 项测试通过。
+- 新增覆盖：1–20 题与 1–9 场景组合、重复场景 ID、两种生成模式、串行/并发调度、连续小题组历史轮换、慢场景逐题交付、短暂/持续审核拒绝以及 SwiftData 已保存题组补题。
+- `python3 Tools/CheckBrand.py` 通过。本轮只修改生成分配逻辑，没有视觉或文案变更；未进行浅/深色视觉验收，也未调用真实模型。离线 fixture 验证配额与调度，不代表真实题目语义质量已完成抽查。
