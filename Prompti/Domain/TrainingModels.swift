@@ -149,8 +149,33 @@ struct TrainingRequest: Sendable {
     var generationMode: GenerationMode = .efficient
     var previousPrompts: [String] = []
     var previousQuestions: [GeneratedQuestion] = []
+    /// Already prepared questions in the set (or available inventory) being filled.
+    /// Kept separate from deduplication history and never sent to the provider.
+    var preparedSceneCounts: [String: Int] = [:]
     /// Advisory goals for this batch, carried only in the untrusted JSON context.
     var diversityHint: String? = nil
+}
+
+enum SceneGenerationPlan {
+    /// Allocate to the least represented scene in this set first. History only
+    /// breaks ties so small sets and indivisible remainders rotate across scenes.
+    static func slots(for request: TrainingRequest) -> [TravelScene] {
+        var ids = Set<String>()
+        let scenes = request.scenes.shuffled().filter { ids.insert($0.id).inserted }
+        var counts = request.preparedSceneCounts.mapValues { max(0, $0) }
+        var history = Dictionary(grouping: request.previousQuestions.compactMap(\.sceneID), by: { $0 }).mapValues(\.count)
+        var slots: [TravelScene] = []
+        for _ in 0..<max(0, request.count) {
+            guard let scene = scenes.min(by: {
+                let lhs = counts[$0.id, default: 0], rhs = counts[$1.id, default: 0]
+                return lhs == rhs ? history[$0.id, default: 0] < history[$1.id, default: 0] : lhs < rhs
+            }) else { break }
+            slots.append(scene)
+            counts[scene.id, default: 0] += 1
+            history[scene.id, default: 0] += 1
+        }
+        return slots
+    }
 }
 
 enum AttemptResult: String, Codable, Sendable {

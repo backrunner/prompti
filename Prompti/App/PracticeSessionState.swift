@@ -82,6 +82,7 @@ final class PracticeSessionState {
             do {
                 var batch = request
                 batch.count = requestedCount - records.count
+                batch.preparedSceneCounts = Dictionary(grouping: records, by: \.sceneID).mapValues(\.count)
                 let existing = try context.fetch(FetchDescriptor<QuestionRecord>())
                 let relevant = existing.filter { $0.destinationID == request.destination.id && $0.languageCode == request.language.code }
                     .sorted { $0.createdAt < $1.createdAt }

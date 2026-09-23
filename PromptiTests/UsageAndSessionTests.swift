@@ -16,6 +16,27 @@ private actor UsageTransport {
 @MainActor
 @Suite("Model usage and growing sessions")
 struct UsageAndSessionTests {
+    @Test("Retrying a partial session balances saved scenes and preserves the existing questions")
+    func sceneBalancedRefill() async throws {
+        let container = ModelContainerFactory.make(inMemory: true)
+        var request = GenerationCapabilityTests.request(count: 6)
+        request.scenes = Array(DestinationCatalog().commonScenes.prefix(3))
+        let fixture = CapabilityProvider()
+        var seedRequest = request
+        seedRequest.count = 3
+        var seed = try await fixture.generate(seedRequest)
+        seed[2].sceneID = "shopping"
+        let saved = try QuestionInventory.save(seed, request: request, context: container.mainContext)
+        let service = QuestionGenerationService(secureStore: SecureStore(), providerFactory: { _, _ in fixture })
+        let session = PracticeSessionState(records: saved, request: request, configuration: ProviderConfiguration())
+        session.fill(using: service, context: container.mainContext)
+        try await waitUntil { !session.isFilling }
+        #expect(session.fillError == nil)
+        #expect(session.records.prefix(3).map(\.id) == saved.map(\.id))
+        #expect(Dictionary(grouping: session.records, by: \.sceneID).values.map(\.count).sorted() == [2, 2, 2])
+        #expect(try container.mainContext.fetchCount(FetchDescriptor<QuestionRecord>()) == 6)
+    }
+
     @Test("Actual fallback attempts each have one ledger entry; missing tokens stay unknown")
     func usageFallback() async throws {
         let suite = "prompti-usage-" + UUID().uuidString

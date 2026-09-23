@@ -4,6 +4,33 @@ import Testing
 
 @Suite("Prompti domain")
 struct DomainTests {
+    @Test("Scene allocations differ by at most one for every supported set size", arguments: 1...20)
+    func balancedScenePlan(_ count: Int) {
+        let catalog = DestinationCatalog()
+        for sceneCount in 1...catalog.commonScenes.count {
+            var request = GenerationCapabilityTests.request(count: count)
+            request.scenes = Array(catalog.commonScenes.prefix(sceneCount))
+            // Duplicate scene IDs must not add weight to a selection.
+            request.scenes.append(request.scenes[0])
+            let slots = SceneGenerationPlan.slots(for: request)
+            let counts = Dictionary(grouping: slots, by: \.id).mapValues(\.count)
+            let distribution = Set(request.scenes.map(\.id)).map { counts[$0, default: 0] }
+            #expect(slots.count == count)
+            #expect(distribution.max()! - distribution.min()! <= 1)
+        }
+    }
+
+    @Test("A refill fills current scene deficits before historical preferences")
+    func sceneRefillPlan() {
+        var request = GenerationCapabilityTests.request(count: 5)
+        request.scenes = Array(DestinationCatalog().commonScenes.prefix(3))
+        request.preparedSceneCounts = ["dining": 3, "shopping": 1]
+        let slots = SceneGenerationPlan.slots(for: request)
+        #expect(slots.filter { $0.id == "dining" }.isEmpty)
+        #expect(slots.filter { $0.id == "shopping" }.count == 2)
+        #expect(slots.filter { $0.id == "transit" }.count == 3)
+    }
+
     @Test("Catalog includes every first-release language")
     func catalogLanguages() {
         let codes = Set(DestinationCatalog().destinations.flatMap(\.languages).map(\.code))

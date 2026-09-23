@@ -159,7 +159,7 @@ actor QuestionGenerationService {
         let generationTarget = request.count + extraCandidates
         let maxAttemptsPerQuestion = allowsRegeneration ? 3 : 1
         let candidateFilter = CandidateFilter(signatures: signatures, history: request.previousQuestions)
-        let scenes = request.scenes.shuffled()
+        let sceneSlots = SceneGenerationPlan.slots(for: request)
         let kinds: [QuestionKind] = [.multipleChoice, .cloze, .spoken].filter { request.kinds.contains($0) }
         let goals = ["clarify an unfamiliar word", "ask for a recommendation", "state a preference",
                      "confirm a quantity", "correct a misunderstanding", "request an alternative",
@@ -179,6 +179,9 @@ actor QuestionGenerationService {
             var approvedIDs = Set<UUID>()
             var pending = Array(0..<generationTarget)
             var attempts = Array(repeating: 0, count: generationTarget)
+            var slotScenes: [TravelScene?] = sceneSlots.map { $0 } + Array(repeating: nil, count: extraCandidates)
+            var remainingByScene = Dictionary(grouping: sceneSlots, by: \.id).mapValues(\.count)
+            var activeByScene: [String: Int] = [:]
             var inFlight = 0
             var firstError: Error?
             var terminalError = false
@@ -186,13 +189,26 @@ actor QuestionGenerationService {
                 guard !Task.isCancelled, approved.count < request.count, !terminalError, !pending.isEmpty,
                       approved.count + inFlight < generationTarget,
                       ContinuousClock.now < deadline else { return false }
+                // Successful peers may have filled a retry's scene already.
+                pending.removeAll { slot in
+                    guard let scene = slotScenes[slot] else { return false }
+                    return remainingByScene[scene.id, default: 0] == 0
+                }
+                guard !pending.isEmpty else { return false }
                 let slot = pending.removeFirst()
+                // Flexible candidates compete only for unfilled scene quotas;
+                // fast/easy scenes must never consume another scene's places.
+                guard let scene = slotScenes[slot] ?? sceneSlots.filter({ remainingByScene[$0.id, default: 0] > 0 }).max(by: {
+                    remainingByScene[$0.id, default: 0] - activeByScene[$0.id, default: 0]
+                        < remainingByScene[$1.id, default: 0] - activeByScene[$1.id, default: 0]
+                }) else { return false }
+                slotScenes[slot] = scene
                 let needsReservation = slot >= request.count || attempts[slot] > 0
                 var batch = request
                 batch.count = 1
                 batch.kinds = [kinds[slot % kinds.count]]
                 batch.previousPrompts = Array((request.previousPrompts + approved.map(\.prompt)).suffix(30))
-                batch.scenes = [scenes[slot % scenes.count]]
+                batch.scenes = [scene]
                 let variation = slot + attempts[slot] * generationTarget
                 var diversityHint = goals[variation % goals.count] + "; explore "
                     + perspectives[variation % perspectives.count]
@@ -205,6 +221,7 @@ actor QuestionGenerationService {
                 let batchID = UUID()
                 attempts[slot] += 1
                 inFlight += 1
+                activeByScene[scene.id, default: 0] += 1
                 group.addTask {
                     if needsReservation, let reserveAdditionalAttempt, !(await reserveAdditionalAttempt()) {
                         return BatchResult(slot: slot, batchID: batchID, questions: [], error: nil, budgetExhausted: true)
@@ -218,6 +235,8 @@ actor QuestionGenerationService {
             while inFlight < concurrency, schedule() { }
             while let result = try await group.next() {
                 inFlight -= 1
+                guard let assignedScene = slotScenes[result.slot] else { throw GenerationError.malformedResponse }
+                activeByScene[assignedScene.id, default: 0] -= 1
                 try Task.checkCancellation()
                 try await events?(.activity(result.batchID, nil))
                 if let error = result.error {
@@ -230,12 +249,12 @@ actor QuestionGenerationService {
                     if !Self.canRegenerate(after: error) { terminalError = true }
                 } else {
                     var delivered: [GeneratedQuestion] = []
-                    var remaining = max(0, request.count - approved.count)
+                    var remaining = remainingByScene[assignedScene.id, default: 0]
                     for var question in result.questions where remaining > 0 {
                         guard approvedIDs.insert(question.id).inserted,
                               seen.insert(question.contentSignature).inserted,
                               duplicates.insert(question) else { continue }
-                        question.sceneID = question.sceneID ?? request.scenes.first?.id
+                        question.sceneID = question.sceneID ?? assignedScene.id
                         question.generation = GenerationMetadata(jobID: jobID, batchID: result.batchID,
                             provider: configuration.kind.rawValue, model: configuration.model, createdAt: .now,
                             sourceFactIDs: question.sourceFactIDs ?? [], checks: QuestionReview.checks,
@@ -245,6 +264,7 @@ actor QuestionGenerationService {
                         approved.append(question)
                         delivered.append(question)
                         remaining -= 1
+                        remainingByScene[assignedScene.id] = remaining
                     }
                     if !delivered.isEmpty { try await events?(.approved(delivered)) }
                 }
@@ -440,15 +460,16 @@ actor QuestionGenerationService {
 #if DEBUG
 enum DemoQuestions {
     static func make(request: TrainingRequest) -> [GeneratedQuestion] {
+        let sceneSlots = SceneGenerationPlan.slots(for: request)
         if ProcessInfo.processInfo.arguments.contains("-prompti-ui-multiple-blanks") {
             let cloze = ClozeContent(segments: ["東京までの切符を", "枚", "。"], blanks: [
                 ClozeBlank(id: "quantity", options: ["二", "雨", "駅"], correctAnswer: "二"),
                 ClozeBlank(id: "request", options: ["お願いします", "晴れです", "おいしいです"], correctAnswer: "お願いします")
             ])
-            return (0..<request.count).map { _ in
+            return (0..<request.count).map {
                 GeneratedQuestion(kind: .cloze, prompt: cloze.prompt, options: [], correctAnswer: cloze.answer,
                     translation: "Two tickets to Tokyo, please.", explanation: "Give the quantity, then make a polite request.",
-                    sceneID: request.scenes[0].id, cloze: cloze)
+                    sceneID: sceneSlots[$0].id, cloze: cloze)
             }
         }
         let examples = [
@@ -502,7 +523,7 @@ enum DemoQuestions {
                 )
             }
             question.id = UUID()
-            question.sceneID = request.scenes[$0 % request.scenes.count].id
+            question.sceneID = sceneSlots[$0].id
             return question
         }
     }

@@ -288,6 +288,7 @@ struct HomeView: View {
         )
         request.previousQuestions = questions.filter { $0.destinationID == destination.id && $0.languageCode == language.code }
             .sorted { $0.createdAt < $1.createdAt }.map(\.question)
+        request.preparedSceneCounts = Dictionary(grouping: availableQuestions, by: \.sceneID).mapValues(\.count)
         request.previousPrompts = Array(questions.filter { $0.destinationID == destination.id && $0.languageCode == language.code }.prefix(30).map(\.prompt))
         do {
             let activeRequest = request
